@@ -23,6 +23,17 @@ design anything:
 - Gradle Kotlin DSL with a version catalog (`gradle/libs.versions.toml`).
 - Sideloaded over adb, not published to Google Play.
 
+## Principles (the owner's top priorities)
+- **No ads, no tracking.** The launcher declares no `INTERNET` permission, so Android
+  itself stops it from loading ads or sending data anywhere. A feature that needs the
+  network is out of scope or goes into a separate app.
+- **As few system resources as possible.** Nothing runs in the background: no services,
+  no scheduled jobs, no polling. System events (app installs, HDMI state) arrive as
+  callbacks. Budget: ≤ 120 MB PSS while on screen, first frame in < 1 s, small APK.
+- Prefer existing system features and small open-source apps over building things into
+  the launcher. Screensaver: Google's Ambient mode or Aerial Views. Browser: TV Bro.
+  Keyboard: Gboard.
+
 ## Cloud session limits
 Check these before promising a build or a device test:
 - Android builds need `dl.google.com` (Android SDK + Google Maven; `maven.google.com`

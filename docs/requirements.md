@@ -3,6 +3,14 @@
 What the owner asked for, what we decided, and what still needs checking on the real TV.
 Status: ✅ in the launcher, ⚠️ in the launcher with caveats, ❌ not a launcher job (solved elsewhere).
 
+## 0. Principles (the owner's top priorities)
+
+- **No ads.** The launcher has no `INTERNET` permission, so it cannot load ads or send data.
+  Side benefit: if the stock Google TV launcher is disabled (see `android-tv-launcher`),
+  its sponsored rows disappear too.
+- **Minimal resources.** No background services, no scheduled jobs, no polling. Target
+  ≤ 120 MB RAM while on screen, nothing extra while in the background, first frame in < 1 s.
+
 ## 1. Home screen: Favourites, then All apps ✅
 
 - Top bar: clock and date on the left; HDMI inputs (with a "signal" dot) and Settings on the right.
@@ -40,25 +48,21 @@ The owner wants it **only if it costs the TV nothing**.
 
 ## 3. Easy background change ✅
 
-- Launcher Settings → Background, with a live preview. Sources: built-in gradients/colours,
-  "photo of the day" from the screensaver cache, or images from a USB drive.
+- Launcher Settings → Background, with a live preview. Sources: built-in gradients/colours
+  or images from a USB drive (copied into the app, so the drive can be removed). No downloads.
 - Shown under a dark scrim so the UI stays legible. Decoded at 960×540, about 2 MB of RAM.
 
-## 4. Screensaver with nature photos ⚠️
+## 4. Screensaver with nature photos ❌ (system feature, works without the launcher)
 
-- A `DreamService` (Android's screensaver API) inside our APK. It shows a slow crossfade
-  slideshow with a small clock and the photo credit.
-- Source: **Wikimedia Commons featured landscape/nature pictures**. Free, no API key, open
-  licences. The licence requires showing author + licence, which we do in a corner.
-  Optional later: Unsplash with the owner's own API key.
-- Prefetch about 30 photos at 1920 px once a day (about 10–20 MB of storage). When offline,
-  show the cache. Downloads happen only while the TV is idle and online.
-- Google TV removed the UI for picking third-party screensavers, so it is switched on once
-  over adb (`settings put secure screensaver_components …`). The command to restore Google's
-  Ambient mode is kept.
-- The screensaver runs while the TV is idle. When the TV actually sleeps (panel off), nothing
-  is shown, and that is the system's job.
-- Note: the cloud session can't reach `commons.wikimedia.org`, so the image fetch is tested on the TV.
+- The screensaver is chosen in system settings and runs no matter which launcher is installed.
+  The launcher doesn't ship one, which keeps it smaller and offline.
+- Option A: Google's **Ambient mode**, already on the TV. Personal cards can be turned off
+  (Settings → Accounts & Sign In → account → Google Assistant → "Never show proactively").
+- Option B: **Aerial Views**, free and open source. It shows nature aerial videos, or photos
+  from USB, with an optional clock. Google TV hides the screensaver picker, so it is switched
+  on once over adb. Restore command for Ambient mode:
+  `settings put secure screensaver_components com.google.android.apps.tv.dreamx/.service.Backdrop`.
+- It runs only while the TV is idle, so it costs nothing while you watch.
 
 ## 5. Browser ❌ (not the launcher; install a TV browser)
 
@@ -88,7 +92,8 @@ The owner wants it **only if it costs the TV nothing**.
   opened by the remote's mic button. This works only if the remote's mic audio is available to
   third-party apps on this TV, which we test with a small debug screen first. Recognition would
   use either Google's on-device recognizer, if it works, or offline Vosk (RU + EN models about
-  45 MB each, run in a separate process only while listening).
+  45 MB each, run in a separate process only while listening). Because of the size and the
+  offline principle, this would be a separate optional app, not part of the launcher APK.
 
 ## Open questions for the owner
 

@@ -1,6 +1,6 @@
 ---
 name: android-tv-launcher
-description: How to build a custom HOME launcher for Google TV / Android TV in Kotlin + Compose. Covers the manifest (HOME + LEANBACK_LAUNCHER, package visibility), listing installed TV apps with banners, launching them, reacting to installs/removals, HDMI inputs and the event-driven "signal on HDMI" prompt, the nature-photo screensaver (DreamService) and backgrounds, launcher-specific Back/Home behaviour, making it the default Home on Google TV, and build/install over adb. Use for any non-visual code in this repo.
+description: How to build a custom HOME launcher for Google TV / Android TV in Kotlin + Compose. Covers the manifest (HOME + LEANBACK_LAUNCHER, package visibility), listing installed TV apps with banners, launching them, reacting to installs/removals, HDMI inputs and the event-driven "signal on HDMI" prompt, offline launcher backgrounds, launcher-specific Back/Home behaviour, making it the default Home on Google TV, and build/install over adb. Use for any non-visual code in this repo.
 ---
 
 # Android TV launcher: engineering guide
@@ -41,6 +41,7 @@ app/src/main/
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- No INTERNET permission, on purpose: the launcher stays offline (no ads, no tracking). -->
     <uses-feature android:name="android.software.leanback" android:required="true" />
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
@@ -244,16 +245,17 @@ class HdmiWatcher(context: Context, private val onSignal: (TvInputInfo) -> Unit)
   device what Xiaomi's HDMI service reports: run `adb shell dumpsys tv_input` while
   plugging in and powering on a device.
 
-## Screensaver and backgrounds
+## Backgrounds
 
-The nature-photo screensaver (`DreamService`), the Wikimedia Commons image source,
-caching, adb activation, and background selection:
-[references/screensaver-and-backgrounds.md](references/screensaver-and-backgrounds.md).
+Built-in gradients, or images from USB, all offline:
+[references/backgrounds.md](references/backgrounds.md).
 
 ## Not the launcher's job
 
 - **Browser:** the Google TV Play Store doesn't list browsers. Sideload TV Bro
   (github.com/truefedex/tv-bro). Web search in the launcher opens URLs with `ACTION_VIEW`.
+- **Screensaver:** a system feature that works with any launcher. Use Google's Ambient mode or
+  Aerial Views. See [references/backgrounds.md](references/backgrounds.md).
 - **Keyboard:** the system IME (Gboard) is used by every text field. Russian/English is set in Gboard.
 - **Google Assistant:** it can't be fixed from a launcher. See the voice diagnostics in the
   `xiaomi-tv-a-pro-2025` skill and `docs/requirements.md` §7.

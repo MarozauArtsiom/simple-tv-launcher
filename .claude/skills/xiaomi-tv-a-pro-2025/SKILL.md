@@ -92,9 +92,9 @@ Record the old value of each setting in `docs/device/` before you change it.
 ```bash
 # HDMI prompt over other apps
 adb shell appops set <pkg> SYSTEM_ALERT_WINDOW allow
-# our screensaver (Google TV has no UI for this); restore value: com.google.android.apps.tv.dreamx/.service.Backdrop
+# screensaver = Aerial Views (Google TV has no UI for this); restore value: com.google.android.apps.tv.dreamx/.service.Backdrop
 adb shell settings get secure screensaver_components
-adb shell settings put secure screensaver_components <pkg>/<pkg>.dream.NatureDreamService
+adb shell settings put secure screensaver_components com.neilturner.aerialviews/.ui.screensaver.DreamActivity
 adb shell settings put system screen_off_timeout 600000      # ms; Android TV 12+ ignores < 360000
 # browser (TV Bro, from github.com/truefedex/tv-bro releases)
 adb install tv-bro.apk
