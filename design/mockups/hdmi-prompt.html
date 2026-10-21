@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>HDMI signal prompt</title>
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    iframe { position: fixed; inset: 0; width: 960px; height: 540px; border: 0; }
+    .dim { position: fixed; inset: 0; background: rgba(11, 13, 18, .40); }
+
+    .prompt {
+      position: fixed; right: var(--safe-h); bottom: var(--safe-v); width: 460px;
+      padding: 20px 24px; border-radius: 16px;
+      background: var(--surface); border: 1px solid rgba(255, 255, 255, .08);
+    }
+    .head { display: flex; gap: 16px; align-items: center; }
+    .badge {
+      width: 44px; height: 44px; border-radius: 50%; flex: none; display: grid; place-items: center;
+      background: rgba(123, 216, 143, .16); color: var(--signal);
+    }
+    .badge svg { width: 22px; height: 22px; fill: currentColor; }
+    .source { color: var(--on-surface-variant); }
+
+    .buttons { display: flex; gap: 12px; align-items: center; margin-top: 20px; }
+    .btn {
+      height: 40px; padding: 0 20px; white-space: nowrap; border-radius: 20px; display: grid; place-items: center;
+      background: var(--surface-variant); color: var(--on-surface);
+    }
+    .btn.focused { background: var(--focus); color: var(--on-focus); transform: scale(1.05); }
+    .timer { margin-left: auto; white-space: nowrap; color: var(--on-surface-variant); }
+  </style>
+</head>
+<body>
+  <iframe src="home.html?nofocus" title="home"></iframe>
+  <div class="dim"></div>
+
+  <section class="prompt" role="dialog">
+    <div class="head">
+      <span class="badge">
+        <svg viewBox="0 0 24 24"><path d="M21 3.01H3c-1.1 0-2 .9-2 2V9h2V4.99h18v14.03H3V15H1v4.01c0 1.1.9 1.98 2 1.98h18c1.1 0 2-.88 2-1.98v-14c0-1.11-.9-2-2-2zM11 16l4-4-4-4v3H1v2h10v3z"/></svg>
+      </span>
+      <div>
+        <div class="title-large">Сигнал на HDMI 2</div>
+        <div class="body-medium source">PlayStation 5</div>
+      </div>
+    </div>
+    <div class="buttons">
+      <span class="btn label-large focused">Переключить</span>
+      <span class="btn label-large">Не сейчас</span>
+      <span class="timer label-medium">Скроется через 15 с</span>
+    </div>
+  </section>
+</body>
+</html>

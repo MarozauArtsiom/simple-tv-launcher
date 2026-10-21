@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <!-- Placeholder for a nature photo from the screensaver cache. Not a real photo. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1B2A44"/>
+      <stop offset="0.55" stop-color="#4E5F7E"/>
+      <stop offset="0.8" stop-color="#C98E6B"/>
+      <stop offset="1" stop-color="#E7B98A"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.68" cy="0.62" r="0.25">
+      <stop offset="0" stop-color="#FFE2B8" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#FFE2B8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8C7A72"/>
+      <stop offset="1" stop-color="#1A2433"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="540" fill="url(#sky)"/>
+  <rect width="960" height="540" fill="url(#sun)"/>
+  <path d="M0 330 L90 250 L160 290 L260 190 L350 270 L420 230 L520 300 L610 210 L700 280 L790 240 L880 300 L960 260 V540 H0 Z" fill="#5A5F78"/>
+  <path d="M0 360 L120 290 L210 330 L300 270 L400 340 L500 290 L590 350 L700 300 L820 350 L960 310 V540 H0 Z" fill="#3B4258"/>
+  <path d="M0 395 L80 360 L170 380 L260 350 L380 390 L470 365 L560 392 L660 362 L760 388 L880 360 L960 380 V540 H0 Z" fill="#232A3B"/>
+  <rect y="400" width="960" height="140" fill="url(#lake)"/>
+  <path d="M0 400 L80 418 L170 410 L260 425 L380 408 L470 420 L560 406 L660 422 L760 409 L880 421 L960 412 V400 Z" fill="#232A3B" opacity="0.8"/>
+  <path d="M0 470 Q240 430 480 470 T960 460 V540 H0 Z" fill="#141B26" opacity="0.7"/>
+</svg>

@@ -84,3 +84,38 @@ adb logcat --pid=$(adb shell pidof -s <pkg>)
 
 Making the launcher the default Home (role assignment, or disabling launcherx) and rolling
 it back: `android-tv-launcher` skill, `references/default-home.md`.
+
+## One-time system tweaks over adb
+
+Record the old value of each setting in `docs/device/` before you change it.
+
+```bash
+# HDMI prompt over other apps
+adb shell appops set <pkg> SYSTEM_ALERT_WINDOW allow
+# our screensaver (Google TV has no UI for this); restore value: com.google.android.apps.tv.dreamx/.service.Backdrop
+adb shell settings get secure screensaver_components
+adb shell settings put secure screensaver_components <pkg>/<pkg>.dream.NatureDreamService
+adb shell settings put system screen_off_timeout 600000      # ms; Android TV 12+ ignores < 360000
+# browser (TV Bro, from github.com/truefedex/tv-bro releases)
+adb install tv-bro.apk
+```
+
+## Voice input diagnostics
+
+The remote's mic works only over Bluetooth. Check in this order and write the findings
+into `docs/device/voice.md`:
+
+1. Settings → Remotes & Accessories: is the remote listed as a Bluetooth device? If not,
+   pair it (see the remote's manual for the button combo).
+2. Settings → Privacy → Microphone is on, and the Google app has the mic permission.
+3. Press the mic button while `adb logcat` runs. Look for errors from
+   `com.google.android.katniss` (the Google app on TV) or the voice service, such as an
+   unsupported language or region.
+4. Switch the TV UI to English and try again. If it works then, the problem is language or
+   region support, not the hardware.
+5. Check the key code: run `adb shell getevent -lt`, press the mic button, and note the
+   key code (`KEY_SEARCH`, `KEY_ASSISTANT`, `KEY_VOICECOMMAND`, and so on).
+
+Whether a third-party app can record from the remote mic is unknown on this TV. Test it
+with a debug screen (`SpeechRecognizer` plus a raw `AudioRecord` with
+`VOICE_RECOGNITION`) before planning a launcher voice search.

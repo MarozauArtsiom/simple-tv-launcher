@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Home</title>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="home.css">
+</head>
+<body>
+  <script>
+    // home.html?nofocus is embedded by other mockups that own the focus.
+    if (location.search.includes('nofocus')) addEventListener('DOMContentLoaded', () =>
+      document.querySelectorAll('.focused').forEach((el) => el.classList.remove('focused')));
+  </script>
+  <div class="backdrop"></div>
+
+  <header class="top">
+    <div class="clock">
+      <span class="display-small">20:41</span>
+      <span class="title-medium date">Среда, 21 октября</span>
+    </div>
+    <nav class="actions">
+      <span class="chip label-large">
+        <svg viewBox="0 0 24 24"><path d="M21 3.01H3c-1.1 0-2 .9-2 2V9h2V4.99h18v14.03H3V15H1v4.01c0 1.1.9 1.98 2 1.98h18c1.1 0 2-.88 2-1.98v-14c0-1.11-.9-2-2-2zM11 16l4-4-4-4v3H1v2h10v3z"/></svg>
+        HDMI 1
+      </span>
+      <span class="chip label-large">
+        <svg viewBox="0 0 24 24"><path d="M21 3.01H3c-1.1 0-2 .9-2 2V9h2V4.99h18v14.03H3V15H1v4.01c0 1.1.9 1.98 2 1.98h18c1.1 0 2-.88 2-1.98v-14c0-1.11-.9-2-2-2zM11 16l4-4-4-4v3H1v2h10v3z"/></svg>
+        HDMI 2 <i class="dot"></i>
+      </span>
+      <span class="chip icon-only" aria-label="Настройки">
+        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      </span>
+    </nav>
+  </header>
+
+  <section class="favorites">
+    <h2 class="section-title row-title">Избранное</h2>
+    <div class="fav-row">
+      <div class="fav-item">
+        <div class="card focused" style="background:#7A2E2E"><span class="title-medium">YouTube</span></div>
+        <span class="fav-label label-large">YouTube</span>
+      </div>
+      <div class="fav-item"><div class="card" style="background:#5A3A1A"><span class="title-medium">Кинопоиск</span></div><span class="fav-label"></span></div>
+      <div class="fav-item"><div class="card" style="background:#2C4A6B"><span class="title-medium">TV Bro</span></div><span class="fav-label"></span></div>
+      <div class="fav-item"><div class="card" style="background:#24523A"><span class="title-medium">Spotify</span></div><span class="fav-label"></span></div>
+      <div class="fav-item"><div class="card" style="background:#5C4A1F"><span class="title-medium">Plex</span></div><span class="fav-label"></span></div>
+      <div class="fav-item"><div class="card" style="background:#6B3F1C"><span class="title-medium">VLC</span></div><span class="fav-label"></span></div>
+    </div>
+  </section>
+
+  <section class="all">
+    <h2 class="section-title row-title">Все приложения <span class="count title-medium">· 14</span></h2>
+    <div class="grid">
+      <div class="card" style="background:#203C5C"><span class="title-medium">Disney+</span></div>
+      <div class="card" style="background:#2F4A3A"><span class="title-medium">Google Play</span></div>
+      <div class="card generated" style="background:#25485A"><i></i><span>Kodi</span></div>
+      <div class="card" style="background:#6B1F24"><span class="title-medium">Netflix</span></div>
+      <div class="card" style="background:#5C4A1F"><span class="title-medium">Plex</span></div>
+      <div class="card" style="background:#1F4A5C"><span class="title-medium">Prime Video</span></div>
+      <div class="card" style="background:#24523A"><span class="title-medium">Spotify</span></div>
+      <div class="card generated" style="background:#3A3358"><i></i><span>Telegram</span></div>
+      <div class="card" style="background:#2C4A6B"><span class="title-medium">TV Bro</span></div>
+      <div class="card" style="background:#43305E"><span class="title-medium">Twitch</span></div>
+      <div class="card" style="background:#6B3F1C"><span class="title-medium">VLC</span></div>
+      <div class="card" style="background:#7A2E2E"><span class="title-medium">YouTube</span></div>
+      <div class="card" style="background:#5A3A1A"><span class="title-medium">Кинопоиск</span></div>
+      <div class="card" style="background:#3B3F4A"><span class="title-medium">Файлы</span></div>
+    </div>
+  </section>
+</body>
+</html>

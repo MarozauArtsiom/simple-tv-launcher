@@ -55,6 +55,7 @@ Starting tokens, placeholders until the owner picks a style:
 | `onFocus` | `#0B0D12` | text on a focused (white) button |
 | `accent` | `#8AB4F8` | small highlights only: indicators, progress |
 | `error` | `#F28B82` | errors |
+| `signal` | `#7BD88F` | "HDMI has a signal" dot |
 
 - Text contrast is at least 4.5:1. The focused element contrasts at least 3:1 with its
   unfocused neighbours.
@@ -103,7 +104,8 @@ Starting tokens, placeholders until the owner picks a style:
   transitions: 250 ms max.
 - No `RenderEffect` blur on large areas, no animated gradients, no parallax on many layers,
   and no more than one large animation at a time.
-- Decode background images at no more than 960×540 px, then crossfade (300 ms max).
+- Launcher background: decode at 960×540 px under a dark scrim, crossfade ≤ 300 ms.
+  Full-screen photos (screensaver): decode at 1920×1080, never at the 4K panel size.
 - No animation is better than a janky one. Check with
   `adb shell dumpsys gfxinfo <pkg> framestats` on the real TV.
 

@@ -1,6 +1,6 @@
 ---
 name: android-tv-launcher
-description: How to build a custom HOME launcher for Google TV / Android TV in Kotlin + Compose. Covers the manifest (HOME + LEANBACK_LAUNCHER, package visibility), listing installed TV apps with banners, launching them, reacting to installs/removals, HDMI inputs via TvInputManager, launcher-specific Back/Home behaviour, making it the default Home on Google TV, and build/install over adb. Use for any non-visual code in this repo.
+description: How to build a custom HOME launcher for Google TV / Android TV in Kotlin + Compose. Covers the manifest (HOME + LEANBACK_LAUNCHER, package visibility), listing installed TV apps with banners, launching them, reacting to installs/removals, HDMI inputs and the event-driven "signal on HDMI" prompt, the nature-photo screensaver (DreamService) and backgrounds, launcher-specific Back/Home behaviour, making it the default Home on Google TV, and build/install over adb. Use for any non-visual code in this repo.
 ---
 
 # Android TV launcher: engineering guide
@@ -208,6 +208,55 @@ app). Check it on the device with
 `adb shell cmd package query-activities -a android.intent.action.VIEW -d content://android.media.tv/passthrough/x`.
 If nothing resolves, fall back to opening the vendor's input picker, which you find through the
 device probe.
+
+### "Signal on HDMI N" prompt (event-driven, zero polling)
+
+```kotlin
+class HdmiWatcher(context: Context, private val onSignal: (TvInputInfo) -> Unit) {
+    private val tim = context.getSystemService(TvInputManager::class.java)
+    private val states = mutableMapOf<String, Int>()
+    private val callback = object : TvInputManager.TvInputCallback() {
+        override fun onInputStateChanged(inputId: String, state: Int) {
+            val before = states.put(inputId, state)
+            if (state == TvInputManager.INPUT_STATE_CONNECTED && before != TvInputManager.INPUT_STATE_CONNECTED) {
+                tim.getTvInputInfo(inputId)?.takeIf { it.type == TvInputInfo.TYPE_HDMI }?.let(onSignal)
+            }
+        }
+    }
+    fun start() {
+        tim.tvInputList.forEach { states[it.id] = tim.getInputState(it.id) }
+        tim.registerCallback(callback, Handler(Looper.getMainLooper()))
+    }
+    fun stop() = tim.unregisterCallback(callback)
+}
+```
+
+- Own it at process level (in `LauncherApp`), not in the Activity, so it keeps working while
+  the launcher is in the background and its process is alive.
+- When the launcher comes back to the front, compare `getInputState` with the last known
+  states. This catches events missed while the process was dead.
+- To show the prompt over other apps, add a `TYPE_APPLICATION_OVERLAY` window. It must be
+  focusable so the D-pad reaches the buttons. It needs `SYSTEM_ALERT_WINDOW`, granted over adb with
+  `adb shell appops set <pkg> SYSTEM_ALERT_WINDOW allow`. Without it, prompt only inside the launcher.
+- Debounce: ignore repeats within 30 s. After "Not now", don't ask about that input again until
+  it disconnects.
+- States mean connection (hotplug, or CEC power state), not "picture present". Check on the
+  device what Xiaomi's HDMI service reports: run `adb shell dumpsys tv_input` while
+  plugging in and powering on a device.
+
+## Screensaver and backgrounds
+
+The nature-photo screensaver (`DreamService`), the Wikimedia Commons image source,
+caching, adb activation, and background selection:
+[references/screensaver-and-backgrounds.md](references/screensaver-and-backgrounds.md).
+
+## Not the launcher's job
+
+- **Browser:** the Google TV Play Store doesn't list browsers. Sideload TV Bro
+  (github.com/truefedex/tv-bro). Web search in the launcher opens URLs with `ACTION_VIEW`.
+- **Keyboard:** the system IME (Gboard) is used by every text field. Russian/English is set in Gboard.
+- **Google Assistant:** it can't be fixed from a launcher. See the voice diagnostics in the
+  `xiaomi-tv-a-pro-2025` skill and `docs/requirements.md` §7.
 
 ## Launcher behaviour (differs from a normal app)
 

@@ -1,0 +1,48 @@
+/* Home screen layout shared by home.html and hdmi-prompt.html. 1 px = 1 dp. */
+
+.backdrop {
+  position: fixed; inset: 0; z-index: -1;
+  background: url(assets/landscape-placeholder.svg) center / cover;
+}
+.backdrop::after { /* scrim keeps text legible over any photo */
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to bottom,
+    rgba(11, 13, 18, .15) 0%, rgba(11, 13, 18, .60) 38%, rgba(11, 13, 18, .90) 72%);
+}
+
+.top {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: var(--safe-v) var(--safe-h) 0; height: 71px;
+}
+.clock { display: flex; align-items: baseline; gap: 16px; }
+.date { color: var(--on-surface-variant); }
+
+.actions { display: flex; gap: 12px; align-items: center; }
+.chip {
+  display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px;
+  border-radius: 18px; background: rgba(30, 35, 45, .78); color: var(--on-surface);
+}
+.chip svg { width: 18px; height: 18px; fill: currentColor; }
+.chip.icon-only { width: 36px; padding: 0; justify-content: center; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--signal); }
+
+.section-title { padding: 0 var(--safe-h); margin-bottom: 12px; display: flex; gap: 8px; align-items: baseline; }
+.count { color: var(--on-surface-variant); font-weight: 400; }
+
+.favorites { margin-top: 24px; }
+.fav-row { display: flex; gap: var(--card-gap); padding: 8px var(--safe-h) 0; overflow: hidden; }
+.fav-item { display: grid; justify-items: center; gap: 10px; }
+.fav-label { height: 20px; color: var(--on-surface); }
+.card:not(.focused) + .fav-label { visibility: hidden; } /* name shows only under focus */
+
+.all { margin-top: 12px; }
+.grid {
+  display: grid; grid-template-columns: repeat(5, var(--banner-w));
+  gap: var(--card-gap); padding: 8px var(--safe-h) 0;
+}
+
+.card span { color: var(--on-surface); text-shadow: 0 1px 2px rgba(0, 0, 0, .35); }
+/* App without a TV banner: generated banner = icon + name on a tinted surface. */
+.card.generated { display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+.card.generated i { width: 36px; height: 36px; border-radius: 10px; background: rgba(255, 255, 255, .85); }
+.card.generated span { font-size: 14px; line-height: 20px; }

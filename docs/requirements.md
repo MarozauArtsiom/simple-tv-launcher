@@ -1,0 +1,97 @@
+# Launcher requirements (v1)
+
+What the owner asked for, what we decided, and what still needs checking on the real TV.
+Status: ✅ in the launcher, ⚠️ in the launcher with caveats, ❌ not a launcher job (solved elsewhere).
+
+## 1. Home screen: Favourites, then All apps ✅
+
+- Top bar: clock and date on the left; HDMI inputs (with a "signal" dot) and Settings on the right.
+- **Favourites**: one horizontal row. Add or remove with a long press on OK, then "Add to favourites".
+  Reorder with a "Move" mode (D-pad left/right, OK to drop). Stored in DataStore.
+- **All apps**: a grid of banners, 5 per line, sorted alphabetically. Phone-only apps without
+  a TV banner get a generated banner (see `android-tv-launcher`).
+- Mockup: `design/mockups/home.html`.
+
+## 2. "Signal on HDMI N — switch?" prompt ⚠️
+
+The owner wants it **only if it costs the TV nothing**.
+
+- `TvInputManager.TvInputCallback.onInputStateChanged` delivers HDMI state changes as a binder
+  callback. Nothing polls and no CPU is used while waiting. When an HDMI input moves to
+  `INPUT_STATE_CONNECTED`, show a prompt: **Switch** (default focus) / **Not now**. It hides
+  itself after 15 s, and Back closes it.
+- Over the launcher: a normal in-app panel. Costs nothing extra.
+- Over another app (YouTube and so on): this needs the overlay permission, granted once over adb
+  (`appops set <pkg> SYSTEM_ALERT_WINDOW allow`), and the launcher process must still be alive.
+  On a 2 GB TV the system often kills the launcher behind heavy apps, and then the event is
+  missed. When the owner returns home, the launcher re-reads the input states and shows the prompt then.
+- Not built by default: an always-on watcher, a tiny foreground service in its own process
+  (about 15–25 MB RAM all the time). Build it only if missed prompts turn out to bother the owner.
+- Caveats to verify on the TV:
+  - Android reports *connection* state, not "picture present". For HDMI-CEC devices (consoles,
+    set-top boxes, Apple TV) turning the device on usually flips STANDBY → CONNECTED, which
+    matches "a signal appeared". For non-CEC devices it may only change when the cable is plugged in.
+  - Xiaomi's HDMI input service must report these states to third-party apps. Check with
+    `dumpsys tv_input` while plugging and powering a device.
+  - If the TV's own CEC auto-switch ("One Touch Play") is on, the TV may switch by itself
+    before our prompt appears. The owner chooses which behaviour to keep.
+- Debounce: ignore repeats for the same input within 30 s. After "Not now", don't ask about
+  that input again until it disconnects.
+
+## 3. Easy background change ✅
+
+- Launcher Settings → Background, with a live preview. Sources: built-in gradients/colours,
+  "photo of the day" from the screensaver cache, or images from a USB drive.
+- Shown under a dark scrim so the UI stays legible. Decoded at 960×540, about 2 MB of RAM.
+
+## 4. Screensaver with nature photos ⚠️
+
+- A `DreamService` (Android's screensaver API) inside our APK. It shows a slow crossfade
+  slideshow with a small clock and the photo credit.
+- Source: **Wikimedia Commons featured landscape/nature pictures**. Free, no API key, open
+  licences. The licence requires showing author + licence, which we do in a corner.
+  Optional later: Unsplash with the owner's own API key.
+- Prefetch about 30 photos at 1920 px once a day (about 10–20 MB of storage). When offline,
+  show the cache. Downloads happen only while the TV is idle and online.
+- Google TV removed the UI for picking third-party screensavers, so it is switched on once
+  over adb (`settings put secure screensaver_components …`). The command to restore Google's
+  Ambient mode is kept.
+- The screensaver runs while the TV is idle. When the TV actually sleeps (panel off), nothing
+  is shown, and that is the system's job.
+- Note: the cloud session can't reach `commons.wikimedia.org`, so the image fetch is tested on the TV.
+
+## 5. Browser ❌ (not the launcher; install a TV browser)
+
+- The Play Store on Google TV doesn't list Chrome or most browsers. A launcher can't change that.
+- Decision: sideload **TV Bro** (open source, made for TV, with a D-pad mouse cursor and
+  bookmarks) over adb, and pin it to Favourites.
+- Not planned: a built-in WebView browser. It would be a lot of work, would have to run in a
+  separate process to stay off the launcher's memory, and would still be worse than TV Bro.
+
+## 6. Keyboard RU/EN ❌ (system, not the launcher)
+
+- The on-screen keyboard is a separate system component (Gboard for TV). Any text field,
+  including ours, uses it. Russian is added in Gboard's settings (Languages); switch with the
+  globe key. The launcher doesn't take part.
+
+## 7. Voice input from the remote ⚠️ (diagnose first)
+
+- The launcher can't repair Google Assistant. Voice from the remote's mic goes Bluetooth
+  remote → system voice service → Google app.
+- Likely causes to check first:
+  1. The remote is paired only over IR, not Bluetooth. The mic works only over Bluetooth.
+     Check Settings → Remotes & Accessories.
+  2. Microphone access is off: Settings → Privacy → Microphone, or the Google app's permission.
+  3. The language or region is unsupported. Assistant on TV may refuse some UI languages or
+     regions; plain voice search sometimes still works. Test by switching the UI to English.
+- What the launcher could add after diagnosis: its own voice search for apps and the web,
+  opened by the remote's mic button. This works only if the remote's mic audio is available to
+  third-party apps on this TV, which we test with a small debug screen first. Recognition would
+  use either Google's on-device recognizer, if it works, or offline Vosk (RU + EN models about
+  45 MB each, run in a separate process only while listening).
+
+## Open questions for the owner
+
+- Over other apps: is the prompt worth granting the overlay permission over adb (one command)?
+- What are the results of the voice checks in section 7?
+- Visual style: is the mockup direction right (dark, photo background, white focus)?

@@ -39,6 +39,7 @@ focus states, text under 14 px, and anything outside the safe area.
   --on-focus: #0B0D12;
   --accent: #8AB4F8;
   --error: #F28B82;
+  --signal: #7BD88F;
 
   --safe-h: 48px;
   --safe-v: 27px;

@@ -1,0 +1,50 @@
+:root {
+  --background: #0B0D12;
+  --surface: #161A22;
+  --surface-variant: #1E232D;
+  --on-surface: #E8EAF0;
+  --on-surface-variant: #A3A9B7;
+  --focus: #FFFFFF;
+  --on-focus: #0B0D12;
+  --accent: #8AB4F8;
+  --error: #F28B82;
+  --signal: #7BD88F;
+
+  --safe-h: 48px;
+  --safe-v: 27px;
+  --card-gap: 16px;
+  --banner-w: 160px;
+  --banner-h: 90px;
+  --card-radius: 12px;
+  --focus-border: 3px;
+  --focus-scale: 1.1;
+}
+
+* { box-sizing: border-box; margin: 0; }
+html, body { width: 960px; height: 540px; overflow: hidden; }
+body {
+  background: var(--background);
+  color: var(--on-surface);
+  font-family: Roboto, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* tv-material type scale (px == sp) */
+.display-small  { font-size: 36px; line-height: 44px; font-weight: 400; }
+.headline-small { font-size: 24px; line-height: 32px; font-weight: 400; }
+.title-large    { font-size: 22px; line-height: 28px; font-weight: 400; }
+.row-title      { font-size: 18px; line-height: 24px; font-weight: 500; }
+.title-medium   { font-size: 16px; line-height: 24px; font-weight: 500; }
+.body-medium    { font-size: 14px; line-height: 20px; font-weight: 400; }
+.label-large    { font-size: 14px; line-height: 20px; font-weight: 500; }
+.label-medium   { font-size: 12px; line-height: 16px; font-weight: 500; }
+
+.card {
+  width: var(--banner-w); height: var(--banner-h); flex: none;
+  border-radius: var(--card-radius); background: var(--surface-variant);
+  display: grid; place-items: center; overflow: hidden;
+}
+.card.focused {
+  transform: scale(var(--focus-scale));
+  outline: var(--focus-border) solid var(--focus);
+}

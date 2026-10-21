@@ -21,6 +21,7 @@ object Tokens {
     val Focus = Color(0xFFFFFFFF)
     val OnFocus = Color(0xFF0B0D12)
     val Accent = Color(0xFF8AB4F8)
+    val Signal = Color(0xFF7BD88F)
 
     val SafeHorizontal = 48.dp
     val SafeVertical = 27.dp
