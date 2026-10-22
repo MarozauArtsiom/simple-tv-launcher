@@ -113,7 +113,10 @@ For each screen: initial focus, Back, Home, and the mockup.
   Android. Section "Лаунчер": Тема, Фон, Язык, Погода, Сигнал на HDMI, Скрытые приложения,
   Установить с флешки, О лаунчере.
 - Initial focus: the Wi-Fi tile. Back: out of a sub-page, then close the panel and return focus
-  to the gear chip.
+  to the gear chip. Coming back from a sub-page, focus returns to the row that opened it.
+- A tile appears only if this TV has a screen for it. Picture falls back to the display settings;
+  the Sleep timer is hidden unless a vendor screen is known. "Website shortcuts" is a launcher row
+  after "Hidden apps".
 
 ### Theme picker — `design/mockups/settings-theme.html`, `settings/theme-picker.png`
 - 3 × 3 thumbnails under the family headings Тёмные / Светлые / Мультяшные, then the item

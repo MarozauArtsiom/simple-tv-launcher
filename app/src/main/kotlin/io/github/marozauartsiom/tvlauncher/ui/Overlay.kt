@@ -3,7 +3,12 @@ package io.github.marozauartsiom.tvlauncher.ui
 import androidx.compose.ui.geometry.Rect
 import io.github.marozauartsiom.tvlauncher.data.prefs.ItemKey
 
-enum class SettingsPage { Root, Theme, Schedule, Background, Language, Weather, Hdmi, Hidden, Usb, About, Shortcuts }
+enum class SettingsPage {
+    Root, Theme, Schedule, Background, Language, Weather, Hdmi, Hidden, Usb, About, Shortcuts;
+
+    /** Pages that are built so far. Opening one that is not does nothing, so there are no invisible dead ends. */
+    val hasUi: Boolean get() = this == Root || this == Shortcuts
+}
 
 /** What is shown over Home. There is no navigation library: Home never goes away, panels open over it. */
 sealed interface Overlay {

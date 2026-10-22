@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -64,7 +66,7 @@ fun SidePanel(
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = theme.titleWeight),
                 color = theme.colors.panelFg,
                 maxLines = 1,
-                modifier = Modifier.padding(bottom = 10.dp),
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             content()
         }
@@ -73,7 +75,8 @@ fun SidePanel(
 
 /**
  * The scrolling body of a panel. The 6 dp inside the scroll area leaves room for the focus ring and
- * the ×1.03 growth of the first and last rows, which a scroll container would otherwise clip.
+ * the ×1.03 growth of the first and last rows, which a scroll container would otherwise clip. When
+ * more content is below the edge, the last 56 dp fade into the panel colour.
  */
 @Composable
 fun PanelScroll(
@@ -81,7 +84,20 @@ fun PanelScroll(
     spacing: Dp = 4.dp,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    Column(modifier.verticalScroll(rememberScrollState())) {
-        Column(Modifier.padding(vertical = 6.dp), verticalArrangement = Arrangement.spacedBy(spacing), content = content)
+    val scroll = rememberScrollState()
+    Box(modifier) {
+        Column(Modifier.verticalScroll(scroll)) {
+            Column(Modifier.padding(vertical = 6.dp), verticalArrangement = Arrangement.spacedBy(spacing), content = content)
+        }
+        val background = io.github.marozauartsiom.tvlauncher.ui.theme.Launcher.colors.panelBg
+        if (scroll.canScrollForward) {
+            Box(
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .background(androidx.compose.ui.graphics.Brush.verticalGradient(listOf(background.copy(alpha = 0f), background))),
+            )
+        }
     }
 }

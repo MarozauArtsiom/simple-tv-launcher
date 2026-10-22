@@ -73,6 +73,12 @@ One line per finished task: date, task id, what was done, anything notable.
   `PanelTextField` building blocks that Settings reuses, `ShortcutsPage`. Fixes found on the way: Home no longer
   steals focus from a panel on reset, and a reset while a panel is open applies when it closes. The page is
   reachable from Settings once T14 lands.
+- 2026-10-22 — T14 settings panel: `SettingsPanel` (quick tiles 3 per row + launcher rows with their values, bottom
+  fade, focus returns to the open row when a page closes), `SystemSettings` (Wi-Fi, Bluetooth, Sound, Android;
+  Picture → vendor screen else display settings; Sleep timer → vendor screen else hidden; every intent checked
+  with `resolveActivity`, `<queries>` added), gear chip opens it, Home gets focus back on the gear on close.
+  Rows for pages that do not exist yet do nothing (`SettingsPage.hasUi`), so there are no invisible dead ends.
+  11 intent-chain tests, 7 panel tests, 3-theme screenshots viewed.
 
 ## Decisions to review
 
@@ -94,6 +100,9 @@ Defaults taken during unattended runs that the owner should look at.
   menu rows had no fill by a CSS accident. "Uninstall" is offered for every app; for system apps the system
   dialog says it cannot remove them.
 - T13: Settings, Weather, HDMI and iPhone chips do nothing until their own tasks (T14, T18–T20) land.
+- T14: vendor intents for **Picture** and **Sleep timer** are unknown until the TV is probed (`VendorIntents` in
+  `system/SystemSettings.kt` is empty). Until then Picture opens the generic display settings and the Sleep timer
+  tile is hidden. After the probe on the TV, add the intents there and to the manifest `<queries>`.
 - Gboard's keyboard height (~168 dp) is an estimate in the city-search mockup; check on the TV.
 
 ## Blockers

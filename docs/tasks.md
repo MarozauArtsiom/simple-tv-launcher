@@ -188,7 +188,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   Mockup first (`design/mockups/shortcuts.html`, midnight/sky/valley), and add it to `docs/ui-spec.md`.
   **Done:** tests for add/edit/delete and for launching; screenshot of the list and the editor.
 
-- [ ] **T14 Settings panel.** Read: `docs/ui-spec.md` §5 Settings and
+- [x] **T14 Settings panel.** Read: `docs/ui-spec.md` §5 Settings and
   `design/mockups/settings.html`.
   The gear opens the panel. TV tiles open settings screens, each guarded with
   `resolveActivity` and a fallback chain: Wi-Fi `ACTION_WIFI_SETTINGS`; Bluetooth

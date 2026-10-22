@@ -1,6 +1,7 @@
 package io.github.marozauartsiom.tvlauncher.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -34,21 +36,23 @@ private val ItemShape = RoundedCornerShape(10.dp)
 val PanelItemHeight = 44.dp
 
 /**
- * The frame of a row in a panel or menu: [height] dp high, the item colour, and in focus the theme's
- * lighter fill, a 3 dp ring and ×1.03, never a full white fill. [content] is laid out in a padded row.
+ * The frame shared by rows and tiles in a panel: [height] dp high, [cornerRadius] corners, the item
+ * colour, and in focus the theme's lighter fill, a 3 dp ring and ×1.03, never a full white fill.
  */
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
-fun PanelRow(
+fun PanelFrame(
     theme: ThemeSpec,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     height: Dp = PanelItemHeight,
+    cornerRadius: Dp = 10.dp,
     transparent: Boolean = false,
     focus: FocusProgress = rememberFocusProgress(),
-    content: @Composable RowScope.() -> Unit,
+    content: @Composable () -> Unit,
 ) {
     val c = theme.colors
+    val shape = remember(cornerRadius) { RoundedCornerShape(cornerRadius) }
     Surface(
         onClick = onClick,
         modifier = modifier
@@ -68,12 +72,12 @@ fun PanelRow(
                         color = c.itemFocusRing.copy(alpha = p),
                         topLeft = Offset(-w / 2f, -w / 2f),
                         size = Size(size.width + w, size.height + w),
-                        cornerRadius = CornerRadius(10.dp.toPx() + w / 2f),
+                        cornerRadius = CornerRadius(cornerRadius.toPx() + w / 2f),
                         style = Stroke(w),
                     )
                 }
             },
-        shape = ClickableSurfaceDefaults.shape(ItemShape),
+        shape = ClickableSurfaceDefaults.shape(shape),
         colors = ClickableSurfaceDefaults.colors(
             containerColor = if (transparent) Color.Transparent else c.itemBg,
             focusedContainerColor = c.itemFocusFill,
@@ -83,13 +87,45 @@ fun PanelRow(
             pressedContentColor = c.panelFg,
         ),
         scale = ClickableSurfaceDefaults.scale(focusedScale = 1f),
-    ) {
+    ) { content() }
+}
+
+/** A row: [content] is laid out in a 12 dp padded row, 12 dp apart. */
+@Composable
+fun PanelRow(
+    theme: ThemeSpec,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    height: Dp = PanelItemHeight,
+    transparent: Boolean = false,
+    focus: FocusProgress = rememberFocusProgress(),
+    content: @Composable RowScope.() -> Unit,
+) {
+    PanelFrame(theme, onClick, modifier, height, 10.dp, transparent, focus) {
         Row(
             modifier = Modifier.fillMaxWidth().height(height).padding(horizontal = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
             content = content,
         )
+    }
+}
+
+/** A quick tile: 58 dp high, 12 dp corners, a 20 dp icon over a one-line label. */
+@Composable
+fun PanelTile(
+    label: String,
+    icon: ImageVector,
+    theme: ThemeSpec,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    focus: FocusProgress = rememberFocusProgress(),
+) {
+    PanelFrame(theme, onClick, modifier, height = 58.dp, cornerRadius = 12.dp, focus = focus) {
+        Column(Modifier.fillMaxWidth().height(58.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically)) {
+            Icon(icon, contentDescription = null, tint = theme.colors.panelFg, modifier = Modifier.size(20.dp))
+            Text(label, style = MaterialTheme.typography.labelLarge, color = theme.colors.panelFg, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(horizontal = 4.dp))
+        }
     }
 }
 

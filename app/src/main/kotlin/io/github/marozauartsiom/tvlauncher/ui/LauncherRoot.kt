@@ -23,7 +23,11 @@ import io.github.marozauartsiom.tvlauncher.data.prefs.SettingsData
 import io.github.marozauartsiom.tvlauncher.i18n.LocaleController
 import io.github.marozauartsiom.tvlauncher.data.prefs.ShortcutsEditor
 import io.github.marozauartsiom.tvlauncher.system.PackageActions
+import io.github.marozauartsiom.tvlauncher.system.SystemSettings
 import io.github.marozauartsiom.tvlauncher.system.WebLauncher
+import io.github.marozauartsiom.tvlauncher.ui.components.FocusMemory
+import io.github.marozauartsiom.tvlauncher.ui.settings.SettingsPanel
+import io.github.marozauartsiom.tvlauncher.ui.settings.settingsValues
 import io.github.marozauartsiom.tvlauncher.ui.shortcuts.ShortcutsPage
 import io.github.marozauartsiom.tvlauncher.ui.home.AppMenu
 import io.github.marozauartsiom.tvlauncher.ui.home.AppMenuState
@@ -63,6 +67,13 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     val packageActions = remember(context) { PackageActions { context.startActivity(it) } }
     val webLauncher = remember(context) { WebLauncher { context.startActivity(it) } }
     val shortcutsEditor = remember(graph) { ShortcutsEditor(graph.settings) }
+    val systemSettings = remember(context) {
+        SystemSettings(
+            canHandle = { intent -> context.packageManager.resolveActivity(intent, 0) != null },
+            start = { context.startActivity(it) },
+        )
+    }
+    val settingsFocus = remember { FocusMemory() }
     var moveOrigin by remember { mutableStateOf<List<ItemKey>?>(null) }
 
     val actions = remember(graph, viewModel, context, webLauncher) {
@@ -73,7 +84,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
             onWeather = { },
             onHdmi = { },
             onIphone = { },
-            onSettings = { },
+            onSettings = { viewModel.open(Overlay.Settings()) },
             onMoveStep = { key, delta ->
                 graph.appScope.launch { editor.step(key, delta, currentContent.favourites.map { it.key }) }
             },
@@ -108,16 +119,27 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                 resets = viewModel.resets,
                 actions = actions,
                 safeMode = safeMode,
-                overlayOpen = menu != null || settingsOverlay?.page == SettingsPage.Shortcuts,
+                overlayOpen = menu != null || settingsOverlay != null,
                 moveKey = moveKey,
             )
-            if (settingsOverlay?.page == SettingsPage.Shortcuts) {
-                ShortcutsPage(
+            when (settingsOverlay?.page) {
+                SettingsPage.Root -> SettingsPanel(
+                    theme = theme,
+                    tiles = remember(systemSettings) { systemSettings.available() },
+                    values = settingsValues(settings),
+                    memory = settingsFocus,
+                    onTile = { tile ->
+                        if (!systemSettings.open(tile)) unavailable(context)
+                    },
+                    onPage = { page -> if (page.hasUi) viewModel.open(Overlay.Settings(page)) },
+                )
+                SettingsPage.Shortcuts -> ShortcutsPage(
                     theme = theme,
                     shortcuts = settings.shortcuts,
                     onSave = shortcutsEditor::save,
                     onDelete = shortcutsEditor::delete,
                 )
+                else -> Unit // other pages: their own tasks
             }
             if (menu != null) {
                 val tile = content.all.firstOrNull { it.key == menu.key }
