@@ -180,7 +180,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
 
 ## M4 — Features
 
-- [ ] **T13b Shortcut tiles.** (Added during the run: approved in `requirements.md` §8 item 4, but missing from the first task list.)
+- [x] **T13b Shortcut tiles.** (Added during the run: approved in `requirements.md` §8 item 4, but missing from the first task list.)
   A shortcut is a tile that opens a web address (in TV Bro, or the default browser through `ACTION_VIEW`). Settings gets
   "Ярлыки сайтов": a list with "Добавить" (a title field and an address field, using the text-input pattern),
   edit and delete. Shortcuts appear in "All apps" with a generated banner (first letter + colour from the

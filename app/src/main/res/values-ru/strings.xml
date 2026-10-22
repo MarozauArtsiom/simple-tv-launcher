@@ -121,7 +121,6 @@
     <string name="wx_snow_showers">Снегопад</string>
     <string name="wx_thunderstorm">Гроза</string>
     <string name="shortcuts_title">Ярлыки сайтов</string>
-    <string name="shortcut_add">Добавить ярлык</string>
     <string name="shortcut_name_hint">Название</string>
     <string name="shortcut_url_hint">Адрес сайта</string>
     <string name="shortcuts_empty">Ярлыков пока нет</string>
@@ -131,4 +130,11 @@
     <string name="cd_weather">Погода: %1$s</string>
     <string name="cd_iphone">Показать экран iPhone</string>
     <string name="all_apps_count">· %1$d</string>
+    <string name="shortcut_add">Добавить ярлык</string>
+    <string name="shortcut_hint">Ярлык открывает сайт в браузере. Чтобы поставить его в избранное, выделите его на главном экране и удерживайте ОК.</string>
+    <string name="shortcut_edit_title">Ярлык</string>
+    <string name="shortcut_name">Название</string>
+    <string name="shortcut_address">Адрес</string>
+    <string name="shortcut_invalid">Введите название и адрес сайта, например example.com</string>
+    <string name="shortcut_no_browser">Не установлен браузер. Сначала установите TV Bro.</string>
 </resources>

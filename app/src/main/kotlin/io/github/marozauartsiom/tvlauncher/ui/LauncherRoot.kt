@@ -21,7 +21,10 @@ import io.github.marozauartsiom.tvlauncher.data.apps.LaunchResult
 import io.github.marozauartsiom.tvlauncher.data.prefs.ItemKey
 import io.github.marozauartsiom.tvlauncher.data.prefs.SettingsData
 import io.github.marozauartsiom.tvlauncher.i18n.LocaleController
+import io.github.marozauartsiom.tvlauncher.data.prefs.ShortcutsEditor
 import io.github.marozauartsiom.tvlauncher.system.PackageActions
+import io.github.marozauartsiom.tvlauncher.system.WebLauncher
+import io.github.marozauartsiom.tvlauncher.ui.shortcuts.ShortcutsPage
 import io.github.marozauartsiom.tvlauncher.ui.home.AppMenu
 import io.github.marozauartsiom.tvlauncher.ui.home.AppMenuState
 import io.github.marozauartsiom.tvlauncher.ui.home.FavouritesEditor
@@ -58,11 +61,13 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     val context = LocalContext.current
     val editor = remember(graph) { FavouritesEditor(graph.settings) }
     val packageActions = remember(context) { PackageActions { context.startActivity(it) } }
+    val webLauncher = remember(context) { WebLauncher { context.startActivity(it) } }
+    val shortcutsEditor = remember(graph) { ShortcutsEditor(graph.settings) }
     var moveOrigin by remember { mutableStateOf<List<ItemKey>?>(null) }
 
-    val actions = remember(graph, viewModel, context) {
+    val actions = remember(graph, viewModel, context, webLauncher) {
         HomeActions(
-            onOpen = { tile -> openTile(graph, context, tile) },
+            onOpen = { tile -> openTile(graph, webLauncher, context, tile) },
             onMenu = { tile, anchor -> viewModel.open(Overlay.AppMenu(tile.key, anchor)) },
             // The panels below are opened by their own tasks; until then these do nothing.
             onWeather = { },
@@ -88,6 +93,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     BackHandler { viewModel.onBack() }
 
     val menu = overlay as? Overlay.AppMenu
+    val settingsOverlay = overlay as? Overlay.Settings
     val moveKey = (overlay as? Overlay.MoveMode)?.key
 
     LauncherTheme(theme) {
@@ -102,9 +108,17 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                 resets = viewModel.resets,
                 actions = actions,
                 safeMode = safeMode,
-                overlayOpen = menu != null,
+                overlayOpen = menu != null || settingsOverlay?.page == SettingsPage.Shortcuts,
                 moveKey = moveKey,
             )
+            if (settingsOverlay?.page == SettingsPage.Shortcuts) {
+                ShortcutsPage(
+                    theme = theme,
+                    shortcuts = settings.shortcuts,
+                    onSave = shortcutsEditor::save,
+                    onDelete = shortcutsEditor::delete,
+                )
+            }
             if (menu != null) {
                 val tile = content.all.firstOrNull { it.key == menu.key }
                 // The app vanished while the menu was opening: nothing to show.
@@ -123,8 +137,17 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     }
 }
 
-private fun openTile(graph: AppGraph, context: Context, tile: HomeTile) {
-    val app = tile.app ?: return // website shortcuts are opened in T13b
+private fun openTile(graph: AppGraph, web: WebLauncher, context: Context, tile: HomeTile) {
+    val shortcut = tile.shortcut
+    if (shortcut != null) {
+        when (web.open(shortcut.url)) {
+            WebLauncher.Result.Started -> graph.appScope.launch { graph.settings.recordLaunch(tile.key) }
+            WebLauncher.Result.NoBrowser -> Toast.makeText(context, context.getString(R.string.shortcut_no_browser), Toast.LENGTH_LONG).show()
+            WebLauncher.Result.Rejected -> Toast.makeText(context, context.getString(R.string.launch_failed, tile.label), Toast.LENGTH_SHORT).show()
+        }
+        return
+    }
+    val app = tile.app ?: return
     when (graph.launcher.launch(app.packageName)) {
         LaunchResult.Started -> graph.appScope.launch { graph.settings.recordLaunch(tile.key) }
         LaunchResult.NotFound -> {

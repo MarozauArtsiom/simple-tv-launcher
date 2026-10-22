@@ -121,7 +121,6 @@
     <string name="wx_snow_showers">Przelotny śnieg</string>
     <string name="wx_thunderstorm">Burza</string>
     <string name="shortcuts_title">Skróty do stron</string>
-    <string name="shortcut_add">Dodaj skrót</string>
     <string name="shortcut_name_hint">Nazwa</string>
     <string name="shortcut_url_hint">Adres strony</string>
     <string name="shortcuts_empty">Brak skrótów</string>
@@ -131,4 +130,11 @@
     <string name="cd_weather">Pogoda: %1$s</string>
     <string name="cd_iphone">Pokaż ekran iPhone’a</string>
     <string name="all_apps_count">· %1$d</string>
+    <string name="shortcut_add">Dodaj skrót</string>
+    <string name="shortcut_hint">Skrót otwiera stronę w przeglądarce. Aby dodać go do ulubionych, zaznacz go na ekranie głównym i przytrzymaj OK.</string>
+    <string name="shortcut_edit_title">Skrót</string>
+    <string name="shortcut_name">Nazwa</string>
+    <string name="shortcut_address">Adres</string>
+    <string name="shortcut_invalid">Wpisz nazwę i adres strony, na przykład example.com</string>
+    <string name="shortcut_no_browser">Brak przeglądarki. Najpierw zainstaluj TV Bro.</string>
 </resources>

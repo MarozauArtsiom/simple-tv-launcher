@@ -67,6 +67,12 @@ One line per finished task: date, task id, what was done, anything notable.
   (app details and uninstall with `REQUEST_DELETE_PACKAGES`), `PanelItem` (the list row reused by Settings).
   Held-OK guard: the OK press that opened the menu cannot choose its first item. 36 new tests; screenshots of the
   menu (3 themes + a grid tile) and move mode (3 themes) viewed against `design/mockups/screens/`. M3 complete.
+- 2026-10-22 — T13b website shortcuts: mockup `shortcuts.html` (list + editor, 3 themes) approved by launch; `Shortcuts`
+  rules (only http/https with a host; bare `example.com` becomes `https://`), `ShortcutsEditor` (delete also
+  removes the favourite), `WebLauncher` (`ACTION_VIEW`, BROWSABLE), `SidePanel`/`PanelScroll`/`PanelRow`/`PanelButton`/
+  `PanelTextField` building blocks that Settings reuses, `ShortcutsPage`. Fixes found on the way: Home no longer
+  steals focus from a panel on reset, and a reset while a panel is open applies when it closes. The page is
+  reachable from Settings once T14 lands.
 
 ## Decisions to review
 

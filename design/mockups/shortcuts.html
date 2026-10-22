@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Website shortcuts</title>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="themes.css">
+  <link rel="stylesheet" href="settings.css">
+  <script src="panel.js"></script>
+  <style>
+    .item .tile-art { width: 72px; height: 40px; border-radius: 8px; display: grid; place-items: center; color: #F4F5F8; font-weight: 700; font-size: 20px; flex: none; }
+    .labelled { display: grid; gap: 6px; margin-top: 12px; }
+    .labelled > .muted { padding-left: 2px; }
+    .keyboard[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <script src="icons.js"></script>
+  <iframe class="behind" data-src="home.html?nofocus" title="home"></iframe>
+
+  <div class="dim"></div>
+  <aside class="sheet">
+    <!-- ?state=list (default) or ?state=edit -->
+    <div data-state="list">
+      <h1>Ярлыки сайтов</h1>
+      <div class="list">
+        <div class="item focused"><svg><use href="#plus"/></svg><span class="title title-medium">Добавить ярлык</span></div>
+        <div class="item item2"><span class="tile-art" style="background:#24523A">Н</span><span class="col"><span class="title-medium">Новости</span><span class="body-medium muted">news.example.com</span></span><svg class="chevron"><use href="#chevron"/></svg></div>
+        <div class="item item2"><span class="tile-art" style="background:#6B3F1C">К</span><span class="col"><span class="title-medium">Кино онлайн</span><span class="body-medium muted">kino.example.org</span></span><svg class="chevron"><use href="#chevron"/></svg></div>
+        <div class="item item2"><span class="tile-art" style="background:#2C4A6B">П</span><span class="col"><span class="title-medium">Погода на неделю</span><span class="body-medium muted">weather.example.net</span></span><svg class="chevron"><use href="#chevron"/></svg></div>
+      </div>
+      <p class="body-medium muted" style="margin-top: 14px">Ярлык открывает сайт в браузере. Чтобы поставить его в избранное, выделите его на главном экране и удерживайте ОК.</p>
+    </div>
+
+    <div data-state="edit" hidden>
+      <h1>Ярлык</h1>
+      <div class="labelled"><span class="body-medium muted">Название</span>
+        <div class="field" style="box-shadow: none"><span class="text title-medium">Новости</span></div></div>
+      <div class="labelled"><span class="body-medium muted">Адрес</span>
+        <div class="field"><svg><use href="#link"/></svg><span class="text title-medium">news.example.com<i class="caret"></i></span></div></div>
+      <div class="buttons" style="margin-top: 16px; flex-wrap: wrap">
+        <span class="btn label-large">Сохранить</span>
+        <span class="btn label-large">Удалить</span>
+        <span class="btn label-large">Отмена</span>
+      </div>
+    </div>
+  </aside>
+  <div class="keyboard label-large" data-only="edit" hidden>Экранная клавиатура Gboard (русская и английская раскладки)</div>
+  <script>
+    // shortcuts.html?state=list|edit
+    const state = new URLSearchParams(location.search).get('state') || 'list';
+    document.querySelectorAll('[data-state]').forEach((el) => { el.hidden = el.dataset.state !== state; });
+    document.querySelectorAll('[data-only]').forEach((el) => { el.hidden = el.dataset.only !== state; });
+  </script>
+</body>
+</html>

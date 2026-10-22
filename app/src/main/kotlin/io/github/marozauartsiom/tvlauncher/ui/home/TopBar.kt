@@ -36,6 +36,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import io.github.marozauartsiom.tvlauncher.R
+import io.github.marozauartsiom.tvlauncher.ui.components.FocusMemory
 import io.github.marozauartsiom.tvlauncher.ui.components.FocusProgress
 import io.github.marozauartsiom.tvlauncher.ui.components.Icons
 import io.github.marozauartsiom.tvlauncher.ui.components.rememberFocusProgress
@@ -56,7 +57,7 @@ fun TopBar(
     onHdmi: (String) -> Unit,
     onIphone: () -> Unit,
     onSettings: () -> Unit,
-    focus: HomeFocus,
+    focus: FocusMemory,
     modifier: Modifier = Modifier,
 ) {
     Row(

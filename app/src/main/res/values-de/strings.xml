@@ -119,7 +119,6 @@
     <string name="wx_snow_showers">Schneeschauer</string>
     <string name="wx_thunderstorm">Gewitter</string>
     <string name="shortcuts_title">Website-Verknüpfungen</string>
-    <string name="shortcut_add">Verknüpfung hinzufügen</string>
     <string name="shortcut_name_hint">Titel</string>
     <string name="shortcut_url_hint">Webadresse</string>
     <string name="shortcuts_empty">Noch keine Verknüpfungen</string>
@@ -129,4 +128,11 @@
     <string name="cd_weather">Wetter: %1$s</string>
     <string name="cd_iphone">iPhone-Bildschirm anzeigen</string>
     <string name="all_apps_count">· %1$d</string>
+    <string name="shortcut_add">Verknüpfung hinzufügen</string>
+    <string name="shortcut_hint">Eine Verknüpfung öffnet eine Website im Browser. Für die Favoriten markieren Sie sie auf dem Startbildschirm und halten OK gedrückt.</string>
+    <string name="shortcut_edit_title">Verknüpfung</string>
+    <string name="shortcut_name">Name</string>
+    <string name="shortcut_address">Adresse</string>
+    <string name="shortcut_invalid">Geben Sie einen Namen und eine Webadresse ein, zum Beispiel example.com</string>
+    <string name="shortcut_no_browser">Kein Browser installiert. Installieren Sie zuerst TV Bro.</string>
 </resources>

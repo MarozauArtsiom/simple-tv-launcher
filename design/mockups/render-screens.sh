@@ -8,7 +8,8 @@ themes=("$@"); [[ ${#themes[@]} -eq 0 ]] && themes=(midnight sky valley)
 for t in "${themes[@]}"; do
   for p in home-empty-favs app-menu favourites-move weather-search settings-background settings-hidden \
            settings-about settings-schedule settings-hdmi iphone-hint \
-           "settings-usb:list" "settings-usb:nopermission" "settings-usb:installing" "settings-usb:done"; do
+           "settings-usb:list" "settings-usb:nopermission" "settings-usb:installing" "settings-usb:done" \
+           "shortcuts:list" "shortcuts:edit"; do
     page=${p%%:*}; state=""; [[ "$p" == *:* ]] && state="&state=${p##*:}"
     out="design/mockups/screens/${p//:/-}-$t.png"
     node $R "design/mockups/$page.html?t=$t$state" "$out" >/dev/null

@@ -142,6 +142,17 @@ For each screen: initial focus, Back, Home, and the mockup.
 - Move mode: the tile gets a dashed ring and a pill "◀ ▶ Переместить · ОК — готово". Left/Right
   swap the tile with its neighbour, OK drops it, and Back cancels (restores the old order).
 
+### Website shortcuts — `design/mockups/shortcuts.html?state=list|edit`
+- Settings → "Ярлыки сайтов". List: a first row "Добавить ярлык", then one two-line row per shortcut
+  (72×40 tile with the first letter, name, address without `https://`) and a muted hint note. OK on a row
+  edits it. Initial focus: "Добавить ярлык". Back closes the panel.
+- Editor: "Название" and "Адрес" fields (the text-input pattern: OK starts typing, Back stops it), then
+  buttons Сохранить / Удалить (existing only) / Отмена. Save with a bad name or address (anything but
+  http/https with a host) shows one warning line and stays. Back leaves the editor first; focus returns to
+  the row that was open.
+- On Home a shortcut is a normal tile (letter on a tinted colour picked from the address, name below the
+  letter), in All apps and, from the app menu, in Favourites. OK opens the address with `ACTION_VIEW`.
+
 ### City search — `design/mockups/weather-search.html`
 - A 400 dp panel: title "Город", a search field (focus ring, caret), and up to three results
   above the on-screen keyboard (Gboard takes the bottom ~168 dp). The first row is always
@@ -222,5 +233,6 @@ Theme and background crossfade 300 ms. Only scale, alpha, translation and rotati
 | City search, background picker, hidden apps | `weather-search.html`, `settings-background.html`, `settings-hidden.html` | `screens/` |
 | USB installer (4 states), About, theme schedule | `settings-usb.html?state=…`, `settings-about.html`, `settings-schedule.html` | `screens/` |
 | HDMI settings, iPhone hint | `settings-hdmi.html`, `iphone-hint.html` | `screens/` |
+| Website shortcuts (list, editor) | `shortcuts.html?state=list|edit` | `screens/shortcuts-{list,edit}-<theme>.png` |
 
 `screens/` holds midnight, sky and valley renders of the batch above (`render-screens.sh`).

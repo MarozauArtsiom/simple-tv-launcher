@@ -9,7 +9,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsFocused
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.assertIsNotFocused
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -244,5 +246,19 @@ class HomeScreenTest : TvScreenshotTest() {
         open = false
         composeRule.waitForIdle()
         fav("TV Bro").assertIsFocused()
+    }
+
+    // ---- website shortcuts ----
+
+    @Test fun aShortcutIsATileLikeAnyOtherAndOpensWithOk() {
+        val shortcut = io.github.marozauartsiom.tvlauncher.data.prefs.Shortcut("s1", "Новости сайта", "https://news.example.com")
+        val key = ItemKey.shortcut("s1")
+        val settings = SettingsData(favourites = listOf(key), shortcuts = listOf(shortcut))
+        val content = HomeLists.build(HomeFixtures.apps, settings, locale = java.util.Locale.ENGLISH)
+        show(content)
+        composeRule.onNodeWithTag("fav:${key.value}").assertIsFocused() // the first favourite
+        composeRule.onNodeWithTag("fav:${key.value}").assert(hasText("Н")) // the first letter on the tile
+        press(Key.Enter)
+        assertEquals(listOf("Новости сайта"), opened)
     }
 }

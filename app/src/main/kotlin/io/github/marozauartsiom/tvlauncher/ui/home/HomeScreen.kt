@@ -57,6 +57,7 @@ import androidx.tv.material3.Text
 import io.github.marozauartsiom.tvlauncher.R
 import io.github.marozauartsiom.tvlauncher.data.apps.ArtSource
 import io.github.marozauartsiom.tvlauncher.data.prefs.ItemKey
+import io.github.marozauartsiom.tvlauncher.ui.components.FocusMemory
 import io.github.marozauartsiom.tvlauncher.ui.components.Icons
 import io.github.marozauartsiom.tvlauncher.ui.components.rememberFocusProgress
 import io.github.marozauartsiom.tvlauncher.ui.theme.ThemeSpec
@@ -109,8 +110,10 @@ fun HomeScreen(
 ) {
     val listState = rememberLazyListState()
     val favouritesState = rememberLazyListState()
-    val focus = remember { HomeFocus() }
+    val focus = remember { FocusMemory() }
     val current by rememberUpdatedState(content)
+    val overlayNow by rememberUpdatedState(overlayOpen)
+    val resetWhileCovered = remember { BooleanArray(1) } // a reset arrived while a panel was open
     val scope = androidx.compose.runtime.rememberCoroutineScope()
 
     suspend fun resetToTop() {
@@ -118,6 +121,7 @@ fun HomeScreen(
         listState.scrollToItem(0)
         if (hasFavourites) favouritesState.scrollToItem(0) // an unattached state would wait forever
         withFrameNanos { } // let the first items attach before asking for focus
+        if (overlayNow) { resetWhileCovered[0] = true; return } // the panel keeps focus; Home takes it when the panel closes
         val target = if (hasFavourites) favouriteId(current.favourites.first()) else gridId(current.all.firstOrNull())
         if (target != null) focus.request(target) // a missing requester must never crash Home
     }
@@ -132,7 +136,9 @@ fun HomeScreen(
     LaunchedEffect(overlayOpen) {
         if (wasOverlayOpen && !overlayOpen) {
             withFrameNanos { }
-            if (!focus.restore()) resetToTop()
+            val reset = resetWhileCovered[0] // the Home key was pressed while the panel was open
+            resetWhileCovered[0] = false
+            if (reset || !focus.restore()) resetToTop()
         }
         wasOverlayOpen = overlayOpen
     }
@@ -205,7 +211,7 @@ private fun FavouritesRow(
     art: ArtSource,
     actions: HomeActions,
     state: androidx.compose.foundation.lazy.LazyListState,
-    focus: HomeFocus,
+    focus: FocusMemory,
     moveKey: ItemKey?,
     pinnedId: String?,
 ) {
@@ -233,7 +239,7 @@ private fun FavouriteItem(
     theme: ThemeSpec,
     art: ArtSource,
     actions: HomeActions,
-    homeFocus: HomeFocus,
+    homeFocus: FocusMemory,
     moving: Boolean,
     pinned: Boolean,
 ) {
@@ -312,7 +318,7 @@ private fun GridRow(
     theme: ThemeSpec,
     art: ArtSource,
     actions: HomeActions,
-    homeFocus: HomeFocus,
+    homeFocus: FocusMemory,
     pinnedId: String?,
 ) {
     Row(

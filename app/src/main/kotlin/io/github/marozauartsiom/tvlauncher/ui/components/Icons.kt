@@ -40,6 +40,14 @@ object Icons {
     val Info = icon("info", "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z")
     val Delete = icon("delete", "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z")
 
+    val Plus = icon("plus", "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z")
+    val Link = icon(
+        "link",
+        "M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z",
+    )
+    val Chevron = icon("chevron", "M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z")
+    val Warning = icon("warning", "M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z")
+
     /** Weather chip: the sun and the cloud are separate so themes can colour them differently. */
     val WeatherSun = icon("weather_sun", "M8 4.5a3.5 3.5 0 1 0 0 7a3.5 3.5 0 1 0 0-7z")
     val WeatherCloud = icon(

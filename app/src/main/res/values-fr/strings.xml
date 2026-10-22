@@ -120,7 +120,6 @@
     <string name="wx_snow_showers">Averses de neige</string>
     <string name="wx_thunderstorm">Orage</string>
     <string name="shortcuts_title">Raccourcis de sites</string>
-    <string name="shortcut_add">Ajouter un raccourci</string>
     <string name="shortcut_name_hint">Titre</string>
     <string name="shortcut_url_hint">Adresse du site</string>
     <string name="shortcuts_empty">Aucun raccourci</string>
@@ -130,4 +129,11 @@
     <string name="cd_weather">Météo : %1$s</string>
     <string name="cd_iphone">Afficher l’écran de l’iPhone</string>
     <string name="all_apps_count">· %1$d</string>
+    <string name="shortcut_add">Ajouter un raccourci</string>
+    <string name="shortcut_hint">Un raccourci ouvre un site dans le navigateur. Pour l’ajouter aux favoris, sélectionnez-le sur l’écran d’accueil et maintenez OK.</string>
+    <string name="shortcut_edit_title">Raccourci</string>
+    <string name="shortcut_name">Nom</string>
+    <string name="shortcut_address">Adresse</string>
+    <string name="shortcut_invalid">Saisissez un nom et une adresse web, par exemple example.com</string>
+    <string name="shortcut_no_browser">Aucun navigateur installé. Installez d’abord TV Bro.</string>
 </resources>

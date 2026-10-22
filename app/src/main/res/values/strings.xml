@@ -134,7 +134,6 @@
     <string name="wx_snow_showers">Snow showers</string>
     <string name="wx_thunderstorm">Thunderstorm</string>
     <string name="shortcuts_title">Website shortcuts</string>
-    <string name="shortcut_add">Add shortcut</string>
     <string name="shortcut_name_hint">Title</string>
     <string name="shortcut_url_hint">Web address</string>
     <string name="shortcuts_empty">No shortcuts yet</string>
@@ -144,4 +143,11 @@
     <string name="cd_weather">Weather: %1$s</string>
     <string name="cd_iphone">Show the iPhone screen</string>
     <string name="all_apps_count">· %1$d</string>
+    <string name="shortcut_add">Add shortcut</string>
+    <string name="shortcut_hint">A shortcut opens a website in the browser. To put it in favorites, select it on the home screen and hold OK.</string>
+    <string name="shortcut_edit_title">Shortcut</string>
+    <string name="shortcut_name">Name</string>
+    <string name="shortcut_address">Address</string>
+    <string name="shortcut_invalid">Enter a name and a web address, for example example.com</string>
+    <string name="shortcut_no_browser">No browser is installed. Install TV Bro first.</string>
 </resources>
