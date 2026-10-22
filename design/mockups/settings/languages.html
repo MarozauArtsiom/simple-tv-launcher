@@ -15,7 +15,7 @@
 </head>
 <body>
   <script>
-    const LANGS = [['ru', 'Русский'], ['en', 'English'], ['pl', 'Polski'], ['de', 'Deutsch'], ['fr', 'Français'], ['be', 'Беларуская']];
+    const LANGS = [['be', 'Беларуская мова'], ['ru', 'Русский'], ['en', 'English'], ['pl', 'Polski'], ['de', 'Deutsch'], ['fr', 'Français']];
     for (const [code, name] of LANGS) {
       document.write(`<div class="cell"><iframe src="../home.html?nofocus&lang=${code}" title="${code}"></iframe><span class="label-large">${name}</span></div>`);
     }

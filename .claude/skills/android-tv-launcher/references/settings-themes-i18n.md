@@ -54,8 +54,11 @@ data class ThemeSpec(
 
 ## Languages
 
-The launcher's own language, independent of the TV's: follow the TV (default), Русский, English,
-Polski, Deutsch, Français, Беларуская. Show each one by its native name.
+The launcher's own language, independent of the TV's. The list order is the owner's:
+**Беларуская мова** (always first), Русский, English, Polski, Deutsch, Français, then
+"follow the TV" (the default selection, listed last). Show each language by its native name.
+Belarusian is written out in full as "Беларуская мова": in Belarusian, "мова" (language) is
+feminine, hence the "-ая" ending. The Russian name "Белорусский" is never used for it.
 
 - Resources: `values/` (English, the fallback), plus `values-ru`, `values-pl`, `values-de`,
   `values-fr` and `values-be`. Declare them in `res/xml/locales_config.xml` and point

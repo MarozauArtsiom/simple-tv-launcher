@@ -182,8 +182,10 @@ help with mirroring an iPhone screen.
 
 ## 13. Languages ✅
 
-- The launcher's own language: **follow the TV** (default), Русский, English, Polski, Deutsch,
-  Français, Беларуская. Each is shown by its native name.
+- The launcher's own language, in this order (the owner's request): **Беларуская мова** first,
+  then Русский, English, Polski, Deutsch, Français, and "follow the TV" last. "Follow the TV" is
+  still the default selection. Each language is shown by its native name, so Belarusian is written
+  in Belarusian.
 - Everything the launcher shows switches: titles, dates, weather texts and city names. App names
   come from the apps themselves.
 - Translations are written in-house; the owner checks them, especially Belarusian.
