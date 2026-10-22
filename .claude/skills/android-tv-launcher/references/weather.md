@@ -38,9 +38,10 @@ Fields used: `name`, `admin1`, `country`, `latitude`, `longitude`. There is no r
 so for Auto mode take the city name from the IP lookup, then search it with `language=ru` and
 pick the result nearest to the IP coordinates. That gives a Russian name and better coordinates.
 
-IP geolocation: a keyless HTTPS service returning city + lat/lon (for example `ipapi.co/json`,
-with `ipinfo.io/json` as a fallback). Check both are still keyless and HTTPS when implementing,
-and note that a VPN on the TV makes Auto show the VPN's city.
+IP geolocation: `https://ipinfo.io/json` (keyless, HTTPS; fields `city`, `region`, `country`,
+`loc` = "lat,lon"), with `https://ipapi.co/json` as a fallback. ipapi.co answers 429 to shared or
+busy IPs. A VPN on the TV makes Auto show the VPN's city. From the cloud container both report
+the data-centre location, so test Auto on the TV.
 
 Weather codes (WMO) → icon and text: 0 clear; 1–3 mainly clear / partly cloudy / overcast;
 45, 48 fog; 51–57 drizzle; 61–67 rain; 71–77 snow; 80–82 showers; 85–86 snow showers;
@@ -54,6 +55,8 @@ Weather codes (WMO) → icon and text: 0 clear; 1–3 mainly clear / partly clou
   Nothing runs when another app is in front: no WorkManager, no alarms, no service.
 - On failure, keep the cached data. Hide the temperature (show only the icon and "—°") once
   the cache is more than 6 h old.
+- Retry a failed request once after a few seconds. In testing, the first TLS connection to
+  Open-Meteo sometimes timed out, and the second one succeeded in 0.6 s.
 - HTTP: `HttpURLConnection` with 10 s timeouts on `Dispatchers.IO`, plus
   `kotlinx.serialization` for JSON. No OkHttp or Retrofit, to keep the APK small. A response
   is a few KB.

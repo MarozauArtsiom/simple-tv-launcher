@@ -38,9 +38,13 @@ design anything:
 
 ## Cloud session limits
 Check these before promising a build or a device test:
-- Android builds need `dl.google.com` (Android SDK + Google Maven; `maven.google.com`
-  redirects there). Test with `curl -sI https://dl.google.com/android/repository/repository2-3.xml`.
-  A 403 means the environment's network policy still blocks it.
+- The environment allows `dl.google.com` (Android SDK + Google Maven) and the Open-Meteo hosts
+  (verified 2026-10-22). If a build fails to download, re-check with
+  `curl -sI https://dl.google.com/android/repository/repository2-3.xml`.
+- The container is fresh each session, so the Android SDK isn't preinstalled. Install
+  cmdline-tools into `~/android-sdk` (the build number is in `repository2-3.xml`). Note that
+  `sdkmanager` now uses `platforms/android-NN` paths in `--list` and points to a newer
+  `android sdk` CLI.
 - There is no `/dev/kvm`, so the emulator cannot run here, and the TV is not reachable from the cloud.
 - What does work here: writing code, HTML mockups rendered to 1920×1080 PNG with Playwright
   (see `tv-ui-design`), and CI builds on GitHub Actions.
