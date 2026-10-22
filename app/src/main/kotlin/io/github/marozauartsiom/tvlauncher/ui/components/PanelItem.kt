@@ -23,6 +23,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.ClickableSurfaceDefaults
@@ -140,10 +142,12 @@ fun PanelItem(
     icon: ImageVector? = null,
     value: String? = null,
     transparent: Boolean = false,
+    /** Shows the check mark of the chosen item (and tells TalkBack it is selected). */
+    selected: Boolean = false,
     focus: FocusProgress = rememberFocusProgress(),
 ) {
     val c = theme.colors
-    PanelRow(theme, onClick, modifier, PanelItemHeight, transparent, focus) {
+    PanelRow(theme, onClick, modifier.semantics { this.selected = selected }, PanelItemHeight, transparent, focus) {
         if (icon != null) Icon(icon, contentDescription = null, tint = c.panelFg, modifier = Modifier.size(20.dp))
         Text(
             text = title,
@@ -154,6 +158,7 @@ fun PanelItem(
             modifier = Modifier.weight(1f),
         )
         if (value != null) Text(value, style = MaterialTheme.typography.bodyMedium, color = c.panelMuted, maxLines = 1)
+        if (selected) Icon(Icons.Check, contentDescription = null, tint = c.signal, modifier = Modifier.size(20.dp))
     }
 }
 

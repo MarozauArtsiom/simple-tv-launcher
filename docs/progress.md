@@ -83,6 +83,9 @@ One line per finished task: date, task id, what was done, anything notable.
   a check badge, leaving the page clears the preview), "Change by time of day" page (switch, day and night rows
   that open the picker in choose mode, sunset/sunrise note), `themeAt` schedule logic (07:00/20:00 until the weather
   data supplies sun times in T18), clock-minute re-check while Home is visible. Back chain: pick → schedule → picker → panel.
+- 2026-10-22 — T16 language picker: seven rows (Беларуская … Français, then "Same as the TV" with the language it
+  resolves to), check on the saved choice, OK applies at once (`LocaleController.apply`: platform per-app locale on
+  API 33+, activity recreation below), focus starts on the saved choice. `be`/`fr` screenshots viewed.
 
 ## Decisions to review
 

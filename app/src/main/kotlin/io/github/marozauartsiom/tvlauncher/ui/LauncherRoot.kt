@@ -21,6 +21,7 @@ import io.github.marozauartsiom.tvlauncher.AppGraph
 import io.github.marozauartsiom.tvlauncher.R
 import io.github.marozauartsiom.tvlauncher.data.apps.LaunchResult
 import io.github.marozauartsiom.tvlauncher.data.prefs.ItemKey
+import io.github.marozauartsiom.tvlauncher.data.prefs.LanguageChoice
 import io.github.marozauartsiom.tvlauncher.data.prefs.SettingsData
 import io.github.marozauartsiom.tvlauncher.i18n.LocaleController
 import io.github.marozauartsiom.tvlauncher.data.prefs.ShortcutsEditor
@@ -30,6 +31,7 @@ import io.github.marozauartsiom.tvlauncher.system.PackageActions
 import io.github.marozauartsiom.tvlauncher.system.SystemSettings
 import io.github.marozauartsiom.tvlauncher.system.WebLauncher
 import io.github.marozauartsiom.tvlauncher.ui.components.FocusMemory
+import io.github.marozauartsiom.tvlauncher.ui.settings.LanguagePickerPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.SchedulePage
 import io.github.marozauartsiom.tvlauncher.ui.settings.SettingsPanel
 import io.github.marozauartsiom.tvlauncher.ui.settings.ThemePickerPage
@@ -89,6 +91,8 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     }
     val settingsFocus = remember { FocusMemory() }
     val themeFocus = remember { FocusMemory() }
+    val languageFocus = remember { FocusMemory() }
+    val systemLocale = remember { android.content.res.Resources.getSystem().configuration.locales[0] }
     val scheduleFocus = remember { FocusMemory() }
     val pickDayFocus = remember { FocusMemory() }
     val pickNightFocus = remember { FocusMemory() }
@@ -194,6 +198,16 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                         memory = if (day) pickDayFocus else pickNightFocus,
                     )
                 }
+                SettingsPage.Language -> LanguagePickerPage(
+                    theme = theme,
+                    selected = settings.language,
+                    tvTag = LocaleController.effectiveTag(LanguageChoice.Follow, systemLocale),
+                    memory = languageFocus,
+                    onChoose = { choice ->
+                        graph.appScope.launch { graph.settings.setLanguage(choice) }
+                        graph.locale.apply(choice, context.findActivity()) // applies at once; recreates the activity below API 33
+                    },
+                )
                 else -> Unit // other pages: their own tasks
             }
             if (menu != null) {
@@ -263,3 +277,9 @@ private fun handleMenuAction(
 
 private fun unavailable(context: Context) =
     Toast.makeText(context, context.getString(R.string.unavailable_on_tv), Toast.LENGTH_SHORT).show()
+
+private tailrec fun Context.findActivity(): android.app.Activity? = when (this) {
+    is android.app.Activity -> this
+    is android.content.ContextWrapper -> baseContext.findActivity()
+    else -> null
+}

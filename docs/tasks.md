@@ -205,7 +205,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   07:00/20:00, checked only on resume or on the minute tick while Home is visible.
   **Done:** tests for preview/revert and the schedule logic; screenshot.
 
-- [ ] **T16 Language picker.** The order and default from `docs/ui-spec.md` §5; applies
+- [x] **T16 Language picker.** The order and default from `docs/ui-spec.md` §5; applies
   immediately; initial focus on the saved choice. **Done:** test + screenshot.
 
 - [ ] **T17 Background picker.** Read: the T06 mockup and `references/backgrounds.md`.

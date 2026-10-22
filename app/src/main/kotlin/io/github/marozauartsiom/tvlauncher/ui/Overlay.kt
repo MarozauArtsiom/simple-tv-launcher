@@ -10,7 +10,7 @@ enum class SettingsPage {
     val hasUi: Boolean get() = this in built
 
     private companion object {
-        val built = setOf(Root, Theme, Schedule, SchedulePickDay, SchedulePickNight, Shortcuts)
+        val built = setOf(Root, Theme, Schedule, SchedulePickDay, SchedulePickNight, Language, Shortcuts)
     }
 }
 

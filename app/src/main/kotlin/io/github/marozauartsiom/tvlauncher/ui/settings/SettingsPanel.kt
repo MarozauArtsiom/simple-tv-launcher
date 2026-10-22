@@ -172,8 +172,9 @@ fun settingsValues(settings: SettingsData, themeId: io.github.marozauartsiom.tvl
     )
 }
 
+/** A language by its own name, as the language picker lists it. */
 @Composable
-private fun languageName(tag: String): String = when (tag) {
+fun languageName(tag: String): String = when (tag) {
     "be" -> stringResource(R.string.lang_be)
     "ru" -> stringResource(R.string.lang_ru)
     "pl" -> stringResource(R.string.lang_pl)
