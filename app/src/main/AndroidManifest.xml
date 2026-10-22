@@ -5,6 +5,8 @@
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <!-- Permissions are added together with the feature that needs each one (docs/tasks.md). -->
+    <!-- T13: the app menu's "Uninstall" opens the system confirmation for an app. -->
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
 
     <!-- Package visibility (API 30+): see every launchable app without QUERY_ALL_PACKAGES. -->
     <queries>

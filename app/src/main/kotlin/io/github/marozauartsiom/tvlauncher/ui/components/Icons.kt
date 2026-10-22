@@ -27,6 +27,19 @@ object Icons {
     )
     val Star = icon("star", "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z")
 
+    val StarOutline = icon(
+        "star_outline",
+        "M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z",
+    )
+    val Move = icon("move", "M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z")
+    val Hidden = icon(
+        "hidden",
+        "M12 6c3.8 0 7.2 2.1 9 6-1.8 3.9-5.2 6-9 6s-7.2-2.1-9-6c1.8-3.9 5.2-6 9-6zm0 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
+        "M3.3 4.7l1.4-1.4 16 16-1.4 1.4z",
+    )
+    val Info = icon("info", "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z")
+    val Delete = icon("delete", "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z")
+
     /** Weather chip: the sun and the cloud are separate so themes can colour them differently. */
     val WeatherSun = icon("weather_sun", "M8 4.5a3.5 3.5 0 1 0 0 7a3.5 3.5 0 1 0 0-7z")
     val WeatherCloud = icon(

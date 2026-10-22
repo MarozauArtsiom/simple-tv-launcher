@@ -9,7 +9,8 @@ import io.github.marozauartsiom.tvlauncher.i18n.LocaleController
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.activity.ComponentActivity
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onRoot
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -30,7 +31,7 @@ import org.robolectric.annotation.GraphicsMode
 @Config(sdk = [36], qualifiers = TV_QUALIFIERS)
 abstract class TvScreenshotTest {
     @get:Rule
-    val composeRule = createComposeRule()
+    val composeRule = createAndroidComposeRule<ComponentActivity>()
 
     /**
      * Renders [content] once per theme (switching the theme in place, like the live preview does) and
@@ -39,10 +40,15 @@ abstract class TvScreenshotTest {
     protected fun captureThemes(
         name: String,
         themes: List<ThemeSpec> = Themes.all,
+        /** Runs after the first frame settles, before the first capture (open a menu, enter a mode). */
+        setup: () -> Unit = {},
         content: @Composable (ThemeSpec) -> Unit,
     ) {
         var current by mutableStateOf(themes.first())
         composeRule.setContent { LauncherTheme(current) { content(current) } }
+        composeRule.waitForIdle()
+        setup()
+        composeRule.waitForIdle()
         for (theme in themes) {
             current = theme
             composeRule.waitForIdle()

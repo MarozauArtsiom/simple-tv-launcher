@@ -61,6 +61,12 @@ One line per finished task: date, task id, what was done, anything notable.
   (initial focus, D-pad moves, focus memory in both rows, reset, OK vs long OK, empty hint, safe mode) and
   Roborazzi Home in 9 themes + empty favourites + `be`/`fr`; all viewed and compared with `design/mockups/themes/`
   (within 1–2 px; soft shadows are not drawn by Robolectric, they show on the TV).
+- 2026-10-22 — T13 app menu and move mode: `AppMenu` (290 dp popup below the tile, flips above near the bottom;
+  Home cannot take focus while it is open and gets it back on close via `HomeFocus`), `FavouritesEditor` (add,
+  remove, swap with the visible neighbour, restore on Back; every step is written at once), `PackageActions`
+  (app details and uninstall with `REQUEST_DELETE_PACKAGES`), `PanelItem` (the list row reused by Settings).
+  Held-OK guard: the OK press that opened the menu cannot choose its first item. 36 new tests; screenshots of the
+  menu (3 themes + a grid tile) and move mode (3 themes) viewed against `design/mockups/screens/`. M3 complete.
 
 ## Decisions to review
 
@@ -78,6 +84,10 @@ Defaults taken during unattended runs that the owner should look at.
   (letter on a colour from the address); their editor comes in T13b.
 - T12: safe mode (two crashes within 10 minutes) shows the default theme, only the clock, the settings gear and
   the app grid, with a one-line explanation. Weather, HDMI and iPhone chips appear when T18–T20 supply data.
+- T13: the menu's focused row uses the theme's focus fill (slightly lighter) with the ring; the mockup's
+  menu rows had no fill by a CSS accident. "Uninstall" is offered for every app; for system apps the system
+  dialog says it cannot remove them.
+- T13: Settings, Weather, HDMI and iPhone chips do nothing until their own tasks (T14, T18–T20) land.
 - Gboard's keyboard height (~168 dp) is an estimate in the city-search mockup; check on the TV.
 
 ## Blockers

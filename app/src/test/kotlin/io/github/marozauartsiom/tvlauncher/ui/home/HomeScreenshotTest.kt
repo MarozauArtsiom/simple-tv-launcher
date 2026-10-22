@@ -55,12 +55,9 @@ class HomeScreenshotTest : TvScreenshotTest() {
             ThemedBackground(theme, cache)
             HomeScreen(
                 content = content, theme = theme, topBar = topBar, clock = { clock }, art = art,
-                resets = emptyFlow(), actions = NoActions,
+                resets = emptyFlow(), actions = HomeActions(),
             )
         }
     }
 
-    private companion object {
-        val NoActions = HomeActions({}, {}, {}, {}, {}, {})
-    }
 }

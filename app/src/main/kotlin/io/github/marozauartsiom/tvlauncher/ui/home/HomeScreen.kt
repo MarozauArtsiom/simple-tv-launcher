@@ -1,5 +1,6 @@
 package io.github.marozauartsiom.tvlauncher.ui.home
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,15 +14,18 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
@@ -29,9 +33,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRestorer
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -46,6 +56,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import io.github.marozauartsiom.tvlauncher.R
 import io.github.marozauartsiom.tvlauncher.data.apps.ArtSource
+import io.github.marozauartsiom.tvlauncher.data.prefs.ItemKey
 import io.github.marozauartsiom.tvlauncher.ui.components.Icons
 import io.github.marozauartsiom.tvlauncher.ui.components.rememberFocusProgress
 import io.github.marozauartsiom.tvlauncher.ui.theme.ThemeSpec
@@ -55,13 +66,18 @@ import kotlinx.coroutines.launch
 
 /** What Home can ask the rest of the launcher to do. */
 @Immutable
-class HomeActions(
-    val onOpen: (HomeTile) -> Unit,
-    val onMenu: (HomeTile) -> Unit,
-    val onWeather: () -> Unit,
-    val onHdmi: (String) -> Unit,
-    val onIphone: () -> Unit,
-    val onSettings: () -> Unit,
+data class HomeActions(
+    val onOpen: (HomeTile) -> Unit = {},
+    /** Long press on a tile; the rectangle is where it is on screen, for placing the menu. */
+    val onMenu: (HomeTile, Rect?) -> Unit = { _, _ -> },
+    val onWeather: () -> Unit = {},
+    val onHdmi: (String) -> Unit = {},
+    val onIphone: () -> Unit = {},
+    val onSettings: () -> Unit = {},
+    /** Move mode: swap the tile one place left (-1) or right (+1). */
+    val onMoveStep: (ItemKey, Int) -> Unit = { _, _ -> },
+    val onMoveDone: () -> Unit = {},
+    val onMoveCancel: () -> Unit = {},
 )
 
 private const val GridColumns = 5
@@ -86,11 +102,14 @@ fun HomeScreen(
     actions: HomeActions,
     modifier: Modifier = Modifier,
     safeMode: Boolean = false,
+    /** A panel or menu is open over Home: Home cannot take focus, and gets it back when this turns false. */
+    overlayOpen: Boolean = false,
+    /** The favourite being moved (move mode), or null. */
+    moveKey: ItemKey? = null,
 ) {
     val listState = rememberLazyListState()
     val favouritesState = rememberLazyListState()
-    val firstFavourite = remember { FocusRequester() }
-    val firstApp = remember { FocusRequester() }
+    val focus = remember { HomeFocus() }
     val current by rememberUpdatedState(content)
     val scope = androidx.compose.runtime.rememberCoroutineScope()
 
@@ -99,8 +118,8 @@ fun HomeScreen(
         listState.scrollToItem(0)
         if (hasFavourites) favouritesState.scrollToItem(0) // an unattached state would wait forever
         withFrameNanos { } // let the first items attach before asking for focus
-        val target = if (hasFavourites) firstFavourite else firstApp
-        runCatching { target.requestFocus() } // a missing requester must never crash Home
+        val target = if (hasFavourites) favouriteId(current.favourites.first()) else gridId(current.all.firstOrNull())
+        if (target != null) focus.request(target) // a missing requester must never crash Home
     }
 
     LaunchedEffect(Unit) {
@@ -108,12 +127,27 @@ fun HomeScreen(
         scope.launch { resets.collect { resetToTop() } }
     }
 
+    // When a panel or menu closes, focus goes back to where it was; if that is gone, to the top.
+    var wasOverlayOpen by remember { mutableStateOf(overlayOpen) }
+    LaunchedEffect(overlayOpen) {
+        if (wasOverlayOpen && !overlayOpen) {
+            withFrameNanos { }
+            if (!focus.restore()) resetToTop()
+        }
+        wasOverlayOpen = overlayOpen
+    }
+
+    BackHandler(enabled = moveKey != null) { actions.onMoveCancel() }
+
+    // The tile a menu is open for keeps its focus look while focus is in the menu.
+    val pinnedId = remember(overlayOpen) { if (overlayOpen) focus.last else null }
+
     val favourites = if (safeMode) emptyList() else content.favourites
     val rows = remember(content.all) { content.all.chunked(GridColumns) }
 
     LazyColumn(
         state = listState,
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize().focusProperties { canFocus = !overlayOpen },
         contentPadding = PaddingValues(bottom = SafeVertical),
     ) {
         item(key = "top", contentType = "top") {
@@ -125,6 +159,7 @@ fun HomeScreen(
                 onHdmi = actions.onHdmi,
                 onIphone = actions.onIphone,
                 onSettings = actions.onSettings,
+                focus = focus,
             )
         }
         if (safeMode) {
@@ -143,7 +178,7 @@ fun HomeScreen(
                     if (favourites.isEmpty()) {
                         EmptyFavouritesHint(theme)
                     } else {
-                        FavouritesRow(favourites, theme, art, actions, favouritesState, firstFavourite)
+                        FavouritesRow(favourites, theme, art, actions, favouritesState, focus, moveKey, pinnedId)
                     }
                 }
             }
@@ -153,11 +188,14 @@ fun HomeScreen(
                 SectionTitle(stringResource(R.string.all_apps), count = content.all.size, theme = theme)
             }
         }
-        itemsIndexed(rows, key = { _, row -> row.first().key.value }, contentType = { _, _ -> "grid-row" }) { index, row ->
-            GridRow(row, theme, art, actions, firstApp.takeIf { index == 0 })
+        items(rows, key = { row -> row.first().key.value }, contentType = { "grid-row" }) { row ->
+            GridRow(row, theme, art, actions, focus, pinnedId)
         }
     }
 }
+
+internal fun favouriteId(tile: HomeTile) = "fav:${tile.key.value}"
+internal fun gridId(tile: HomeTile?) = tile?.let { "all:${it.key.value}" }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -167,50 +205,103 @@ private fun FavouritesRow(
     art: ArtSource,
     actions: HomeActions,
     state: androidx.compose.foundation.lazy.LazyListState,
-    first: FocusRequester,
+    focus: HomeFocus,
+    moveKey: ItemKey?,
+    pinnedId: String?,
 ) {
+    // In move mode the tile follows the owner's presses, so keep it on screen as it changes place.
+    val movingIndex = tiles.indexOfFirst { it.key == moveKey }
+    LaunchedEffect(moveKey, movingIndex) {
+        if (movingIndex >= 0 && state.layoutInfo.visibleItemsInfo.none { it.index == movingIndex }) state.animateScrollToItem(movingIndex)
+    }
     LazyRow(
         state = state,
         modifier = Modifier.focusRestorer(),
         contentPadding = PaddingValues(start = SafeHorizontal, end = SafeHorizontal, top = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(CardGap),
     ) {
-        itemsIndexed(tiles, key = { _, tile -> tile.key.value }, contentType = { _, _ -> "tile" }) { index, tile ->
-            FavouriteItem(tile, theme, art, actions, if (index == 0) first else null)
+        items(tiles, key = { tile -> tile.key.value }, contentType = { "tile" }) { tile ->
+            FavouriteItem(tile, theme, art, actions, focus, moving = tile.key == moveKey, pinned = favouriteId(tile) == pinnedId)
         }
     }
 }
 
 /** A favourite: the card, and under it the name pill, which is visible only while the card has focus. */
 @Composable
-private fun FavouriteItem(tile: HomeTile, theme: ThemeSpec, art: ArtSource, actions: HomeActions, requester: FocusRequester?) {
+private fun FavouriteItem(
+    tile: HomeTile,
+    theme: ThemeSpec,
+    art: ArtSource,
+    actions: HomeActions,
+    homeFocus: HomeFocus,
+    moving: Boolean,
+    pinned: Boolean,
+) {
     val focus = rememberFocusProgress()
+    val labelGap = with(LocalDensity.current) { (10 + 20 - 8).dp.toPx() } // the menu opens below the name pill, 8 dp further
+    val id = favouriteId(tile)
+    // Entering move mode from the grid or the menu: take focus on this tile.
+    LaunchedEffect(moving) { if (moving) homeFocus.request(id) }
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
         TileCard(
             tile = tile,
             theme = theme,
             art = art,
             onClick = { actions.onOpen(tile) },
-            onLongClick = { actions.onMenu(tile) },
-            modifier = (if (requester != null) Modifier.focusRequester(requester) else Modifier).testTag("fav:${tile.key.value}"),
+            onLongClick = { rect -> actions.onMenu(tile, rect?.let { it.copy(bottom = it.bottom + labelGap) }) },
+            modifier = homeFocus.track(id)
+                .then(if (moving) Modifier.moveKeys(tile.key, actions) else Modifier)
+                .testTag(id),
             focus = focus,
+            moving = moving,
+            pinned = pinned,
         )
-        Box(Modifier.height(20.dp).graphicsLayer { alpha = focus.value }) {
-            val pill = theme.hasLabelPill
-            Text(
-                text = tile.label,
-                style = MaterialTheme.typography.labelLarge,
-                color = theme.colors.labelFg,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .widthIn(max = CardWidth)
-                    .then(
-                        if (pill) Modifier.background(theme.colors.labelBg, RoundedCornerShape(10.dp)) else Modifier,
-                    )
-                    .padding(horizontal = theme.labelPaddingHorizontal),
-            )
+        Box(Modifier.height(20.dp).graphicsLayer { alpha = if (moving || pinned) 1f else focus.value }) {
+            if (moving) MovePill(theme) else NamePill(tile.label, theme)
         }
+    }
+}
+
+@Composable
+private fun NamePill(label: String, theme: ThemeSpec) {
+    Text(
+        text = label,
+        style = MaterialTheme.typography.labelLarge,
+        color = theme.colors.labelFg,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier
+            .widthIn(max = CardWidth)
+            .then(if (theme.hasLabelPill) Modifier.background(theme.colors.labelBg, RoundedCornerShape(10.dp)) else Modifier)
+            .padding(horizontal = theme.labelPaddingHorizontal),
+    )
+}
+
+/** "◀ ▶ Move · OK to finish" in the theme's focus colour, instead of the name. */
+@Composable
+private fun MovePill(theme: ThemeSpec) {
+    Text(
+        text = stringResource(R.string.move_hint),
+        style = MaterialTheme.typography.labelLarge,
+        color = theme.colors.buttonFg,
+        maxLines = 1,
+        softWrap = false,
+        modifier = Modifier
+            .background(theme.colors.focus, RoundedCornerShape(12.dp))
+            .padding(horizontal = 12.dp)
+            .wrapContentWidth(unbounded = true),
+    )
+}
+
+/** Move mode on the moving tile: Left/Right swap places, OK drops it, Up/Down stay put. */
+private fun Modifier.moveKeys(key: ItemKey, actions: HomeActions): Modifier = onPreviewKeyEvent { event ->
+    val ok = event.key == Key.Enter || event.key == Key.DirectionCenter || event.key == Key.NumPadEnter
+    when {
+        event.key == Key.DirectionLeft -> { if (event.type == KeyEventType.KeyDown) actions.onMoveStep(key, -1); true }
+        event.key == Key.DirectionRight -> { if (event.type == KeyEventType.KeyDown) actions.onMoveStep(key, +1); true }
+        event.key == Key.DirectionUp || event.key == Key.DirectionDown -> true
+        ok -> { if (event.type == KeyEventType.KeyUp) actions.onMoveDone(); true }
+        else -> false
     }
 }
 
@@ -221,21 +312,23 @@ private fun GridRow(
     theme: ThemeSpec,
     art: ArtSource,
     actions: HomeActions,
-    firstOfGrid: FocusRequester?,
+    homeFocus: HomeFocus,
+    pinnedId: String?,
 ) {
     Row(
         modifier = Modifier.focusRestorer().padding(start = SafeHorizontal, end = SafeHorizontal, top = 8.dp, bottom = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(CardGap),
     ) {
-        tiles.forEachIndexed { column, tile ->
+        tiles.forEach { tile ->
+            val id = gridId(tile)!!
             TileCard(
                 tile = tile,
                 theme = theme,
                 art = art,
                 onClick = { actions.onOpen(tile) },
-                onLongClick = { actions.onMenu(tile) },
-                modifier = (if (column == 0 && firstOfGrid != null) Modifier.focusRequester(firstOfGrid) else Modifier)
-                    .testTag("all:${tile.key.value}"),
+                onLongClick = { rect -> actions.onMenu(tile, rect) },
+                modifier = homeFocus.track(id).testTag(id),
+                pinned = id == pinnedId,
             )
         }
     }

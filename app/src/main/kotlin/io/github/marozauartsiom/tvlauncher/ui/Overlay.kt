@@ -1,5 +1,6 @@
 package io.github.marozauartsiom.tvlauncher.ui
 
+import androidx.compose.ui.geometry.Rect
 import io.github.marozauartsiom.tvlauncher.data.prefs.ItemKey
 
 enum class SettingsPage { Root, Theme, Schedule, Background, Language, Weather, Hdmi, Hidden, Usb, About, Shortcuts }
@@ -11,7 +12,8 @@ sealed interface Overlay {
     data object Weather : Overlay
     data object WeatherSearch : Overlay
     data class Hdmi(val inputId: String) : Overlay
-    data class AppMenu(val key: ItemKey) : Overlay
+    /** [anchor] is the tile's bounds on screen, so the menu opens next to it. */
+    data class AppMenu(val key: ItemKey, val anchor: Rect? = null) : Overlay
     data class MoveMode(val key: ItemKey) : Overlay
     data object IphoneHint : Overlay
 

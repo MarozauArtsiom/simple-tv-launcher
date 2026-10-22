@@ -171,7 +171,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   **Done:** Compose behaviour tests (D-pad navigation, focus restore, Back reset); Roborazzi
   Home in 9 themes + `be` + `fr`, compared by eye with `design/mockups/themes/*.png`.
 
-- [ ] **T13 App menu + move mode.** Read: the T06 mockup.
+- [x] **T13 App menu + move mode.** Read: the T06 mockup.
   Long-press OK opens a menu with: add to / remove from favourites, move (Favourites only:
   Left/Right moves, OK drops, Back cancels), hide, app info
   (`ACTION_APPLICATION_DETAILS_SETTINGS`), uninstall (`ACTION_DELETE` +

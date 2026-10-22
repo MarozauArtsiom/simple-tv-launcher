@@ -19,7 +19,12 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
@@ -62,18 +67,23 @@ fun TileCard(
     theme: ThemeSpec,
     art: ArtSource,
     onClick: () -> Unit,
-    onLongClick: () -> Unit,
+    onLongClick: (Rect?) -> Unit,
     modifier: Modifier = Modifier,
     focus: FocusProgress = rememberFocusProgress(),
+    moving: Boolean = false,
+    /** Drawn as focused although focus is elsewhere: the tile a menu is open for. */
+    pinned: Boolean = false,
 ) {
     val shape = remember(theme.cardRadius) { RoundedCornerShape(theme.cardRadius) }
+    val coordinates = remember { arrayOfNulls<LayoutCoordinates>(1) } // read only on long press, so not state
     Surface(
         onClick = onClick,
-        onLongClick = onLongClick,
+        onLongClick = { onLongClick(coordinates[0]?.takeIf { it.isAttached }?.boundsInRoot()) },
         modifier = modifier
             .size(CardWidth, CardHeight)
+            .onGloballyPositioned { coordinates[0] = it }
             .then(focus.track())
-            .cardFrame(theme, shape, focus)
+            .cardFrame(theme, shape, focus, moving, pinned)
             .semantics { contentDescription = tile.label },
         shape = ClickableSurfaceDefaults.shape(shape),
         colors = ClickableSurfaceDefaults.colors(
@@ -152,9 +162,9 @@ object ShortcutColors {
  * at rest the white sticker outline and the card shadow, in focus the ring, glow, scale and tilt.
  * Hard (cartoon) shadows are drawn as offset shapes; soft ones use the layer's elevation shadow.
  */
-fun Modifier.cardFrame(theme: ThemeSpec, shape: RoundedCornerShape, focus: FocusProgress): Modifier = this
+fun Modifier.cardFrame(theme: ThemeSpec, shape: RoundedCornerShape, focus: FocusProgress, moving: Boolean = false, pinned: Boolean = false): Modifier = this
     .graphicsLayer {
-        val p = focus.value
+        val p = if (pinned) 1f else focus.value
         val scale = 1f + (theme.focus.scale - 1f) * p
         scaleX = scale
         scaleY = scale
@@ -170,7 +180,7 @@ fun Modifier.cardFrame(theme: ThemeSpec, shape: RoundedCornerShape, focus: Focus
         clip = false
     }
     .drawBehind {
-        val p = focus.value
+        val p = if (pinned) 1f else focus.value
         val radius = theme.cardRadius.toPx()
         if (p < 1f) {
             val rest = 1f - p
@@ -181,6 +191,7 @@ fun Modifier.cardFrame(theme: ThemeSpec, shape: RoundedCornerShape, focus: Focus
             theme.focus.glow?.takeIf { it.blur.value == 0f }?.let { drawHardShadow(it, radius, p) }
             drawRing(theme.colors.focus.copy(alpha = p), theme.focus.ring.toPx(), radius)
         }
+        if (moving) drawMoveRing(theme.colors.focus, radius)
     }
 
 private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawHardShadow(shadow: ShadowSpec, radius: Float, alpha: Float) {
@@ -190,6 +201,19 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawHardShadow(shad
         topLeft = Offset(-spread, shadow.offsetY.toPx() - spread),
         size = Size(size.width + 2 * spread, size.height + 2 * spread),
         cornerRadius = CornerRadius(radius + spread),
+    )
+}
+
+/** The dashed ring around the tile being moved: 3 dp dashes, 5 dp outside the edge. */
+private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawMoveRing(color: Color, radius: Float) {
+    val gap = 5.dp.toPx()
+    val width = 3.dp.toPx()
+    drawRoundRect(
+        color = color,
+        topLeft = Offset(-gap, -gap),
+        size = Size(size.width + 2 * gap, size.height + 2 * gap),
+        cornerRadius = CornerRadius(radius + gap),
+        style = Stroke(width, pathEffect = PathEffect.dashPathEffect(floatArrayOf(width * 2f, width * 1.5f))),
     )
 }
 

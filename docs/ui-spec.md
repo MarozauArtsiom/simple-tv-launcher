@@ -135,8 +135,10 @@ For each screen: initial focus, Back, Home, and the mockup.
 ### App menu — `design/mockups/app-menu.html`, move mode `favourites-move.html`
 - Long-press OK on any tile opens a 290 dp popup under the tile (flipped above it when there
   is no room). Items: В избранное / Убрать из избранного, Переместить (only for favourites),
-  Скрыть, О приложении, Удалить. Initial focus is the first item. Back closes it, and focus
-  returns to the tile.
+  Скрыть, О приложении, Удалить (the last three only for apps; a website shortcut has just the
+  favourites items). Initial focus is the first item. Back closes it, and focus
+  returns to the tile. While the menu is open the tile keeps its focus look and Home takes no
+  focus. The OK press that opened the menu (still held) cannot choose the first item.
 - Move mode: the tile gets a dashed ring and a pill "◀ ▶ Переместить · ОК — готово". Left/Right
   swap the tile with its neighbour, OK drops it, and Back cancels (restores the old order).
 

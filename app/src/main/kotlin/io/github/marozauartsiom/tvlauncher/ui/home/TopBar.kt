@@ -56,6 +56,7 @@ fun TopBar(
     onHdmi: (String) -> Unit,
     onIphone: () -> Unit,
     onSettings: () -> Unit,
+    focus: HomeFocus,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -70,7 +71,7 @@ fun TopBar(
             ClockAndDate(clock, theme)
             state.weather?.let { w ->
                 val description = stringResource(R.string.cd_weather, w.description)
-                TopChip(theme, onWeather, Modifier.semantics { contentDescription = description }) {
+                TopChip(theme, onWeather, focus.track("chip:weather").semantics { contentDescription = description }) {
                     WeatherIcon(theme)
                     val meta = theme.colors.chipMeta
                     Text(
@@ -90,7 +91,7 @@ fun TopBar(
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
             state.hdmi.forEach { input ->
                 val signalText = if (input.hasSignal) stringResource(R.string.cd_hdmi_signal, input.label) else input.label
-                TopChip(theme, { onHdmi(input.id) }, Modifier.semantics { contentDescription = signalText }) {
+                TopChip(theme, { onHdmi(input.id) }, focus.track("chip:hdmi:${input.id}").semantics { contentDescription = signalText }) {
                     ChipIcon(Icons.Hdmi, theme)
                     Text(input.label, style = MaterialTheme.typography.labelLarge, color = theme.colors.chipFg)
                     if (input.hasSignal) Box(Modifier.size(8.dp).background(theme.colors.signal, CircleShape))
@@ -98,13 +99,13 @@ fun TopBar(
             }
             if (state.showIphone) {
                 val description = stringResource(R.string.cd_iphone)
-                TopChip(theme, onIphone, Modifier.semantics { contentDescription = description }) {
+                TopChip(theme, onIphone, focus.track("chip:iphone").semantics { contentDescription = description }) {
                     ChipIcon(Icons.Phone, theme)
                     Text(stringResource(R.string.iphone_chip), style = MaterialTheme.typography.labelLarge, color = theme.colors.chipFg)
                 }
             }
             val settings = stringResource(R.string.cd_settings)
-            TopChip(theme, onSettings, Modifier.semantics { contentDescription = settings }, iconOnly = true) {
+            TopChip(theme, onSettings, focus.track("chip:settings").semantics { contentDescription = settings }, iconOnly = true) {
                 ChipIcon(Icons.Gear, theme)
             }
         }
