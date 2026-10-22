@@ -16,7 +16,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
 
 ## M0 — Setup
 
-- [ ] **T01 SDK setup script.** Read: `docs/tech-stack.md` §"Android SDK in a cloud session",
+- [x] **T01 SDK setup script.** Read: `docs/tech-stack.md` §"Android SDK in a cloud session",
   the `android-cli` skill.
   Write an idempotent `scripts/setup-android-sdk.sh`. It installs the cmdline-tools into
   `~/android-sdk` (newest build number from `repository2-3.xml`, sorted numerically), accepts
@@ -24,13 +24,13 @@ string lives in resources in all six languages from the start (`values/` = Engli
   `platform-tools`. It then writes `local.properties` with `sdk.dir`, and skips anything
   already present. **Done:** running it twice works, and the second run is a no-op.
 
-- [ ] **T02 Re-verify versions.** Run
+- [x] **T02 Re-verify versions.** Run
   `.claude/skills/android-tv-launcher/scripts/latest-versions.sh`. If a stable version
   changed, update `docs/tech-stack.md`, but keep the compatibility rules there (AGP ≥ 9.2 for
   compileSdk 37 Compose, Gradle ≥ AGP minimum, Kotlin plugins equal versions).
   **Done:** the versions table is current.
 
-- [ ] **T03 Gradle scaffold.** Read: `docs/tech-stack.md` (all of it), the `agp-9-upgrade`
+- [x] **T03 Gradle scaffold.** Read: `docs/tech-stack.md` (all of it), the `agp-9-upgrade`
   skill (new DSL, built-in Kotlin).
   - `settings.gradle.kts`: `pluginManagement` repos `google()`, `mavenCentral()`,
     `gradlePluginPortal()`; `dependencyResolutionManagement` with `google()` and

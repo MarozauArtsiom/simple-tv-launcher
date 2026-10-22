@@ -66,6 +66,10 @@ Check these before promising a build or a device test:
   cmdline-tools into `~/android-sdk` (the build number is in `repository2-3.xml`). Note that
   `sdkmanager` now uses `platforms/android-NN` paths in `--list` and points to a newer
   `android sdk` CLI.
+- Build with `scripts/gradlew-retry.sh <tasks>`: Maven Central answers HTTP 429 to cloud IPs,
+  and the script retries with growing pauses. Set the SDK up first with
+  `scripts/setup-android-sdk.sh` (idempotent, about 30 s).
+- The preinstalled `gradle` is 8.14 and cannot configure this project. Use `./gradlew` (9.8.2).
 - There is no `/dev/kvm`, so the emulator cannot run here, and the TV is not reachable from the cloud.
 - What does work here: writing code, HTML mockups rendered to 1920×1080 PNG with Playwright
   (see `tv-ui-design`), and CI builds on GitHub Actions.
