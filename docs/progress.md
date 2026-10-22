@@ -92,6 +92,14 @@ One line per finished task: date, task id, what was done, anything notable.
   deleted), `ThemedBackground` now draws theme art, a colour or a picture with a 300 ms crossfade. Without
   `MANAGE_EXTERNAL_STORAGE` the picker shows the exact adb command and a "Check again" button (`PermissionNote`, reused by T22).
   Fixed on the way: Down from the wide "From theme" row used to land on the last swatch. 22 new tests; screenshots viewed.
+- 2026-10-22 — T18 weather (first network feature, `INTERNET` added): `HttpFetcher` (HttpURLConnection, https only, 10 s
+  timeouts, 512 KB cap), `OpenMeteoClient` (forecast incl. sunrise/sunset, city search in the UI language), `GeoIp` (ipinfo.io →
+  ipapi.co, refined through geocoding to a localised name), `WeatherRepository` (refresh only while Home is STARTED, at most every
+  30 min, one retry after 3 s, failure keeps the cache, IP place kept 24 h, "—°" after 6 h), WMO code → picture + wording,
+  top-bar chip, panel, city search (Back leaves the field first), Settings → Weather opens the search. The theme schedule now uses
+  the real sunrise/sunset when the forecast is from today. 54 tests on the real Open-Meteo JSON (fetched from the cloud) and fakes.
+  Live smoke check from the cloud: forecast 200 (first attempt timed out, as the skill warned), geocoding 200, ipinfo.io 200
+  (reports the data-centre city), ipapi.co 429 (as the skill warned).
 
 ## Decisions to review
 
@@ -122,6 +130,10 @@ Defaults taken during unattended runs that the owner should look at.
   theme switch would make a saved colour unreadable, the theme's own background is shown instead. Pictures get a scrim of the
   opposite tone. Please check a bright photo under a few themes on the TV.
 - T17: the background picker lists at most 36 pictures from the first two folder levels of each USB drive.
+- T18: the chip is hidden until the first forecast arrives (no data, no chip). If automatic location fails (no internet, or a
+  VPN shows the wrong city) the owner sets the city in Settings → Weather. City names stay in the language they were fetched in
+  until the next refresh of the place.
+- T18: the search lists at most three matches (the keyboard covers the rest of the screen); typing more narrows the search.
 - Gboard's keyboard height (~168 dp) is an estimate in the city-search mockup; check on the TV.
 
 ## Blockers

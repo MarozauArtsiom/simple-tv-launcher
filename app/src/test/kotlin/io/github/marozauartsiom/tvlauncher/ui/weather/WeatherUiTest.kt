@@ -2,7 +2,9 @@ package io.github.marozauartsiom.tvlauncher.ui.weather
 
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsFocused
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performKeyInput
@@ -81,7 +83,7 @@ class WeatherPanelTest : TvScreenshotTest() {
     @Test fun showsTheCityNowHoursAndDays() {
         show()
         composeRule.onNodeWithText("Минск").assertExists()
-        composeRule.onNodeWithText("+7°").assertExists()
+        composeRule.onAllNodesWithText("+7°").assertCountEquals(2) // now, and Friday's maximum
         composeRule.onNodeWithText("Partly cloudy").assertExists()
         composeRule.onNodeWithText("Feels like +4° · wind 5 m/s").assertExists()
         composeRule.onNodeWithText("21:00").assertExists()
@@ -169,6 +171,8 @@ class CitySearchPageTest : TvScreenshotTest() {
     @Test fun okOnAResultPicksThatPlace() {
         show()
         type("Брест")
+        press(Key.Back) // Back leaves the text field (the keyboard goes away), focus returns to the field's frame
+        composeRule.onNodeWithText("Detect automatically").assertExists()
         press(Key.DirectionDown, 2) // Detect automatically, then the first result
         press(Key.Enter)
         assertEquals(listOf(brest), picked)

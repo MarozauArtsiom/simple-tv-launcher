@@ -215,7 +215,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   jpg/png/webp, build thumbnails on `Default`, and copy the chosen image downscaled to
   960×540 into app storage. **Done:** tests for scanning (fake filesystem); screenshot.
 
-- [ ] **T18 Weather.** Read: `references/weather.md`.
+- [x] **T18 Weather.** Read: `references/weather.md`.
   Add the `INTERNET` permission. `GeoIp` (ipinfo.io → ipapi.co), `OpenMeteoClient` (forecast
   + geocoding with `language` = UI language), `WeatherRepository` (DataStore cache, refresh
   only while Home is `STARTED`, every 30 min at most, one retry, stale after 6 h). WMO code →

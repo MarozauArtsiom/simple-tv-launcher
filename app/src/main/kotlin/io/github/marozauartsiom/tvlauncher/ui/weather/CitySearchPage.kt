@@ -45,8 +45,9 @@ fun CitySearchPage(
     onAuto: () -> Unit,
     onPick: (WeatherPlace) -> Unit,
     modifier: Modifier = Modifier,
+    initialQuery: String = "",
 ) {
-    var query by remember { mutableStateOf("") }
+    var query by remember { mutableStateOf(initialQuery) }
     var results by remember { mutableStateOf<List<WeatherPlace>?>(null) }
     val field = remember { FocusRequester() }
     LaunchedEffect(Unit) { withFrameNanos { }; runCatching { field.requestFocus() } }
