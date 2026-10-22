@@ -16,6 +16,10 @@
     <!-- T17: read pictures (and later .apk files) on a USB drive. Granted once over adb; see the owner guide. -->
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
+    <!-- Lets runtime-registered receivers be "not exported" on API < 33 (ContextCompat.registerReceiver uses it). Signature level: only we hold it. -->
+    <permission android:name="${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" android:protectionLevel="signature" />
+    <uses-permission android:name="${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+
     <!-- Package visibility (API 30+): see every launchable app without QUERY_ALL_PACKAGES. -->
     <queries>
         <intent>

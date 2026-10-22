@@ -12,7 +12,8 @@ import io.github.marozauartsiom.tvlauncher.data.install.InstallResults
 /**
  * Receives the installer's status for a session we committed. Not exported: the only way to reach it is the
  * explicit PendingIntent that was given to the system installer. When the system needs the owner's
- * confirmation, its confirmation screen is started (only if it is the installer's own action).
+ * confirmation, its confirmation screen is started (only if it is the installer's own action, started with
+ * our flags only: no URI-permission grants can ride along).
  */
 class InstallResultReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -24,7 +25,7 @@ class InstallResultReceiver : BroadcastReceiver() {
             ownPackage = context.packageName,
         )
         if (result is InstallResult.NeedsConfirm) {
-            runCatching { context.startActivity(Intent(result.confirm).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+            runCatching { context.startActivity(Intent(result.confirm).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
         }
         (context.applicationContext as? LauncherApp)?.graph?.installEvents?.tryEmit(result)
     }

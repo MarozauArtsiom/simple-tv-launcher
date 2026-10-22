@@ -52,6 +52,7 @@ class LauncherActivity : ComponentActivity() {
     // The Home key while we are already in front arrives here. Nothing from the intent is trusted or forwarded.
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        setIntent(intent)
         if (intent.hasCategory(Intent.CATEGORY_HOME)) viewModel.onHomePressed()
     }
 }

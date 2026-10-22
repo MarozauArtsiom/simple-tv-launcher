@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
+import androidx.core.content.ContextCompat
 
 /**
  * Tells the UI when the TV's screen turns on, so Home can go back to the first favourite. A
@@ -23,8 +23,7 @@ class ScreenOnWatcher(private val context: Context) {
 
     fun register() {
         val filter = IntentFilter(Intent.ACTION_SCREEN_ON)
-        if (Build.VERSION.SDK_INT >= 33) context.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED)
-        else context.registerReceiver(receiver, filter)
+        ContextCompat.registerReceiver(context, receiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
     }
 
     fun onScreenOn() {

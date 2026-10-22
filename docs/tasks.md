@@ -252,7 +252,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
 
 ## M5 — Hardening and handover
 
-- [ ] **T24 Security and permission review.** Run the `android-intent-security` checklist
+- [x] **T24 Security and permission review.** Run the `android-intent-security` checklist
   on the manifest and every intent we send or receive. The only exported component is
   `LauncherActivity` (HOME/LEANBACK), plus receivers registered at runtime as not exported.
   **Done:** findings fixed or documented in `docs/progress.md`.

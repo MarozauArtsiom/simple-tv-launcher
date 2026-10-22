@@ -123,6 +123,19 @@ One line per finished task: date, task id, what was done, anything notable.
 - 2026-10-22 — T23 About page: name, version from `PackageManager`, the no-ads line and three licence rows (Open-Meteo CC BY 4.0,
   Nunito OFL, Android components Apache 2.0); rows take focus, OK does nothing. With it every Settings row now opens a page.
   2 + 1 tests, screenshots in 3 themes and `be`/`fr` viewed against the mockup.
+- 2026-10-22 — T24 security review (android-intent-security checklist over the manifest and every intent in `app/src/main`):
+  - Exported: only `LauncherActivity` (HOME / LEANBACK_LAUNCHER); no services, providers or exported receivers. `onNewIntent` reads only the
+    HOME category and now calls `setIntent`; no extras are read or forwarded anywhere.
+  - Runtime receivers (clock, screen-on) now use `ContextCompat.registerReceiver(..., RECEIVER_NOT_EXPORTED)` with the signature-level
+    `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` declared (needed below API 33). Both listen to protected system broadcasts only.
+  - The one PendingIntent (installer status) is explicit (own receiver + own package) and mutable, as the installer must add extras;
+    the receiver is not exported. Its confirmation intent is passed on only if its action is `CONFIRM_INSTALL` and it does not target
+    our components, and it is now started with `setFlags(NEW_TASK)` so no URI-permission flags can ride along (new receiver test).
+  - Outgoing intents: app launches come from `PackageManager`, settings screens are fixed actions with fallbacks, shortcuts accept
+    only http/https, uninstall/app-info use `package:` URIs built from our own list. No sticky or custom broadcasts, no `allowBackup`,
+    no cleartext (https-only fetcher, targetSdk 36 default).
+  - Left as is: `MANAGE_EXTERNAL_STORAGE` and `REQUEST_INSTALL_PACKAGES` are broad but are the owner's explicit features and are granted
+    only over adb; stored names of copied images/APK paths are validated by regex before use.
 
 ## Decisions to review
 
