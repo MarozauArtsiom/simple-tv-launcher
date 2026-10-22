@@ -33,13 +33,12 @@ svg { width: 20px; height: 20px; fill: currentColor; flex: none; }
 }
 .item .title { flex: 1; white-space: nowrap; }
 .item .value { color: var(--panel-muted); white-space: nowrap; }
+/* Focus = ring in the theme's focus colour + a slightly lighter fill, like the app cards. */
 .item.focused, .tile.focused {
-  background: var(--item-focus-bg); color: var(--item-focus-fg); transform: scale(1.03);
+  background: var(--item-focus-fill); box-shadow: 0 0 0 3px var(--item-focus-ring); transform: scale(1.03);
 }
-.item.focused .value { color: inherit; opacity: .75; }
 .chevron { width: 18px; height: 18px; opacity: .6; }
 .check { color: var(--signal); }
-.item.focused .check { color: inherit; }
 
 /* The list keeps going below the screen edge: fade the cut-off part. */
 .fade::after {

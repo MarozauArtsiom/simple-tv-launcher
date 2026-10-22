@@ -46,8 +46,8 @@
   --panel-muted: #A3A9B7;
   --panel-radius: 0px;
   --item-bg: #1E232D;
-  --item-focus-bg: #FFFFFF;
-  --item-focus-fg: #0B0D12;
+  --item-focus-ring: #FFFFFF;
+  --item-focus-fill: rgba(255, 255, 255, .14);
 }
 
 /* ---------- 2. Graphite (dark, minimal) ---------- */
@@ -69,8 +69,8 @@
   --panel-fg: #EDEDED;
   --panel-muted: #8E8E93;
   --item-bg: #1C1C20;
-  --item-focus-bg: #FFC46B;
-  --item-focus-fg: #141416;
+  --item-focus-ring: #FFC46B;
+  --item-focus-fill: #26262B;
 }
 [data-theme="graphite"] .row-title { font-size: 14px; }
 
@@ -87,6 +87,7 @@
   --panel-fg: #EEF0FF;
   --panel-muted: #AEB3D3;
   --item-bg: rgba(255, 255, 255, .07);
+  --item-focus-fill: rgba(255, 255, 255, .16);
 }
 
 /* ---------- 4. Paper (light, warm) ---------- */
@@ -105,8 +106,8 @@
   --panel-fg: #1F1D1A;
   --panel-muted: #6E685F;
   --item-bg: #EFEAE0;
-  --item-focus-bg: #1F1D1A;
-  --item-focus-fg: #FBF9F4;
+  --item-focus-ring: #1F1D1A;
+  --item-focus-fill: #E4DDCF;
 }
 
 /* ---------- 5. Sky (light, airy) ---------- */
@@ -126,8 +127,8 @@
   --panel-fg: #0E2742;
   --panel-muted: #4A6585;
   --item-bg: #EEF5FF;
-  --item-focus-bg: #1A6BFF;
-  --item-focus-fg: #FFFFFF;
+  --item-focus-ring: #1A6BFF;
+  --item-focus-fill: #DCEBFF;
 }
 
 /* ---------- 6. Sage (light, natural) ---------- */
@@ -147,8 +148,8 @@
   --panel-fg: #1D2A21;
   --panel-muted: #5A6B5E;
   --item-bg: #E6EDE3;
-  --item-focus-bg: #2F6B45;
-  --item-focus-fg: #FFFFFF;
+  --item-focus-ring: #2F6B45;
+  --item-focus-fill: #D6E3D1;
 }
 
 /* ---------- Cartoon family: rounded font, sticker cards, playful focus ---------- */
@@ -180,14 +181,14 @@
   --panel-fg: #FFFFFF;
   --panel-muted: #CFC6FF;
   --item-bg: rgba(255, 255, 255, .09);
-  --item-focus-bg: #FFE14D;
-  --item-focus-fg: #2B1A63;
+  --item-focus-ring: #FFE14D;
+  --item-focus-fill: rgba(255, 255, 255, .16);
   --panel-bg: #FFFFFF;
   --panel-fg: #23324A;
   --panel-muted: #5B6B82;
   --panel-radius: 24px;
   --item-bg: #F1F5FA;
-  --item-focus-fg: #23324A;
+  --item-focus-fill: #FFF6C2;
 }
 [data-theme="valley"] .card span, [data-theme="ocean"] .card span, [data-theme="space"] .card span { font-weight: 800; }
 
@@ -199,7 +200,7 @@
   --focus: #FFD400;
   --focus-glow: 0 8px 0 rgba(0, 0, 0, .18);
   --signal: #2DBE4E;
-  --item-focus-bg: #FFD400;
+  --item-focus-ring: #FFD400;
 }
 
 /* ---------- 8. Underwater (cartoon) ---------- */
@@ -210,8 +211,8 @@
   --focus: #FF7A59;
   --focus-glow: 0 8px 0 rgba(0, 0, 0, .18);
   --signal: #20C07A;
-  --item-focus-bg: #FF7A59;
-  --item-focus-fg: #FFFFFF;
+  --item-focus-ring: #FF7A59;
+  --item-focus-fill: #FFE6DE;
 }
 
 /* ---------- 9. Space (cartoon, evening-friendly) ---------- */

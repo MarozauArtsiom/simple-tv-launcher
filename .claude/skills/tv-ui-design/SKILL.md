@@ -83,6 +83,8 @@ Starting tokens, placeholders until the owner picks a style:
 - Optionally dim unfocused content slightly (alpha 0.85). Never change layout on focus,
   because that causes reflow.
 - Pressed state: shrink back a little (about ×1.0) while OK is held.
+- List items and tiles in panels: a 3 dp ring in the theme's focus colour, a slightly lighter
+  fill and ×1.03. No full white fill: the owner found white rows odd. Buttons may still fill.
 
 ## Navigation model
 
