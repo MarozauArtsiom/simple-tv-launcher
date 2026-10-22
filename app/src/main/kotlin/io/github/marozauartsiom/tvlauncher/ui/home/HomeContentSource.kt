@@ -35,7 +35,10 @@ object HomeLists {
         val all = byKey.values.sortedWith(
             compareByDescending<HomeTile> { launchCounts[it.key.value] ?: 0 }.thenComparing(compareBy(collator) { it.label }),
         )
-        return HomeContent(favourites, all)
+        val hidden = apps.filter { it.packageName in settings.hidden }
+            .map { HomeTile(it.key, it.label, app = it) }
+            .sortedWith(compareBy(collator) { it.label })
+        return HomeContent(favourites, all, hidden)
     }
 }
 

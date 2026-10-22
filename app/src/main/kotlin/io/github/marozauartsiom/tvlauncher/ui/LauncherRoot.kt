@@ -444,12 +444,12 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                 else -> Unit // other pages: their own tasks
             }
             if (menu != null) {
-                val tile = content.all.firstOrNull { it.key == menu.key }
+                val tile = content.all.firstOrNull { it.key == menu.key } ?: content.hidden.firstOrNull { it.key == menu.key }
                 // The app vanished while the menu was opening: nothing to show.
                 LaunchedEffect(tile == null) { if (tile == null) viewModel.open(Overlay.None) }
                 if (tile != null) {
                     AppMenu(
-                        state = AppMenuState(tile, isFavourite = menu.key in settings.favourites, anchor = menu.anchor),
+                        state = AppMenuState(tile, isFavourite = menu.key in settings.favourites, anchor = menu.anchor, isHidden = content.hidden.any { it.key == menu.key }),
                         theme = theme,
                         onAction = { action ->
                             handleMenuAction(action, tile, graph, editor, packageActions, context, viewModel, currentSettings.favourites) { moveOrigin = it }
@@ -502,6 +502,7 @@ private fun handleMenuAction(
             return
         }
         MenuAction.Hide -> if (packageName != null) graph.appScope.launch { graph.settings.setHidden(packageName, true) }
+        MenuAction.Unhide -> if (packageName != null) graph.appScope.launch { graph.settings.setHidden(packageName, false) }
         MenuAction.Info -> if (packageName != null && !packageActions.showInfo(packageName)) unavailable(context)
         MenuAction.Uninstall -> if (packageName != null && !packageActions.uninstall(packageName)) unavailable(context)
     }

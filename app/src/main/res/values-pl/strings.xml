@@ -143,4 +143,6 @@
     <string name="usb_cancelled">Instalacja anulowana</string>
     <string name="item_avatar">Zdjęcie profilowe</string>
     <string name="avatar_none">Bez zdjęcia</string>
+    <string name="menu_show_on_home">Pokaż na ekranie głównym</string>
+    <string name="hidden_section">Ukryte</string>
 </resources>

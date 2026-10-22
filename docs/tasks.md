@@ -338,7 +338,7 @@ Found by the owner on the real TV after the first install. Recorded first, fixed
   **Done:** mockup approved; screenshots of both states in 9 themes; a test that the inactive
   section's alpha changes when focus crosses between sections; frame check on the TV.
 
-- [ ] **T32 Feature: a collapsed "Hidden" section on Home instead of hiding apps away.**
+- [x] **T32 Feature: a collapsed "Hidden" section on Home instead of hiding apps away.**
   Owner: "Hide" should move the app from All apps into a **Hidden** section that works like an
   accordion: collapsed by default, it opens only when the owner clicks it; scrolling past it with
   the remote (just pressing Down) moves focus on as if it were empty, with nothing focusable inside.

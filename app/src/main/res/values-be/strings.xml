@@ -143,4 +143,6 @@
     <string name="usb_cancelled">Усталёўка скасавана</string>
     <string name="item_avatar">Фота профілю</string>
     <string name="avatar_none">Без фота</string>
+    <string name="menu_show_on_home">Паказаць на галоўным</string>
+    <string name="hidden_section">Схаваныя</string>
 </resources>

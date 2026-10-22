@@ -161,6 +161,8 @@ One line per finished task: date, task id, what was done, anything notable.
   `files/avatar`). 1 behaviour test (Menu key); Home and panel goldens re-recorded (only the button changed).
 - 2026-10-22 — T31: the Home section without focus fades to 50 % (150 ms, `graphicsLayer` alpha with `ModulateAlpha`, no
   offscreen buffer). Home goldens re-recorded.
+- 2026-10-22 — T32: collapsed "Hidden · N" section at the bottom of Home (chip header, OK toggles, closes on reset, tiles not
+  composed while collapsed); hidden apps' menu has "Show on Home"; Settings → Hidden apps kept (owner's answer). 1 behaviour test.
 
 ## Decisions to review
 
@@ -216,6 +218,8 @@ Defaults taken during unattended runs that the owner should look at.
   Menu key is unknown until the probe; Up+Right to the button always works.
 - T31: fade only, no blur: `Modifier.blur` needs Android 12+ and costs GPU time every frame on the Mali-G52. If the owner still
   wants blur, try 2–4 dp on the TV and keep it only if focus moves stay smooth. No separate mockup (approved Home, faded).
+- T32: no separate mockup; the header reuses the top-bar chip and the open section the All apps grid. Its look is not in a
+  screenshot test (it sits below the first screen); check it on the TV.
 
 ## Blockers
 

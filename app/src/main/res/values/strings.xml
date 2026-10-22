@@ -156,4 +156,6 @@
     <string name="usb_cancelled">Installation cancelled</string>
     <string name="item_avatar">Profile photo</string>
     <string name="avatar_none">No photo</string>
+    <string name="menu_show_on_home">Show on Home</string>
+    <string name="hidden_section">Hidden</string>
 </resources>

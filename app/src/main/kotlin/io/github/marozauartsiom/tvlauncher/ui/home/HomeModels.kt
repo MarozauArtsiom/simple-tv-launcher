@@ -21,6 +21,8 @@ data class HomeTile(
 data class HomeContent(
     val favourites: List<HomeTile> = emptyList(),
     val all: List<HomeTile> = emptyList(),
+    /** Installed apps the owner hid, by name: the collapsed "Hidden" section at the bottom of Home. */
+    val hidden: List<HomeTile> = emptyList(),
 ) {
     val isEmpty: Boolean get() = favourites.isEmpty() && all.isEmpty()
 }

@@ -143,4 +143,6 @@
     <string name="usb_cancelled">Установка отменена</string>
     <string name="item_avatar">Фото профиля</string>
     <string name="avatar_none">Без фото</string>
+    <string name="menu_show_on_home">Показать на главном</string>
+    <string name="hidden_section">Скрытые</string>
 </resources>

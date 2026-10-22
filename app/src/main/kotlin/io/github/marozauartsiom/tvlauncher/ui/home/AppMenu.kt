@@ -35,13 +35,15 @@ import io.github.marozauartsiom.tvlauncher.ui.components.PanelItem
 import io.github.marozauartsiom.tvlauncher.ui.components.PanelItemHeight
 import io.github.marozauartsiom.tvlauncher.ui.theme.ThemeSpec
 
-enum class MenuAction { ToggleFavourite, Move, Hide, Info, Uninstall }
+enum class MenuAction { ToggleFavourite, Move, Hide, Unhide, Info, Uninstall }
 
 /** What the menu is about. [anchor] is the tile's rectangle on screen in pixels. */
 data class AppMenuState(
     val tile: HomeTile,
     val isFavourite: Boolean,
     val anchor: androidx.compose.ui.geometry.Rect?,
+    /** The tile is in the Hidden section: "Show on Home" instead of "Hide", and no favourites entry. */
+    val isHidden: Boolean = false,
 )
 
 private val MenuWidth = 290.dp
@@ -51,6 +53,12 @@ private val ItemGap = 4.dp
 private data class MenuEntry(val action: MenuAction, val titleRes: Int, val icon: ImageVector)
 
 private fun entries(state: AppMenuState): List<MenuEntry> = buildList {
+    if (state.isHidden) {
+        add(MenuEntry(MenuAction.Unhide, R.string.menu_show_on_home, Icons.Hidden))
+        add(MenuEntry(MenuAction.Info, R.string.menu_app_info, Icons.Info))
+        add(MenuEntry(MenuAction.Uninstall, R.string.menu_uninstall, Icons.Delete))
+        return@buildList
+    }
     add(
         if (state.isFavourite) MenuEntry(MenuAction.ToggleFavourite, R.string.menu_remove_favourite, Icons.StarOutline)
         else MenuEntry(MenuAction.ToggleFavourite, R.string.menu_add_favourite, Icons.Star),
@@ -78,7 +86,7 @@ fun AppMenu(
     onAction: (MenuAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val items = remember(state.tile.key, state.isFavourite) { entries(state) }
+    val items = remember(state.tile.key, state.isFavourite, state.isHidden) { entries(state) }
     val first = remember { FocusRequester() }
     val heldKey = remember { HeldKeyGuard() }
     val density = LocalDensity.current

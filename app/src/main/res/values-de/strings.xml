@@ -141,4 +141,6 @@
     <string name="usb_cancelled">Installation abgebrochen</string>
     <string name="item_avatar">Profilfoto</string>
     <string name="avatar_none">Kein Foto</string>
+    <string name="menu_show_on_home">Auf Startseite zeigen</string>
+    <string name="hidden_section">Ausgeblendet</string>
 </resources>

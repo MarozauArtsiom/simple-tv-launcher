@@ -203,7 +203,7 @@ startup budgets, Belarusian dates, the Baseline Profile and the voice diagnostic
 
 ## Open questions for the owner
 
-- Hidden section on Home (T32): keep Settings → Hidden apps as well, or have only the section?
+- Hidden section on Home (T32): answered — keep both the section and Settings → Hidden apps.
 
 - Account avatar (T30): which photo should it show? The Google account photo is not available to a
   launcher without Google sign-in; the default is a picture from USB or the first letter of a name.

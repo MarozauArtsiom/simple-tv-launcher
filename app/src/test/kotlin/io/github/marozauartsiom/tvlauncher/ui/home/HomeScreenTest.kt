@@ -138,6 +138,23 @@ class HomeScreenTest : TvScreenshotTest() {
         assertEquals(1, settingsClicks)
     }
 
+    @Test fun hiddenSectionIsCollapsedUntilOpenedAndClosesOnReset() {
+        val settings = HomeFixtures.settings.copy(hidden = HomeFixtures.hiddenApps.map { it.packageName }.toSet())
+        show(HomeLists.build(HomeFixtures.apps + HomeFixtures.hiddenApps, settings, locale = java.util.Locale.ENGLISH))
+        val hiddenTile = composeRule.onNodeWithTag(hiddenId(HomeTile(HomeFixtures.key("Xiaomi Mi Home"), "Xiaomi Mi Home"))!!)
+        press(Key.DirectionDown, 4) // favourites → three grid rows → the header
+        composeRule.onNodeWithTag(HiddenHeaderId).assertIsFocused()
+        press(Key.DirectionDown) // collapsed: nothing to go to
+        composeRule.onNodeWithTag(HiddenHeaderId).assertIsFocused()
+        hiddenTile.assertDoesNotExist()
+        press(Key.Enter)
+        press(Key.DirectionDown)
+        hiddenTile.assertExists()
+        resets.tryEmit(Unit)
+        composeRule.waitForIdle()
+        hiddenTile.assertDoesNotExist()
+    }
+
     @Test fun okOpensTheFocusedApp() {
         show()
         press(Key.DirectionRight)

@@ -86,6 +86,10 @@ For each screen: initial focus, Back, Home, and the mockup.
 - Focus memory: the favourites row and each grid row restore their last item (`focusRestorer`).
   Up from the first row goes to the top bar.
 - The remote's Menu key opens Settings from anywhere on Home.
+- **Hidden** section (only when something is hidden): the last section, a chip "Hidden · N" with a chevron.
+  Collapsed by default and after every reset (Home key, TV on, Back); its tiles are not composed, so Down
+  from the header goes nowhere. OK toggles it; open, it is a 5-column grid like All apps. The app menu of a
+  hidden tile offers "Show on Home", App info and Uninstall. Settings → Hidden apps stays as a second way back.
 - The section that holds focus (Favourites or All apps) is drawn as is; the other one fades to 50 %
   in 150 ms (title and tiles). Focus in the top bar fades nothing. No blur (see T31).
 - Scrolling follows focus calmly (`CalmScrollSpec`, not the TV pivot): a tile already on screen

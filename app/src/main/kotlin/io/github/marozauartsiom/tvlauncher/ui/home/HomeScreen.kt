@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.animation.core.tween
@@ -93,7 +95,9 @@ private const val GridColumns = 5
 /** Opacity of the Home section that does not hold focus. */
 private const val InactiveAlpha = 0.5f
 
-private enum class Section { None, Favourites, All }
+private enum class Section { None, Favourites, All, Hidden }
+
+internal const val HiddenHeaderId = "hidden-header"
 private val CardGap = 16.dp
 
 /**
@@ -128,7 +132,11 @@ fun HomeScreen(
     val resetWhileCovered = remember { BooleanArray(1) } // a reset arrived while a panel was open
     val scope = androidx.compose.runtime.rememberCoroutineScope()
 
+    // The Hidden section is collapsed until the owner opens it, and closes again on every reset (T32).
+    var hiddenOpen by remember { mutableStateOf(false) }
+
     suspend fun resetToTop() {
+        hiddenOpen = false
         val hasFavourites = current.favourites.isNotEmpty() && !safeMode
         listState.scrollToItem(0)
         if (hasFavourites) favouritesState.scrollToItem(0) // an unattached state would wait forever
@@ -166,8 +174,11 @@ fun HomeScreen(
     // The section that holds focus stays as is; the other one fades, so the eye stays on the selected tile (T31).
     // Focus in the top bar fades nothing. The alphas are read only in layer lambdas.
     var activeSection by remember { mutableStateOf(Section.None) }
-    val favouritesAlpha = animateFloatAsState(if (activeSection == Section.All) InactiveAlpha else 1f, tween(150), label = "favouritesAlpha")
-    val allAlpha = animateFloatAsState(if (activeSection == Section.Favourites) InactiveAlpha else 1f, tween(150), label = "allAlpha")
+    fun alphaOf(section: Section) = if (activeSection != Section.None && activeSection != section) InactiveAlpha else 1f
+    val favouritesAlpha = animateFloatAsState(alphaOf(Section.Favourites), tween(150), label = "favouritesAlpha")
+    val allAlpha = animateFloatAsState(alphaOf(Section.All), tween(150), label = "allAlpha")
+    val hiddenAlpha = animateFloatAsState(alphaOf(Section.Hidden), tween(150), label = "hiddenAlpha")
+    val hiddenRows = remember(content.hidden) { content.hidden.chunked(GridColumns) }
     fun Modifier.section(section: Section, alpha: androidx.compose.runtime.State<Float>) = this
         .onFocusChanged { if (it.hasFocus) activeSection = section else if (activeSection == section) activeSection = Section.None }
         .graphicsLayer { this.alpha = alpha.value; compositingStrategy = CompositingStrategy.ModulateAlpha }
@@ -227,12 +238,50 @@ fun HomeScreen(
             items(rows, key = { row -> row.first().key.value }, contentType = { "grid-row" }) { row ->
                 GridRow(row, theme, art, actions, focus, pinnedId, Modifier.section(Section.All, allAlpha))
             }
+            if (!safeMode && content.hidden.isNotEmpty()) {
+                item(key = "hidden-header", contentType = "hidden-header") {
+                    HiddenHeader(
+                        count = content.hidden.size,
+                        open = hiddenOpen,
+                        theme = theme,
+                        onToggle = { hiddenOpen = !hiddenOpen },
+                        modifier = Modifier.section(Section.Hidden, hiddenAlpha).then(focus.track(HiddenHeaderId)).testTag(HiddenHeaderId),
+                    )
+                }
+                // Collapsed, the tiles are not composed at all, so D-pad presses pass the section by.
+                if (hiddenOpen) {
+                    items(hiddenRows, key = { row -> "hidden:" + row.first().key.value }, contentType = { "grid-row" }) { row ->
+                        GridRow(row, theme, art, actions, focus, pinnedId, Modifier.section(Section.Hidden, hiddenAlpha), idOf = ::hiddenId)
+                    }
+                }
+            }
         }
     }
 }
 
 internal fun favouriteId(tile: HomeTile) = "fav:${tile.key.value}"
 internal fun gridId(tile: HomeTile?) = tile?.let { "all:${it.key.value}" }
+internal fun hiddenId(tile: HomeTile?) = tile?.let { "hidden:${it.key.value}" }
+
+/** "Hidden · N" with a chevron: OK opens or closes the section. A top-bar chip, so it looks like the other buttons. */
+@Composable
+private fun HiddenHeader(count: Int, open: Boolean, theme: ThemeSpec, onToggle: () -> Unit, modifier: Modifier) {
+    Box(Modifier.padding(start = SafeHorizontal, top = 12.dp, bottom = 8.dp)) {
+        TopChip(theme, onToggle, modifier.semantics { stateDescription = if (open) "open" else "closed" }) {
+            Text(
+                stringResource(R.string.hidden_section) + " " + stringResource(R.string.all_apps_count, count),
+                style = MaterialTheme.typography.labelLarge,
+                color = theme.colors.chipFg,
+            )
+            Icon(
+                Icons.Chevron,
+                contentDescription = null,
+                tint = theme.colors.chipFg,
+                modifier = Modifier.size(18.dp).graphicsLayer { rotationZ = if (open) -90f else 90f },
+            )
+        }
+    }
+}
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -354,13 +403,14 @@ private fun GridRow(
     homeFocus: FocusMemory,
     pinnedId: String?,
     modifier: Modifier = Modifier,
+    idOf: (HomeTile) -> String? = ::gridId,
 ) {
     Row(
         modifier = modifier.focusRestorer().padding(start = SafeHorizontal, end = SafeHorizontal, top = 8.dp, bottom = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(CardGap),
     ) {
         tiles.forEach { tile ->
-            val id = gridId(tile)!!
+            val id = idOf(tile)!!
             TileCard(
                 tile = tile,
                 theme = theme,
