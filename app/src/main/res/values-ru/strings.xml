@@ -137,4 +137,6 @@
     <string name="shortcut_address">Адрес</string>
     <string name="shortcut_invalid">Введите название и адрес сайта, например example.com</string>
     <string name="shortcut_no_browser">Не установлен браузер. Сначала установите TV Bro.</string>
+    <string name="bg_picture">Картинка</string>
+    <string name="bg_import_failed">Не удалось использовать эту картинку</string>
 </resources>

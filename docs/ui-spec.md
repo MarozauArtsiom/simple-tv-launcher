@@ -169,6 +169,11 @@ For each screen: initial focus, Back, Home, and the mockup.
   images found on USB (title shows the count). Focus on a swatch or picture previews it on the
   screen behind, OK saves, and Back reverts. Without USB access, the grid is replaced by the
   adb hint note (as on the USB installer screen).
+- The six colours depend on the theme's text: dark colours for themes with light text, light colours for
+  themes with dark text. A saved colour that the current theme's text cannot be read on is not applied.
+  A picture gets a scrim (dark under light text, light under dark text). Down from "Из темы" goes to the
+  saved colour (or the first). Pictures: up to 36, three per row, from the first two folder levels of each
+  removable volume; OK stores a 960×540 copy in app storage.
 
 ### Hidden apps — `design/mockups/settings-hidden.html`
 - A list with a mini banner (72×40), the app name and "Показать". OK unhides and removes the row.

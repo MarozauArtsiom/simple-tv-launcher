@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -15,11 +17,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.marozauartsiom.tvlauncher.AppGraph
 import io.github.marozauartsiom.tvlauncher.R
 import io.github.marozauartsiom.tvlauncher.data.apps.LaunchResult
+import io.github.marozauartsiom.tvlauncher.data.background.BackgroundDecoder
+import io.github.marozauartsiom.tvlauncher.data.prefs.BackgroundChoice
 import io.github.marozauartsiom.tvlauncher.data.prefs.ItemKey
 import io.github.marozauartsiom.tvlauncher.data.prefs.LanguageChoice
 import io.github.marozauartsiom.tvlauncher.data.prefs.SettingsData
@@ -31,7 +36,9 @@ import io.github.marozauartsiom.tvlauncher.system.PackageActions
 import io.github.marozauartsiom.tvlauncher.system.SystemSettings
 import io.github.marozauartsiom.tvlauncher.system.WebLauncher
 import io.github.marozauartsiom.tvlauncher.ui.components.FocusMemory
+import io.github.marozauartsiom.tvlauncher.ui.settings.BackgroundPickerPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.LanguagePickerPage
+import io.github.marozauartsiom.tvlauncher.ui.settings.PicturesState
 import io.github.marozauartsiom.tvlauncher.ui.settings.SchedulePage
 import io.github.marozauartsiom.tvlauncher.ui.settings.SettingsPanel
 import io.github.marozauartsiom.tvlauncher.ui.settings.ThemePickerPage
@@ -48,13 +55,19 @@ import io.github.marozauartsiom.tvlauncher.ui.home.HomeTile
 import io.github.marozauartsiom.tvlauncher.ui.home.MenuAction
 import io.github.marozauartsiom.tvlauncher.ui.home.TopBarState
 import io.github.marozauartsiom.tvlauncher.ui.home.rememberClock
+import io.github.marozauartsiom.tvlauncher.ui.theme.BackgroundChoices
+import io.github.marozauartsiom.tvlauncher.ui.theme.BackgroundPick
 import io.github.marozauartsiom.tvlauncher.ui.theme.LauncherTheme
 import io.github.marozauartsiom.tvlauncher.ui.theme.ThemedBackground
 import io.github.marozauartsiom.tvlauncher.ui.theme.ThemeId
 import io.github.marozauartsiom.tvlauncher.ui.theme.Themes
+import android.os.Environment
+import java.io.File
 import java.time.LocalDateTime
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /** The whole UI. Home is always there; panels and menus open over it. */
 @Composable
@@ -78,6 +91,15 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     // Safe mode always uses the default theme: the saved one could be what keeps crashing.
     val theme = if (safeMode) Themes.default else Themes.byId(preview ?: scheduled ?: settings.theme)
 
+    // The background: a preview from the background picker, else the saved choice (theme art, a colour or a picture).
+    var backgroundPreview by remember { mutableStateOf<BackgroundPick?>(null) }
+    val backgroundSpec = if (safeMode) {
+        theme.background
+    } else {
+        BackgroundChoices.preview(theme, backgroundPreview)
+            ?: BackgroundChoices.resolve(theme, settings.background, graph.backgroundImages::fileFor)
+    }
+
     val context = LocalContext.current
     val editor = remember(graph) { FavouritesEditor(graph.settings) }
     val packageActions = remember(context) { PackageActions { context.startActivity(it) } }
@@ -92,6 +114,8 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     val settingsFocus = remember { FocusMemory() }
     val themeFocus = remember { FocusMemory() }
     val languageFocus = remember { FocusMemory() }
+    val backgroundFocus = remember { FocusMemory() }
+    val thumbnailDispatcher = remember { Dispatchers.Default.limitedParallelism(2) }
     val systemLocale = remember { android.content.res.Resources.getSystem().configuration.locales[0] }
     val scheduleFocus = remember { FocusMemory() }
     val pickDayFocus = remember { FocusMemory() }
@@ -132,7 +156,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
 
     LauncherTheme(theme) {
         Box(Modifier.fillMaxSize()) {
-            ThemedBackground(theme, graph.backgrounds)
+            ThemedBackground(backgroundSpec, graph.backgrounds)
             HomeScreen(
                 content = content,
                 theme = theme,
@@ -196,6 +220,39 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                             viewModel.open(Overlay.Settings(SettingsPage.Schedule))
                         },
                         memory = if (day) pickDayFocus else pickNightFocus,
+                    )
+                }
+                SettingsPage.Background -> {
+                    var accessChecks by remember { mutableIntStateOf(0) }
+                    val pictures by produceState<PicturesState>(PicturesState.Loading, accessChecks) {
+                        value = if (Environment.isExternalStorageManager()) {
+                            PicturesState.Loaded(graph.backgroundImages.scan())
+                        } else {
+                            PicturesState.NoAccess
+                        }
+                    }
+                    BackgroundPickerPage(
+                        theme = theme,
+                        saved = settings.background,
+                        pictures = pictures,
+                        adbCommand = "adb shell appops set --uid ${context.packageName} MANAGE_EXTERNAL_STORAGE allow",
+                        memory = backgroundFocus,
+                        thumbnail = { image -> withContext(thumbnailDispatcher) { BackgroundDecoder.thumbnail(File(image.path))?.asImageBitmap() } },
+                        onPreview = { backgroundPreview = it },
+                        onChoose = { pick ->
+                            graph.appScope.launch {
+                                when (pick) {
+                                    BackgroundPick.FromTheme -> { graph.settings.setBackground(BackgroundChoice.FromTheme); graph.backgroundImages.clear() }
+                                    is BackgroundPick.Solid -> { graph.settings.setBackground(BackgroundChoice.Solid(pick.argb)); graph.backgroundImages.clear() }
+                                    is BackgroundPick.Picture -> {
+                                        val name = graph.backgroundImages.import(File(pick.path))
+                                        if (name != null) graph.settings.setBackground(BackgroundChoice.Image(name))
+                                        else withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.bg_import_failed), Toast.LENGTH_SHORT).show() }
+                                    }
+                                }
+                            }
+                        },
+                        onCheckAccess = { accessChecks++ },
                     )
                 }
                 SettingsPage.Language -> LanguagePickerPage(

@@ -208,7 +208,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
 - [x] **T16 Language picker.** The order and default from `docs/ui-spec.md` §5; applies
   immediately; initial focus on the saved choice. **Done:** test + screenshot.
 
-- [ ] **T17 Background picker.** Read: the T06 mockup and `references/backgrounds.md`.
+- [x] **T17 Background picker.** Read: the T06 mockup and `references/backgrounds.md`.
   Choices: from theme, a set of solid colours, or images from USB. USB images need
   `MANAGE_EXTERNAL_STORAGE` (granted over adb). When `Environment.isExternalStorageManager()`
   is false, show a hint with the exact adb command. Scan `StorageManager` volumes for

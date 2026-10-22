@@ -42,6 +42,7 @@ import androidx.tv.material3.Text
 import io.github.marozauartsiom.tvlauncher.R
 import io.github.marozauartsiom.tvlauncher.ui.components.FocusMemory
 import io.github.marozauartsiom.tvlauncher.ui.components.FocusProgress
+import io.github.marozauartsiom.tvlauncher.ui.components.focusRing
 import io.github.marozauartsiom.tvlauncher.ui.components.Icons
 import io.github.marozauartsiom.tvlauncher.ui.components.PanelItem
 import io.github.marozauartsiom.tvlauncher.ui.components.PanelScroll
@@ -143,24 +144,7 @@ private fun ThemeThumbnail(
             modifier = Modifier
                 .size(ThumbWidth, ThumbHeight)
                 .then(focus.track())
-                .graphicsLayer {
-                    val scale = 1f + 0.06f * focus.value
-                    scaleX = scale
-                    scaleY = scale
-                }
-                .drawBehind {
-                    val p = focus.value
-                    if (p > 0f) {
-                        val w = 3.dp.toPx()
-                        drawRoundRect(
-                            color = ring.copy(alpha = p),
-                            topLeft = Offset(-w / 2f, -w / 2f),
-                            size = Size(size.width + w, size.height + w),
-                            cornerRadius = CornerRadius(10.dp.toPx() + w / 2f),
-                            style = Stroke(w),
-                        )
-                    }
-                }
+                .focusRing(focus, ring, 10.dp, growth = 0.06f)
                 .semantics { contentDescription = name; selected = isChosen },
             shape = ClickableSurfaceDefaults.shape(shape),
             colors = ClickableSurfaceDefaults.colors(containerColor = Color.Transparent, focusedContainerColor = Color.Transparent),

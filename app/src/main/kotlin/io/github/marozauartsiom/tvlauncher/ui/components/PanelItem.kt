@@ -62,24 +62,7 @@ fun PanelFrame(
             .fillMaxWidth()
             .height(height)
             .then(focus.track())
-            .graphicsLayer {
-                val scale = 1f + 0.03f * focus.value
-                scaleX = scale
-                scaleY = scale
-            }
-            .drawBehind {
-                val p = focus.value
-                if (p > 0f) {
-                    val w = 3.dp.toPx()
-                    drawRoundRect(
-                        color = c.itemFocusRing.copy(alpha = p),
-                        topLeft = Offset(-w / 2f, -w / 2f),
-                        size = Size(size.width + w, size.height + w),
-                        cornerRadius = CornerRadius(cornerRadius.toPx() + w / 2f),
-                        style = Stroke(w),
-                    )
-                }
-            },
+            .focusRing(focus, c.itemFocusRing, cornerRadius, growth = 0.03f),
         shape = ClickableSurfaceDefaults.shape(shape),
         colors = ClickableSurfaceDefaults.colors(
             containerColor = if (transparent) Color.Transparent else c.itemBg,

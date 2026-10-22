@@ -1,10 +1,13 @@
 package io.github.marozauartsiom.tvlauncher
 
 import android.content.Context
+import android.os.Environment
+import android.os.storage.StorageManager
 import io.github.marozauartsiom.tvlauncher.data.apps.AppLauncher
 import io.github.marozauartsiom.tvlauncher.data.apps.AppRepository
 import io.github.marozauartsiom.tvlauncher.data.apps.BannerLoader
 import io.github.marozauartsiom.tvlauncher.data.apps.PackageManagerSource
+import io.github.marozauartsiom.tvlauncher.data.background.BackgroundImages
 import io.github.marozauartsiom.tvlauncher.data.prefs.Settings
 import io.github.marozauartsiom.tvlauncher.i18n.LocaleController
 import io.github.marozauartsiom.tvlauncher.system.CrashGuard
@@ -32,5 +35,16 @@ class AppGraph(private val context: Context) {
     private val packageSource by lazy { PackageManagerSource(context) }
     val apps by lazy { AppRepository(packageSource, File(context.filesDir, "apps.json"), context.packageName.removeSuffix(".debug"), appScope, Dispatchers.IO) }
     val banners by lazy { BannerLoader(packageSource) }
+    /** Pictures on USB drives and the stored background. Only touched while the background picker is open. */
+    val backgroundImages by lazy {
+        BackgroundImages(
+            roots = {
+                context.getSystemService(StorageManager::class.java).storageVolumes
+                    .filter { it.isRemovable && it.state == Environment.MEDIA_MOUNTED }
+                    .mapNotNull { it.directory }
+            },
+            storeDir = File(context.filesDir, "backgrounds"),
+        )
+    }
     val launcher by lazy { AppLauncher(packageSource) { intent -> context.startActivity(intent) } }
 }

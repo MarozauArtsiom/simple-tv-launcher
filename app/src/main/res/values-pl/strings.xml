@@ -137,4 +137,6 @@
     <string name="shortcut_address">Adres</string>
     <string name="shortcut_invalid">Wpisz nazwę i adres strony, na przykład example.com</string>
     <string name="shortcut_no_browser">Brak przeglądarki. Najpierw zainstaluj TV Bro.</string>
+    <string name="bg_picture">Obraz</string>
+    <string name="bg_import_failed">Nie można użyć tego obrazu</string>
 </resources>

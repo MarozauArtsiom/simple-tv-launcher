@@ -57,6 +57,14 @@ data class LauncherColors(
 
 sealed interface BackgroundSpec
 
+/** The owner's colour (Settings → Background), no art and no scrim. */
+@Immutable
+data class SolidBackground(val color: Color) : BackgroundSpec
+
+/** The owner's picture, already 960x540 in app storage (or a USB file while previewing), under a scrim chosen for the theme. */
+@Immutable
+data class FileBackground(val path: String, val scrim: List<Pair<Float, Color>>) : BackgroundSpec
+
 /** A bitmap background (stored as 1920x1080 WebP, decoded at 960x540) under an optional vertical scrim. */
 @Immutable
 data class ImageBackground(

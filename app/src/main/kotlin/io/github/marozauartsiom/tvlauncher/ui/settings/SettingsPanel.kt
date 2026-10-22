@@ -155,7 +155,7 @@ fun settingsValues(settings: SettingsData, themeId: io.github.marozauartsiom.tvl
     val background = when (settings.background) {
         BackgroundChoice.FromTheme -> stringResource(R.string.value_from_theme)
         is BackgroundChoice.Solid -> stringResource(R.string.bg_colors)
-        is BackgroundChoice.Image -> stringResource(R.string.item_background)
+        is BackgroundChoice.Image -> stringResource(R.string.bg_picture)
     }
     val place = when (val w = settings.weatherLocation) {
         WeatherLocation.Auto -> settings.autoPlace?.name
