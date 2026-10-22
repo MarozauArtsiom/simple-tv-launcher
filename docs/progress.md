@@ -29,6 +29,12 @@ One line per finished task: date, task id, what was done, anything notable.
   empty-favourites hint, app menu + move mode, city search, background picker, hidden apps, USB
   installer (4 states), About, theme schedule, HDMI settings, iPhone hint. `ui-spec.md` §5 and §9
   updated. M1 complete.
+- 2026-10-22 — T07 theme engine: `ThemeSpec` and nine themes generated from `themes.css` values
+  (`Themes.kt`), `LauncherTheme` (tv-material scheme and typography, Nunito variable font bundled),
+  `ThemedBackground` + `BackgroundCache` (960×540 decode, two bitmaps max, 300 ms crossfade),
+  `themeShadow`, WebP backgrounds and thumbnails (~440 KB), `ThemeCssSyncTest` guards drift against
+  the CSS, nine-theme sample screenshots viewed and match the mockups.
+- 2026-10-22 — Gap found: shortcut tiles (approved feature 4) were not in the task list. Added T13b.
 
 ## Decisions to review
 
@@ -36,6 +42,9 @@ Defaults taken during unattended runs that the owner should look at.
 
 - T06: new screens were designed by Claude without prior owner review (as agreed for this run).
   Look at `design/mockups/screens/*.png`, especially the app menu and the USB installer.
+- T07: soft shadows and glows use Android's elevation shadow tinted with the theme colour, not an
+  exact CSS box-shadow, so glows look slightly different from the mockups. Hard cartoon shadows
+  are exact.
 - Gboard's keyboard height (~168 dp) is an estimate in the city-search mockup; check on the TV.
 
 ## Blockers

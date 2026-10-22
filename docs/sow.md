@@ -25,7 +25,8 @@ and it spends as little of the TV's 2 GB RAM and weak GPU as possible.
    and a settings gear; a **Favourites** row (manual order only, always first); an **All
    apps** grid (5 columns, sorted by launch count); app banners with generated banners for
    icon-only apps; focus memory; Back, Home and TV-on all return to the first favourite.
-2. **App menu** (long press OK): add to or remove from favourites, move, hide, app info,
+2. **Shortcut tiles** for websites (added to All apps and Favourites like apps).
+   **App menu** (long press OK): add to or remove from favourites, move, hide, app info,
    uninstall.
 3. **HDMI:** event-driven "signal on HDMI N — switch?" prompt inside the launcher, plus over
    other apps when the overlay permission is granted. HDMI chips open the input.

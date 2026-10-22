@@ -101,7 +101,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
 
 ## M2 — Foundations
 
-- [ ] **T07 Theme engine.** Read: `docs/ui-spec.md` §2–§4, `compose-tv-patterns.md`
+- [x] **T07 Theme engine.** Read: `docs/ui-spec.md` §2–§4, `compose-tv-patterns.md`
   (ThemeSpec), and `design/mockups/themes.css`.
   - Port all 9 themes 1:1 into `ui/theme/Themes.kt` (`ThemeSpec`, `LauncherColors`,
     `FocusStyle`), including the panel and item tokens. `LauncherTheme(spec)` provides the
@@ -179,6 +179,14 @@ string lives in resources in all six languages from the start (`values/` = Engli
   **Done:** behaviour tests for move and persistence; screenshot.
 
 ## M4 — Features
+
+- [ ] **T13b Shortcut tiles.** (Added during the run: approved in `requirements.md` §8 item 4, but missing from the first task list.)
+  A shortcut is a tile that opens a web address (in TV Bro, or the default browser through `ACTION_VIEW`). Settings gets
+  "Ярлыки сайтов": a list with "Добавить" (a title field and an address field, using the text-input pattern),
+  edit and delete. Shortcuts appear in "All apps" with a generated banner (first letter + colour from the
+  address) and can be added to Favourites from the app menu like apps. Keys in storage: `url:<id>` next to `pkg:<package>`.
+  Mockup first (`design/mockups/shortcuts.html`, midnight/sky/valley), and add it to `docs/ui-spec.md`.
+  **Done:** tests for add/edit/delete and for launching; screenshot of the list and the editor.
 
 - [ ] **T14 Settings panel.** Read: `docs/ui-spec.md` §5 Settings and
   `design/mockups/settings.html`.

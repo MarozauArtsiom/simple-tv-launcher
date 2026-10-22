@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Simple TV</string>
+    <string name="theme_midnight">Midnight</string>
+    <string name="theme_graphite">Graphite</string>
+    <string name="theme_aurora">Aurora</string>
+    <string name="theme_paper">Paper</string>
+    <string name="theme_sky">Sky</string>
+    <string name="theme_sage">Sage</string>
+    <string name="theme_valley">Sunny valley</string>
+    <string name="theme_ocean">Underwater</string>
+    <string name="theme_space">Space</string>
 </resources>
