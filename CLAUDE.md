@@ -69,6 +69,9 @@ Check these before promising a build or a device test:
 - Build with `scripts/gradlew-retry.sh <tasks>`: Maven Central answers HTTP 429 to cloud IPs,
   and the script retries with growing pauses. Set the SDK up first with
   `scripts/setup-android-sdk.sh` (idempotent, about 30 s).
+- Robolectric tests need a 200 MB jar from Maven Central, which 429s. If a test fails with
+  "Failed to fetch maven artifact ...android-all-instrumented:<ver>", run
+  `scripts/prefetch-robolectric.sh <ver>` once, then rerun.
 - The preinstalled `gradle` is 8.14 and cannot configure this project. Use `./gradlew` (9.8.2).
 - There is no `/dev/kvm`, so the emulator cannot run here, and the TV is not reachable from the cloud.
 - What does work here: writing code, HTML mockups rendered to 1920×1080 PNG with Playwright

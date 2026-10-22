@@ -50,7 +50,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   - Retry on HTTP 429 from Maven Central or the plugin portal: rerun with a short pause.
   **Done:** `./gradlew :app:assembleDebug` builds an app with an empty Compose activity.
 
-- [ ] **T04 Manifest + launcher identity.** Read: the `android-tv-launcher` skill
+- [x] **T04 Manifest + launcher identity.** Read: the `android-tv-launcher` skill
   (Manifest, Launcher behaviour), and the `android-intent-security` skill.
   - Manifest exactly as in the skill: HOME + DEFAULT and LEANBACK_LAUNCHER filters,
     `<queries>`, `singleTask`, `stateNotNeeded`, `excludeFromRecents`, landscape,
@@ -62,7 +62,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   - Theme XML: no action bar, `windowBackground` = the Midnight background colour.
   **Done:** the merged manifest shows both filters; the build is green.
 
-- [ ] **T05 Test infra + CI.** Read: `docs/tech-stack.md` §Testing and §CI, and the
+- [x] **T05 Test infra + CI.** Read: `docs/tech-stack.md` §Testing and §CI, and the
   `testing-setup` skill (project decisions win).
   - Test dependencies: JUnit 4, Robolectric 4.17, Roborazzi 1.77.0 (plugin + `roborazzi`,
     `roborazzi-compose`, `roborazzi-junit-rule`), Compose ui-test-junit4 and

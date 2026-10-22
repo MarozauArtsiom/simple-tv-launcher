@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Launcher banner</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <style>
+    html, body { width: 320px; height: 180px; }
+    body { background: radial-gradient(260px 160px at 15% 0%, #2A3350 0%, #0B0D12 75%);
+           display: grid; place-items: center; font-family: Roboto, system-ui, sans-serif; }
+    .logo { display: flex; align-items: center; gap: 14px; }
+    .mark { width: 56px; height: 56px; border-radius: 16px; background: #FFFFFF; display: grid; place-items: center; }
+    .mark svg { width: 34px; height: 34px; fill: #0B0D12; }
+    .name { font-size: 34px; font-weight: 600; color: #E8EAF0; letter-spacing: -.01em; }
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <span class="mark"><svg viewBox="0 0 24 24"><path d="M3 4h18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7v2h3v2H7v-2h3v-2H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v10h18V6H3zm9 1l5 4-5 4V7z"/></svg></span>
+    <span class="name">Simple TV</span>
+  </div>
+</body>
+</html>

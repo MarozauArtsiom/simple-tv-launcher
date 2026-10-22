@@ -14,6 +14,17 @@ One line per finished task: date, task id, what was done, anything notable.
   `./gradlew :app:assembleDebug` is green. The wrapper must be bootstrapped in an empty folder
   because the preinstalled Gradle 8.14 can't configure AGP 9.4. Added `scripts/gradlew-retry.sh`
   for Maven Central HTTP 429 responses.
+- 2026-10-22 — T04 manifest (HOME + LEANBACK_LAUNCHER, queries, singleTask, landscape, no
+  permissions yet), adaptive icon, 320×180 banner rendered from `design/mockups/brand/banner.html`.
+  The renderer gained `--size=WxH --scale=N`. Intent-security notes for later: never forward
+  incoming intents; the installer's status `PendingIntent` must be mutable (system fills extras),
+  so keep it explicit and package-bound.
+- 2026-10-22 — T05 test infra: Robolectric 4.17 + Roborazzi 1.77 + Compose UI tests; `TvScreenshotTest`
+  base class (960×540 dp, television, xhdpi → 1920×1080 PNG); smoke golden recorded and viewed;
+  GitHub Actions workflow `.github/workflows/android.yml`. Gotchas: Robolectric needs JDK
+  `--add-opens` flags (set in `app/build.gradle.kts`), and its android-all jar download dies on
+  Maven Central HTTP 429, so use `scripts/prefetch-robolectric.sh <version>` once per session.
+  M0 complete.
 
 ## Decisions to review
 

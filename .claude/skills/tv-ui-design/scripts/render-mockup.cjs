@@ -4,6 +4,7 @@
 //
 // Usage: node render-mockup.cjs <mockup.html[?query]> [out.png] [--grid]
 //   A query string is passed to the page, e.g. home.html?t=space picks a theme.
+//   --size=WxH  viewport in CSS px (default 960x540); --scale=N  device scale factor (default 2).
 //   --grid  overlays the safe area (48 dp sides, 27 dp top/bottom) and the 12-column grid.
 
 const path = require('path');
@@ -28,6 +29,9 @@ const GRID_CSS = `
 async function main() {
   const args = process.argv.slice(2);
   const grid = args.includes('--grid');
+  const opt = (name, fallback) => (args.find((a) => a.startsWith(`--${name}=`)) || '').split('=')[1] || fallback;
+  const [vw, vh] = opt('size', '960x540').split('x').map(Number);
+  const scale = Number(opt('scale', '2'));
   const [input, outArg] = args.filter((a) => !a.startsWith('--'));
   if (!input) {
     console.error('Usage: node render-mockup.cjs <mockup.html> [out.png] [--grid]');
@@ -40,7 +44,7 @@ async function main() {
   const { chromium } = loadPlaywright();
   const browser = await chromium.launch();
   try {
-    const page = await browser.newPage({ viewport: { width: 960, height: 540 }, deviceScaleFactor: 2 });
+    const page = await browser.newPage({ viewport: { width: vw, height: vh }, deviceScaleFactor: scale });
     const url = pathToFileURL(path.resolve(file)).href + (query ? '?' + query : '');
     await page.goto(url, { waitUntil: 'networkidle' });
     if (grid) await page.addStyleTag({ content: GRID_CSS });
