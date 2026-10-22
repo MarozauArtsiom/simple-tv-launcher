@@ -338,6 +338,27 @@ Found by the owner on the real TV after the first install. Recorded first, fixed
   **Done:** mockup approved; screenshots of both states in 9 themes; a test that the inactive
   section's alpha changes when focus crosses between sections; frame check on the TV.
 
+- [ ] **T32 Feature: a collapsed "Hidden" section on Home instead of hiding apps away.**
+  Owner: "Hide" should move the app from All apps into a **Hidden** section that works like an
+  accordion: collapsed by default, it opens only when the owner clicks it; scrolling past it with
+  the remote (just pressing Down) moves focus on as if it were empty, with nothing focusable inside.
+  Needs a mockup first (collapsed and expanded, 9 themes), then code.
+  Today: "Hide" removes the app from Home, and hidden apps live only in Settings → Hidden apps (T21).
+  Defaults to take unless the owner says otherwise:
+  - Place: the last section of Home, under All apps: a focusable header "Hidden · N" with a chevron.
+    Not shown when nothing is hidden.
+  - Collapsed: only the header takes focus; its tiles are not composed, so Down/Up pass by them.
+    OK on the header expands it (chevron turns); OK again collapses it.
+  - Expanded: the hidden apps as a grid like All apps. OK opens the app; long OK opens the app menu
+    with "Show on Home" (moves it back to All apps) instead of "Hide".
+  - It collapses again on Home reset (Home key, TV turned on, Back on Home), so it stays out of the way.
+  - Launch counts keep counting for hidden apps; Settings → Hidden apps stays as a second way back
+    (or is removed if the owner prefers one place).
+  - Fits T31: when focus is in the Hidden section, the other sections dim, and vice versa.
+  **Done:** mockup approved; behaviour tests (collapsed: Down from the last All apps row lands on the
+  header and the next Down goes nowhere / no hidden tile ever gets focus; OK expands and focus can
+  enter; Home reset collapses; "Show on Home" moves the app back); screenshots in 9 themes and `be`/`fr`.
+
 ## On the TV (owner, or Claude Code running on a computer in the same network)
 
 Not part of the cloud run. Do these after M5:
