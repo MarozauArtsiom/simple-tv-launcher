@@ -52,17 +52,12 @@ The owner wants it **only if it costs the TV nothing**.
   or images from a USB drive (copied into the app, so the drive can be removed). No downloads.
 - Shown under a dark scrim so the UI stays legible. Decoded at 960×540, about 2 MB of RAM.
 
-## 4. Screensaver with nature photos ❌ (system feature, works without the launcher)
+## 4. Screensaver ❌ (skipped: keep the system default)
 
-- The screensaver is chosen in system settings and runs no matter which launcher is installed.
-  The launcher doesn't ship one, which keeps it smaller and offline.
-- Option A: Google's **Ambient mode**, already on the TV. Personal cards can be turned off
-  (Settings → Accounts & Sign In → account → Google Assistant → "Never show proactively").
-- Option B: **Aerial Views**, free and open source. It shows nature aerial videos, or photos
-  from USB, with an optional clock. Google TV hides the screensaver picker, so it is switched
-  on once over adb. Restore command for Ambient mode:
-  `settings put secure screensaver_components com.google.android.apps.tv.dreamx/.service.Backdrop`.
-- It runs only while the TV is idle, so it costs nothing while you watch.
+- Decision: keep Google's default **Ambient mode**. Nothing to build or configure.
+- The screensaver is a system feature that works with any launcher. If the owner ever wants
+  nature videos without Google's cards, Aerial Views (free, open source) can be set over adb.
+  See the `xiaomi-tv-a-pro-2025` skill.
 
 ## 5. Browser ❌ (not the launcher; install a TV browser)
 
@@ -94,6 +89,23 @@ The owner wants it **only if it costs the TV nothing**.
   use either Google's on-device recognizer, if it works, or offline Vosk (RU + EN models about
   45 MB each, run in a separate process only while listening). Because of the size and the
   offline principle, this would be a separate optional app, not part of the launcher APK.
+
+## 8. Candidate features (proposed, awaiting the owner's choice)
+
+All of these are offline and do no background work.
+
+| Idea | Cost | Notes |
+|---|---|---|
+| Hide apps + adb clean-up of unused preinstalled apps | none in the launcher | `pm disable-user`, reversible with `pm enable`. Frees RAM and background activity; measure before and after |
+| Install APKs from a USB drive (also updates the launcher itself) | none until used | `REQUEST_INSTALL_PACKAGES`, and the owner allows "unknown apps" once |
+| "All apps" sorted by how often you launch them | tiny | Own launch counters in DataStore; no usage-stats permission |
+| Shortcut tiles: websites (open in TV Bro), deep links into apps | tiny | `ACTION_VIEW` with a URL or deep link |
+| Quick actions in the top bar: Wi-Fi, Bluetooth, sound output, picture mode, sleep timer | tiny | Open system/Xiaomi settings pages; which ones exist must be checked on the TV |
+| PIN lock on chosen apps | small | Soft lock: only blocks launching from our launcher |
+
+Not possible or against the principles: weather/news (needs internet); a "Continue watching" row
+(other apps' Watch Next needs a system-only permission); remote button remapping (needs an
+always-on accessibility service, so use Button Mapper if ever needed).
 
 ## Open questions for the owner
 
