@@ -13,28 +13,33 @@ are in the `xiaomi-tv-a-pro-2025` skill, and visual rules are in `tv-ui-design`.
 ```
 app/src/main/
   AndroidManifest.xml
-  java/<pkg>/
-    LauncherActivity.kt        single activity, hosts Compose
-    LauncherApp.kt             Application: keep onCreate nearly empty
-    data/apps/AppRepository.kt     query + cache + change callbacks
-    data/apps/AppIconLoader.kt     banner/icon -> ImageBitmap, LRU by bytes
-    data/inputs/InputRepository.kt HDMI inputs (TvInputManager)
-    data/prefs/                    DataStore: favourites, order, hidden apps
-    ui/home/HomeScreen.kt + HomeViewModel.kt
-    ui/components/               cards, rows, top bar
-    ui/theme/                    tokens from tv-ui-design (colours, type, spacing, motion)
+  kotlin/io/github/marozauartsiom/tvlauncher/
+    LauncherApp.kt  LauncherActivity.kt  AppGraph.kt   app, single activity, manual DI
+    data/apps/      AppRepository (query, cache, LauncherApps callback), BannerLoader, LaunchCounter
+    data/inputs/    InputRepository, HdmiWatcher
+    data/weather/   WeatherClient (Open-Meteo), GeoIp, WeatherRepository (cache)
+    data/prefs/     Settings (single DataStore: favourites, hidden, theme, language, weather…)
+    ui/theme/       ThemeSpec ×9, fonts, backgrounds (ported 1:1 from design/mockups/themes.css)
+    ui/home/        HomeScreen, HomeViewModel, TopBar, FavouritesRow, AppGrid
+    ui/settings/    SettingsPanel, ThemePicker, LanguagePicker, … , SettingsViewModel
+    ui/weather/  ui/hdmi/  ui/components/
+  res/values{,-be,-ru,-pl,-de,-fr}/strings.xml     English is the fallback in values/
+app/src/test/       unit, Compose-on-Robolectric and Roborazzi screenshot tests; goldens in snapshots/
 ```
 
-- Use ViewModel + `StateFlow` and collect it with `collectAsStateWithLifecycle()`.
-- Create dependencies by hand in `LauncherApp`. Don't add a DI framework until it hurts.
-- Pick library versions at scaffold time from Google Maven and Maven Central. Don't guess
-  them. As of May 2026 the stable versions were `androidx.tv:tv-material:1.1.0` and
-  `tv-foundation:1.0.0`. tv-foundation's `TvLazyRow`/`TvLazyColumn` were removed, so use
-  `androidx.compose.foundation.lazy.LazyRow`/`LazyColumn`.
-- Set `minSdk 28` unless the device probe shows otherwise. Set `targetSdk`/`compileSdk` to
-  the latest stable.
-- In release builds, turn on R8 (`isMinifyEnabled = true`, `isShrinkResources = true`)
-  because the TV only has 8 GB of storage.
+**Technology, versions, architecture, testing and CI live in `docs/tech-stack.md`. That
+file is the source of truth.** In short:
+- Gradle 9.8.2, AGP 9.4.1 with built-in Kotlin, Kotlin 2.4.21, Compose BOM 2026.09.00,
+  tv-material 1.1.0; compileSdk 37, targetSdk 36, minSdk 30 (until the device probe).
+- ViewModel + `StateFlow`, collected with `collectAsStateWithLifecycle()`. Manual DI
+  (`AppGraph` in `LauncherApp`). No navigation library: overlays are state plus `BackHandler`.
+- Before scaffolding or upgrading, run `scripts/latest-versions.sh` and update
+  `docs/tech-stack.md` together with `gradle/libs.versions.toml`. Stable versions only.
+- Release builds: R8 with `isMinifyEnabled` and `isShrinkResources` (the TV only has 8 GB).
+  The release keystore stays outside the repo.
+- Google's official skills in `.claude/skills/` cover the details: `agp-9-upgrade` (build
+  DSL), `testing-setup`, `r8-analyzer`, `android-intent-security` (exported HOME activity and
+  launch intents) and `android-cli` (SDK and devices).
 
 ## Manifest
 

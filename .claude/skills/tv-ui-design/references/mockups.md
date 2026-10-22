@@ -27,9 +27,12 @@ focus states, text under 14 px, and anything outside the safe area.
 - Draw the focused state as a static `.focused` class. A mockup shows one frame, so put
   exactly one `.focused` element per file. To compare focus positions, make variants such
   as `home.focus-row2.html`.
-- Use only the token variables. If a mockup needs a new value, add it to `tokens.css` and
-  to `ui/theme/Tokens.kt` in the same change.
-- Fonts: `font-family: Roboto, system-ui, sans-serif`. Don't load web fonts the app won't ship.
+- Use only the token variables. Layout and sizes live in `tokens.css`, and per-theme colours
+  and styles live in `themes.css`. A new value is added to all nine themes in `themes.css`, to
+  the `ThemeSpec` port in `ui/theme/`, and to the token list in `docs/ui-spec.md` §2, all in
+  the same change.
+- Fonts: `var(--font)` from the theme (Roboto, or the bundled Nunito for the cartoon themes).
+  Don't load web fonts the app won't ship.
 - App art: use plain coloured blocks with the app name. Don't copy real app logos into
   mockups.
 

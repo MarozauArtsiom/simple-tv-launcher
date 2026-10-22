@@ -7,17 +7,34 @@ A custom home-screen launcher for one specific TV: **Xiaomi TV A Pro 2025 55"**
 The owner writes in Russian, so reply in Russian. Code, identifiers, commit messages and
 skill files stay in English.
 
+## Documents: the source of truth
+| File | Holds |
+|---|---|
+| `docs/requirements.md` | What the owner asked for, every decision, and open questions |
+| `docs/ui-spec.md` | Every screen and component: sizes, states, initial focus, Back behaviour, which mockups exist and which screens still need one |
+| `docs/tech-stack.md` | Versions (verified 2026-10-22), libraries used and deliberately not used, architecture, testing, CI, SDK setup |
+| `design/mockups/` | Approved HTML mockups; `themes.css` has the exact tokens of all nine themes |
+
+Workflow: requirement → mockup → owner approves → code that matches `ui-spec.md` and the
+mockup → Roborazzi screenshot test. Before scaffolding or upgrading, re-check versions with
+`.claude/skills/android-tv-launcher/scripts/latest-versions.sh`.
+
 ## Skills: load before working
-Project skills live in `.claude/skills/`. Load the matching one before you write code or
-design anything:
+Load the matching skill before you write code or design anything. `.claude/skills/README.md`
+lists them all.
 
 | Skill | Load when |
 |---|---|
-| `android-tv-launcher` | any app code: manifest, app list, launching apps, HOME replacement, HDMI inputs, build/install |
+| `android-tv-launcher` | any app code: manifest, app list, launching apps, HOME replacement, HDMI, weather, settings, build/install |
 | `tv-ui-design` | any screen, component, colour, type, focus state, animation or mockup |
 | `xiaomi-tv-a-pro-2025` | anything device-specific: hardware limits, adb, probing or testing on the real TV |
+| `leanback-to-compose-tv-migration` (Google) | Compose-for-TV reference: focus, `focusRestorer`, text input, lazy lists |
+| `jetpack-compose-performance` (Google) | writing or reviewing Compose UI for performance |
+| `agp-9-upgrade`, `testing-setup`, `r8-analyzer`, `android-intent-security`, `android-cli` (Google) | build DSL, tests, release shrinking, manifest/intents, SDK and devices |
 
-## Stack (decided)
+Project docs win over Google's generic advice (see `.claude/skills/README.md`).
+
+## Stack (decided; details in `docs/tech-stack.md`)
 - Kotlin, one activity, Jetpack Compose + `androidx.tv:tv-material` (Material 3 for TV).
 - No Leanback library and no XML views for UI.
 - Gradle Kotlin DSL with a version catalog (`gradle/libs.versions.toml`).

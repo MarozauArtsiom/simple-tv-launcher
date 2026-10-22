@@ -1,9 +1,15 @@
 ---
 name: tv-ui-design
-description: Design system and rules for the 10-foot TV UI of this launcher. Covers the 960x540 dp canvas and safe areas, layout grid, type scale, dark colours tuned for a QLED panel, focus states, D-pad navigation model, motion budget for a weak GPU, Compose-for-TV component patterns, and how to render HTML mockups as 1920x1080 PNGs with Playwright. Load before designing, reviewing or coding any screen or component.
+description: Design rules for the 10-foot TV UI of this launcher. Covers the 960x540 dp canvas and safe areas, layout grid, type scale, the nine themes (tokens in design/mockups/themes.css), QLED-aware colour, focus states per component, D-pad navigation model, motion budget for a weak GPU, Compose-for-TV component patterns, and how to render HTML mockups as 1920x1080 PNGs with Playwright. The concrete per-screen spec is docs/ui-spec.md. Load before designing, reviewing or coding any screen or component.
 ---
 
 # TV UI design
+
+Three sources, each with one job:
+- **This skill** holds the rules (how anything on a TV must look and behave).
+- **`docs/ui-spec.md`** holds what each screen and component is: sizes, states, initial focus,
+  Back behaviour, and which screens still need a mockup.
+- **`design/mockups/themes.css`** holds the exact token values of all nine themes.
 
 The user sits about 3 m from a 55" screen, holding a remote with a D-pad, OK, Back and
 Home. Nothing on screen can be tapped, and only one thing has focus at a time. Every
@@ -42,41 +48,34 @@ bodySmall 12/16, labelLarge 14/20 (Medium), labelMedium 12/16 (Medium), labelSma
   which use Nunito: a rounded, very legible sans with Cyrillic, under the OFL licence, bundled
   in the app at about 270 KB (`design/mockups/assets/fonts/`).
 
-## Colour (dark, QLED-aware)
+## Colour (nine themes, QLED-aware)
 
-Starting tokens, placeholders until the owner picks a style:
+The owner chose to ship all nine themes (3 dark, 3 light, 3 cartoon). Every colour comes from
+a theme token. The token list is in `docs/ui-spec.md` §2 and the values are in
+`design/mockups/themes.css`. Never hard-code a colour in a component.
 
-| Token | Value | Use |
-|---|---|---|
-| `background` | `#0B0D12` | full-screen background (not pure black) |
-| `surface` | `#161A22` | panels, top bar |
-| `surfaceVariant` | `#1E232D` | unfocused cards and buttons |
-| `onSurface` | `#E8EAF0` | primary text (not pure white) |
-| `onSurfaceVariant` | `#A3A9B7` | secondary text |
-| `focus` | `#FFFFFF` | focus border, focused button fill |
-| `onFocus` | `#0B0D12` | text on a focused (white) button |
-| `accent` | `#8AB4F8` | small highlights only: indicators, progress |
-| `error` | `#F28B82` | errors |
-| `signal` | `#7BD88F` | "HDMI has a signal" dot |
-
-- Text contrast is at least 4.5:1. The focused element contrasts at least 3:1 with its
-  unfocused neighbours.
-- Use pure white only for the focus indicator, so focus always reads as the brightest
-  thing on screen.
+- Text contrast is at least 4.5:1 against its real background in **every** theme. The
+  focused element contrasts at least 3:1 with its unfocused state.
+- The focus indicator is the most prominent thing on screen in each theme: white in Midnight
+  and Aurora, amber in Graphite, dark ink in Paper, blue in Sky, green in Sage, and yellow or
+  coral in the cartoon themes.
+- Dark themes: off-white text (#E8EAF0-ish), never a pure black background. The one exception is
+  Space, which uses white text because its focus colour is yellow.
+- Light themes are bright in a dark room, which is why the optional day/night schedule exists.
 - The panel covers about 94% of DCI-P3, and in Vivid mode it oversaturates sRGB colours.
-  Keep saturation moderate and keep big areas desaturated. Bright accents go on small
-  elements only.
-- Avoid 1 dp hairlines, fine stripes and checkerboards (they cause moiré and shimmer after
-  upscaling). Avoid long, subtle full-screen gradients, because 8-bit UI surfaces band;
-  if you need one, keep it short or add a little noise.
+  Keep saturation moderate on big areas. The cartoon themes are deliberately bright, but their
+  large sky and sea areas stay soft.
+- Avoid 1 dp hairlines, fine stripes and checkerboards (they cause moiré after upscaling). Avoid
+  long, subtle full-screen gradients, which band on 8-bit surfaces: keep them short or add noise.
 - The UI is SDR. Don't design for HDR brightness.
 
 ## Focus
 
 - Exactly one focused item, always. On first frame, on return from an app, and after Back
   or Home, focus goes to a predictable place: the first app, or the last focused one.
-- Focused state = **scale + white border**:
-  - Small cards (banners, about 160 dp wide): ×1.1, 3 dp border.
+- Focused state = **scale + ring in the theme's focus colour** (`docs/ui-spec.md` §2, §4):
+  - Small cards (banners, about 160 dp wide): ×1.1 with a 3 dp ring. The cartoon family uses
+    ×1.12, a 5 dp ring and a −2° tilt.
   - Medium (about 260 dp): ×1.05.
   - Large or full-width: ×1.025.
 - Glow and shadow cost a lot on this GPU, so use them sparingly, only on the focused item.
@@ -142,4 +141,8 @@ Compose with the same token values.
 - [ ] There is a defined initial focus, and focus is restored after returning from an app.
 - [ ] Back and Home on the root screen reset to the top; the launcher never exits.
 - [ ] Only `graphicsLayer` animations, all ≤ 250 ms, no blur.
-- [ ] Colours come from tokens. No pure white text, no pure black background.
+- [ ] Colours, radii and focus styles come from theme tokens. Nothing is hard-coded.
+- [ ] Checked in all 9 themes: dark, light and cartoon each look right, and contrast holds.
+- [ ] Checked in `fr` and `be` (the longest strings and the Belarusian alphabet). Nothing is
+      clipped and every title is one line.
+- [ ] The screen has an approved mockup and matches `docs/ui-spec.md`.
