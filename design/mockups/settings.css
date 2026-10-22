@@ -1,0 +1,49 @@
+/* Side panels (settings, theme and language pickers). Colours come from the panel tokens in themes.css. */
+
+body { font-family: var(--font); }
+iframe.behind { position: fixed; inset: 0; width: 960px; height: 540px; border: 0; }
+.dim { position: fixed; inset: 0; background: rgba(0, 0, 0, var(--dim, .45)); }
+
+.sheet {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 400px; overflow: hidden;
+  padding: var(--safe-v) var(--safe-h) var(--safe-v) 32px;
+  background: var(--panel-bg); color: var(--panel-fg);
+  border-radius: var(--panel-radius) 0 0 var(--panel-radius);
+  display: flex; flex-direction: column;
+}
+.sheet.wide { width: 560px; }
+.sheet h1 { font-size: 24px; line-height: 32px; font-weight: var(--title-weight, 500); margin-bottom: 16px; }
+.muted { color: var(--panel-muted); }
+.section { margin: 16px 0 8px; color: var(--panel-muted); }
+
+svg { width: 20px; height: 20px; fill: currentColor; flex: none; }
+
+/* Quick TV actions: 3 x 2 tiles */
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tile {
+  height: 58px; border-radius: 12px; background: var(--item-bg);
+  display: grid; place-items: center; align-content: center; gap: 4px;
+}
+
+/* List items */
+.list { display: grid; gap: 4px; }
+.item {
+  height: 44px; padding: 0 12px; border-radius: 10px; background: var(--item-bg);
+  display: flex; align-items: center; gap: 12px;
+}
+.item .title { flex: 1; white-space: nowrap; }
+.item .value { color: var(--panel-muted); white-space: nowrap; }
+.item.focused, .tile.focused {
+  background: var(--item-focus-bg); color: var(--item-focus-fg); transform: scale(1.03);
+}
+.item.focused .value { color: inherit; opacity: .75; }
+.chevron { width: 18px; height: 18px; opacity: .6; }
+.check { color: var(--signal); }
+.item.focused .check { color: inherit; }
+
+/* The list keeps going below the screen edge: fade the cut-off part. */
+.fade::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 56px;
+  background: linear-gradient(to bottom, transparent, var(--panel-bg));
+  border-radius: 0 0 0 var(--panel-radius);
+}

@@ -8,8 +8,25 @@
   <link rel="stylesheet" href="home.css">
   <script>
     // home.html?t=<theme id> picks one of the themes in themes.css (default: midnight).
-    const theme = new URLSearchParams(location.search).get('t');
+    const params = new URLSearchParams(location.search);
+    const theme = params.get('t');
     if (theme) document.documentElement.dataset.theme = theme;
+
+    // home.html?lang=<code> shows the UI strings in one of the six launcher languages.
+    const STRINGS = {
+      ru: { favorites: 'Избранное', all: 'Все приложения', city: '· Минск', date: 'Среда, 21 октября' },
+      en: { favorites: 'Favorites', all: 'All apps', city: '· Minsk', date: 'Wednesday, October 21' },
+      pl: { favorites: 'Ulubione', all: 'Wszystkie aplikacje', city: '· Mińsk', date: 'Środa, 21 października' },
+      de: { favorites: 'Favoriten', all: 'Alle Apps', city: '· Minsk', date: 'Mittwoch, 21. Oktober' },
+      fr: { favorites: 'Favoris', all: 'Toutes les applications', city: '· Minsk', date: 'Mercredi 21 octobre' },
+      be: { favorites: 'Абранае', all: 'Усе праграмы', city: '· Мінск', date: 'Серада, 21 кастрычніка' },
+    };
+    // Dates are spelled out because the mockup browser lacks Belarusian date data (Android has it).
+    const lang = params.get('lang');
+    if (lang && STRINGS[lang]) addEventListener('DOMContentLoaded', () => {
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = STRINGS[lang][el.dataset.i18n]; });
+    });
   </script>
 </head>
 <body>
@@ -24,11 +41,11 @@
     <div class="left">
       <div class="clock">
         <span class="display-small">20:41</span>
-        <span class="title-medium date">Среда, 21 октября</span>
+        <span class="title-medium date" data-i18n="date">Среда, 21 октября</span>
       </div>
       <span class="chip label-large weather">
         <svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3.5" opacity=".7"/><path d="M8.5 20h9a3.75 3.75 0 0 0 .5-7.47A5 5 0 0 0 8.6 11.9 4 4 0 0 0 8.5 20z"/></svg>
-        +7° <span class="meta">· Минск</span>
+        +7° <span class="meta" data-i18n="city">· Минск</span>
       </span>
     </div>
     <nav class="actions">
@@ -51,7 +68,7 @@
   </header>
 
   <section class="favorites">
-    <h2 class="section-title row-title">Избранное</h2>
+    <h2 class="section-title row-title" data-i18n="favorites">Избранное</h2>
     <div class="fav-row">
       <div class="fav-item">
         <div class="card focused" style="background:#7A2E2E"><span class="title-medium">YouTube</span></div>
@@ -66,7 +83,7 @@
   </section>
 
   <section class="all">
-    <h2 class="section-title row-title">Все приложения <span class="count title-medium">· 14</span></h2>
+    <h2 class="section-title row-title"><span data-i18n="all">Все приложения</span> <span class="count title-medium">· 14</span></h2>
     <div class="grid">
       <div class="card" style="background:#203C5C"><span class="title-medium">Disney+</span></div>
       <div class="card" style="background:#2F4A3A"><span class="title-medium">Google Play</span></div>

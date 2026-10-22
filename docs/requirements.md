@@ -159,14 +159,36 @@ help with mirroring an iPhone screen.
 - This is the first network feature, so the launcher gets the `INTERNET` permission.
 - Details: `android-tv-launcher` skill, `references/weather.md`. Mockup: `design/mockups/weather-panel.html`.
 
-## 11. Visual theme (choosing) ⚠️
+## 11. Themes ✅ (all nine ship, switchable)
 
-- Nine candidates in the same layout: dark (Midnight, Graphite, Aurora), light (Paper, Sky, Sage),
-  and cartoon (Sunny valley, Underwater, Space).
-  Mockups: `design/mockups/themes/*.png`; sources: `design/mockups/themes.css` + `assets/bg/`.
-- Backgrounds are static images, so the choice doesn't affect performance. Several themes can
-  ship and be switched in launcher Settings. Light themes are bright in a dark room, so
-  "light by day, dark at night" is a possible option.
+- The owner liked all nine, so all of them ship: dark (Midnight, Graphite, Aurora), light (Paper,
+  Sky, Sage), and cartoon (Sunny valley, Underwater, Space).
+- Settings → Theme: thumbnails grouped by family with **live preview**. The focused theme is applied
+  to the screen at once, OK saves it, and Back cancels.
+- Optional "change by time of day" (off by default): a day theme and a night theme, switched at
+  sunrise and sunset, checked only while the home screen is visible.
+- Panels (settings, weather, prompts) follow the theme too. Backgrounds are static images, so no
+  theme costs more than another.
+- Mockups: `design/mockups/themes/*.png`, `design/mockups/settings/theme-picker.png`.
+
+## 12. Settings ✅
+
+- The gear in the top bar opens the settings panel.
+  - **TV** (quick tiles): Wi-Fi, Bluetooth, Sound, Picture, Sleep timer, Android settings.
+  - **Launcher**: Theme, Background, Language, Weather, HDMI signal prompt, Hidden apps,
+    Install from USB, About.
+- "Background" defaults to the theme's own art. A custom colour or an image from USB overrides it.
+- Mockup: `design/mockups/settings/settings-*.png`.
+
+## 13. Languages ✅
+
+- The launcher's own language: **follow the TV** (default), Русский, English, Polski, Deutsch,
+  Français, Беларуская. Each is shown by its native name.
+- Everything the launcher shows switches: titles, dates, weather texts and city names. App names
+  come from the apps themselves.
+- Translations are written in-house; the owner checks them, especially Belarusian.
+- Mockups: `design/mockups/settings/language-picker.png`, `design/mockups/settings/languages.png`.
+- Details: `android-tv-launcher` skill, `references/settings-themes-i18n.md`.
 
 ## Open questions for the owner
 
