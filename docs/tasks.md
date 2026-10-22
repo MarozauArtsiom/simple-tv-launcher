@@ -135,7 +135,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   **Done:** unit tests for date strings (ru, be, de, fr, en, pl) and for the fallback;
   screenshot of a sample screen in `be` and `fr`.
 
-- [ ] **T10 App shell.** Read: the `android-tv-launcher` skill (Launcher behaviour) and
+- [x] **T10 App shell.** Read: the `android-tv-launcher` skill (Launcher behaviour) and
   `docs/tech-stack.md` §Architecture.
   `LauncherApp` + `AppGraph` (manual DI), and `LauncherActivity`: Compose content,
   `onNewIntent(CATEGORY_HOME)` → home-pressed events, and an `ACTION_SCREEN_ON` receiver

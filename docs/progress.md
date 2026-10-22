@@ -43,6 +43,10 @@ One line per finished task: date, task id, what was done, anything notable.
   complete plural forms), `LocaleController` (platform per-app locale on API 33+, context wrapping
   + recreate below; SharedPreferences mirror for `attachBaseContext`), `DateText`, and a six-language
   screenshot sample (viewed: nothing clipped).
+- 2026-10-22 — T10 app shell: `LauncherApp`/`AppGraph` (manual DI, all lazy), `LauncherActivity`
+  (locale wrap, HOME `onNewIntent`, screen-on reset via `ScreenOnWatcher`), `Overlay` state machine +
+  `LauncherViewModel` (Back never exits), `CrashGuard` (two crashes in ten minutes → safe mode),
+  `LauncherRoot` placeholder. 10 tests. M2 complete.
 
 ## Decisions to review
 
@@ -53,6 +57,8 @@ Defaults taken during unattended runs that the owner should look at.
 - T07: soft shadows and glows use Android's elevation shadow tinted with the theme colour, not an
   exact CSS box-shadow, so glows look slightly different from the mockups. Hard cartoon shadows
   are exact.
+- T10: safe mode is detected (`CrashGuard.safeMode()`) but the safe screen (app grid + Settings only)
+  is drawn in T12 with the real grid.
 - T09: all translations (especially Belarusian) were written by Claude. Please read
   `app/src/main/res/values-be/strings.xml`.
 - Gboard's keyboard height (~168 dp) is an estimate in the city-search mockup; check on the TV.
