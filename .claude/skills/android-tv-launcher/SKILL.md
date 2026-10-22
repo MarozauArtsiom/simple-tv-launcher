@@ -266,6 +266,15 @@ Built-in gradients, or images from USB, all offline:
   `BackHandler` to scroll to the top and focus the first item. If already there, do nothing.
 - **Home pressed while we are already in front:** it arrives as `onNewIntent` with
   `CATEGORY_HOME`. Treat it like Back: reset scroll and focus, close menus.
+- **TV turned on → first favourite focused.** Favourites are always the first row, in the
+  owner's manual order. Nothing automatic reorders them; launch-count sorting applies only to
+  "All apps". In `LauncherApp`, register `Intent.ACTION_SCREEN_ON` at runtime (a callback, not
+  background work), set a flag, and on the next `onResume` reset scroll and focus to the first
+  favourite. A cold start does the same by default. Returning from an app with Back keeps
+  focus on the tile you left from.
+- **Installing APKs from USB:** declare `REQUEST_INSTALL_PACKAGES`, then stream the file into a
+  `PackageInstaller` session and commit it with a `PendingIntent` status receiver. The system
+  shows its own confirmation. The first time, the owner allows "unknown apps" for the launcher.
 - **Never block startup:** show the cached list in the first frame. Keep
   `LauncherApp.onCreate` free of I/O.
 - **Never crash in a loop.** If the stock launcher is disabled (see below), a crash loop

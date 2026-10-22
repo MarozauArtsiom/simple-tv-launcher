@@ -14,10 +14,17 @@ Status: ✅ in the launcher, ⚠️ in the launcher with caveats, ❌ not a laun
 ## 1. Home screen: Favourites, then All apps ✅
 
 - Top bar: clock and date on the left; HDMI inputs (with a "signal" dot) and Settings on the right.
-- **Favourites**: one horizontal row. Add or remove with a long press on OK, then "Add to favourites".
-  Reorder with a "Move" mode (D-pad left/right, OK to drop). Stored in DataStore.
-- **All apps**: a grid of banners, 5 per line, sorted alphabetically. Phone-only apps without
-  a TV banner get a generated banner (see `android-tv-launcher`).
+- **Favourites always come first** (the owner's main requirement). One horizontal row,
+  filled **only by hand**: long press on OK → "Add to favourites". Reorder with a "Move" mode
+  (D-pad left/right, OK to drop). The order is exactly what the owner set; nothing automatic
+  ever reorders or adds to it. Stored in DataStore.
+- **When the TV is turned on**, focus lands on the first favourite. A cold start does this
+  anyway; if the process survived standby, a screen-on callback resets focus on the next resume.
+  When returning from an app with Back, focus stays on the tile you left from.
+  Check on the TV: Xiaomi may have a "power on → last input/app" setting that skips Home entirely.
+- **All apps**: a grid of banners, 5 per line, sorted by how often you launch them, then
+  alphabetically (see §8). Phone-only apps without a TV banner get a generated banner
+  (see `android-tv-launcher`).
 - Mockup: `design/mockups/home.html`.
 
 ## 2. "Signal on HDMI N — switch?" prompt ⚠️
@@ -90,22 +97,41 @@ The owner wants it **only if it costs the TV nothing**.
   45 MB each, run in a separate process only while listening). Because of the size and the
   offline principle, this would be a separate optional app, not part of the launcher APK.
 
-## 8. Candidate features (proposed, awaiting the owner's choice)
+## 8. Extra features (approved) ✅
 
 All of these are offline and do no background work.
 
-| Idea | Cost | Notes |
-|---|---|---|
-| Hide apps + adb clean-up of unused preinstalled apps | none in the launcher | `pm disable-user`, reversible with `pm enable`. Frees RAM and background activity; measure before and after |
-| Install APKs from a USB drive (also updates the launcher itself) | none until used | `REQUEST_INSTALL_PACKAGES`, and the owner allows "unknown apps" once |
-| "All apps" sorted by how often you launch them | tiny | Own launch counters in DataStore; no usage-stats permission |
-| Shortcut tiles: websites (open in TV Bro), deep links into apps | tiny | `ACTION_VIEW` with a URL or deep link |
-| Quick actions in the top bar: Wi-Fi, Bluetooth, sound output, picture mode, sleep timer | tiny | Open system/Xiaomi settings pages; which ones exist must be checked on the TV |
-| PIN lock on chosen apps | small | Soft lock: only blocks launching from our launcher |
+1. **Hide apps + clean-up of preinstalled apps.** Hidden apps disappear from "All apps"
+   (Settings lists them, to bring them back). Separately, adb `pm disable-user --user 0 <pkg>`
+   for unused preinstalled apps (reversible with `pm enable`). This frees RAM and background
+   activity; the list is built from the device probe, and the gain is measured before and after.
+2. **Install APKs from a USB drive**, including updates of the launcher itself.
+   `REQUEST_INSTALL_PACKAGES` + `PackageInstaller`; the owner allows "unknown apps" for the
+   launcher once in system settings.
+3. **"All apps" sorted by launch count** (own counters in DataStore, no usage-stats permission).
+   Favourites are never affected.
+4. **Shortcut tiles**: a website that opens in TV Bro, or a deep link into an app
+   (`ACTION_VIEW`). They can be added to Favourites like apps.
+5. **Quick actions in the top bar**: Wi-Fi, Bluetooth, sound output, picture mode, sleep timer.
+   They open the matching system or Xiaomi settings page; which pages exist is checked on the TV.
 
+Not chosen: PIN lock on apps.
 Not possible or against the principles: weather/news (needs internet); a "Continue watching" row
 (other apps' Watch Next needs a system-only permission); remote button remapping (needs an
 always-on accessibility service, so use Button Mapper if ever needed).
+
+## 9. Phone screen on the TV ⚠️ (system features; the launcher only adds a shortcut)
+
+- The TV already has **Chromecast built-in** and **Miracast** (Xiaomi's "Miracast" app).
+  Both work without our launcher.
+- Android phone: Google Home → device → Cast → "Cast screen", or the phone's own screen-cast
+  tile (Miracast). Photos and videos also cast from Google Photos or YouTube with the Cast button.
+- iPhone: no screen mirroring to Google TV out of the box. Photos and videos cast from
+  Google Photos or YouTube. Mirroring needs a third-party AirPlay receiver app.
+- The launcher adds a **"Phone screen"** button that opens Xiaomi's Miracast receiver
+  (package name from the device probe), because Miracast waits only while that app is open.
+- A custom receiver inside the launcher is ruled out: any network socket, even on the local
+  network, needs the `INTERNET` permission.
 
 ## Open questions for the owner
 
