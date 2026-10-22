@@ -555,10 +555,16 @@ private fun handleMenuAction(
 /** Side of the stored profile photo in px: the button is 36 dp, so 2× xhdpi with room to spare. */
 private const val AvatarSize = 160
 
-/** The adb commands that enable the power helper (accessibility service), as one line to copy. */
+/**
+ * The adb command that enables the power helper (accessibility service). It adds ours to the services already
+ * enabled instead of replacing them, and does nothing twice.
+ */
 private fun powerServiceCommand(context: Context): String {
     val service = "${context.packageName}/${PowerService::class.java.name}"
-    return "adb shell settings put secure enabled_accessibility_services $service && adb shell settings put secure accessibility_enabled 1"
+    val key = "enabled_accessibility_services"
+    return "adb shell 'svc=$service; cur=\$(settings get secure $key); " +
+        "case \"\$cur\" in null|\"\") new=\$svc;; *\"\$svc\"*) new=\$cur;; *) new=\"\$cur:\$svc\";; esac; " +
+        "settings put secure $key \"\$new\"; settings put secure accessibility_enabled 1'"
 }
 
 private fun unavailable(context: Context) =

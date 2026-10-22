@@ -124,12 +124,13 @@ adb shell pm enable com.google.android.tungsten.setupwraith
 
 **Выключение телевизора** (кнопка «Выключить телевизор» в настройках и «Таймер» вверху). Обычное приложение
 не может выключить ТВ, поэтому это делает служба доступности лаунчера: она ничего не читает и включается только
-по вашей команде. Один раз включите её (команда перезапишет список других служб доступности, если они у вас есть):
+по вашей команде. Один раз включите её (команда добавляет службу к уже включённым, ничего не отключая):
 
 ```bash
-adb shell settings put secure enabled_accessibility_services <pkg>/io.github.marozauartsiom.tvlauncher.system.power.PowerService
-adb shell settings put secure accessibility_enabled 1
+adb shell 'svc=io.github.marozauartsiom.tvlauncher.debug/io.github.marozauartsiom.tvlauncher.system.power.PowerService; cur=$(settings get secure enabled_accessibility_services); case "$cur" in null|"") new=$svc;; *"$svc"*) new=$cur;; *) new="$cur:$svc";; esac; settings put secure enabled_accessibility_services "$new"; settings put secure accessibility_enabled 1'
 ```
+
+Проверка: `adb shell settings get secure enabled_accessibility_services` — в списке должна быть `…PowerService`.
 
 По «Да» служба открывает системное меню питания и сама нажимает «Выключить». Если на вашем ТВ пункт называется
 иначе, меню просто останется открытым — нажмите сами и сообщите название.
