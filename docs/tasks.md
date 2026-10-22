@@ -325,7 +325,7 @@ Found by the owner on the real TV after the first install. Recorded first, fixed
   Settings; OK opens the Settings panel. It replaces the gear chip at the right end of the top bar.
   **Done:** mockup approved, avatar in 9 themes (screenshots), OK opens Settings, picker tested.
 
-- [ ] **T31 Feature: dim the section without focus.** Owner: "the section that is not active
+- [x] **T31 Feature: dim the section without focus.** Owner: "the section that is not active
   (Favourites or All apps) should be a bit blurred and transparent, so my attention stays where the
   selected app really is". Needs a mockup first (both states, 9 themes), then code.
   Plan: the section that holds focus stays as is; the other one (title and tiles) fades to about

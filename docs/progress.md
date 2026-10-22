@@ -159,6 +159,8 @@ One line per finished task: date, task id, what was done, anything notable.
 - 2026-10-22 — T29+T30: the gear became a round avatar button (owner's photo or a person icon) that opens Settings; the
   remote's Menu key opens Settings from Home; new page Settings → Profile photo (USB picture, stored as a 160 px square copy in
   `files/avatar`). 1 behaviour test (Menu key); Home and panel goldens re-recorded (only the button changed).
+- 2026-10-22 — T31: the Home section without focus fades to 50 % (150 ms, `graphicsLayer` alpha with `ModulateAlpha`, no
+  offscreen buffer). Home goldens re-recorded.
 
 ## Decisions to review
 
@@ -212,6 +214,8 @@ Defaults taken during unattended runs that the owner should look at.
 - T30: the avatar is a picture from USB, not the Google account photo (that needs Google sign-in and a call to Google). No separate
   mockup: the button keeps the approved chip shape and the page reuses the background picker's parts. Whether the remote has a
   Menu key is unknown until the probe; Up+Right to the button always works.
+- T31: fade only, no blur: `Modifier.blur` needs Android 12+ and costs GPU time every frame on the Mali-G52. If the owner still
+  wants blur, try 2–4 dp on the TV and keep it only if focus moves stay smooth. No separate mockup (approved Home, faded).
 
 ## Blockers
 

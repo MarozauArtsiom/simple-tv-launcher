@@ -16,6 +16,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -86,6 +90,10 @@ data class HomeActions(
 )
 
 private const val GridColumns = 5
+/** Opacity of the Home section that does not hold focus. */
+private const val InactiveAlpha = 0.5f
+
+private enum class Section { None, Favourites, All }
 private val CardGap = 16.dp
 
 /**
@@ -155,6 +163,15 @@ fun HomeScreen(
     val favourites = if (safeMode) emptyList() else content.favourites
     val rows = remember(content.all) { content.all.chunked(GridColumns) }
 
+    // The section that holds focus stays as is; the other one fades, so the eye stays on the selected tile (T31).
+    // Focus in the top bar fades nothing. The alphas are read only in layer lambdas.
+    var activeSection by remember { mutableStateOf(Section.None) }
+    val favouritesAlpha = animateFloatAsState(if (activeSection == Section.All) InactiveAlpha else 1f, tween(150), label = "favouritesAlpha")
+    val allAlpha = animateFloatAsState(if (activeSection == Section.Favourites) InactiveAlpha else 1f, tween(150), label = "allAlpha")
+    fun Modifier.section(section: Section, alpha: androidx.compose.runtime.State<Float>) = this
+        .onFocusChanged { if (it.hasFocus) activeSection = section else if (activeSection == section) activeSection = Section.None }
+        .graphicsLayer { this.alpha = alpha.value; compositingStrategy = CompositingStrategy.ModulateAlpha }
+
     // Our own scroll rule instead of the TV pivot, which jerked the screen during the focus animation (T28).
     // The top margin keeps a section's title in view above its first row.
     CompositionLocalProvider(LocalBringIntoViewSpec provides rememberCalmScrollSpec(leadingMargin = 56.dp, trailingMargin = SafeVertical)) {
@@ -192,7 +209,7 @@ fun HomeScreen(
                 }
             } else {
                 item(key = "favourites", contentType = "favourites") {
-                    Column(Modifier.padding(top = 24.dp)) {
+                    Column(Modifier.padding(top = 24.dp).section(Section.Favourites, favouritesAlpha)) {
                         SectionTitle(stringResource(R.string.favourites), count = null, theme = theme)
                         if (favourites.isEmpty()) {
                             EmptyFavouritesHint(theme)
@@ -203,12 +220,12 @@ fun HomeScreen(
                 }
             }
             item(key = "all-title", contentType = "title") {
-                Box(Modifier.padding(top = 12.dp)) {
+                Box(Modifier.padding(top = 12.dp).graphicsLayer { alpha = allAlpha.value }) {
                     SectionTitle(stringResource(R.string.all_apps), count = content.all.size, theme = theme)
                 }
             }
             items(rows, key = { row -> row.first().key.value }, contentType = { "grid-row" }) { row ->
-                GridRow(row, theme, art, actions, focus, pinnedId)
+                GridRow(row, theme, art, actions, focus, pinnedId, Modifier.section(Section.All, allAlpha))
             }
         }
     }
@@ -336,9 +353,10 @@ private fun GridRow(
     actions: HomeActions,
     homeFocus: FocusMemory,
     pinnedId: String?,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier.focusRestorer().padding(start = SafeHorizontal, end = SafeHorizontal, top = 8.dp, bottom = 8.dp),
+        modifier = modifier.focusRestorer().padding(start = SafeHorizontal, end = SafeHorizontal, top = 8.dp, bottom = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(CardGap),
     ) {
         tiles.forEach { tile ->

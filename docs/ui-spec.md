@@ -86,6 +86,8 @@ For each screen: initial focus, Back, Home, and the mockup.
 - Focus memory: the favourites row and each grid row restore their last item (`focusRestorer`).
   Up from the first row goes to the top bar.
 - The remote's Menu key opens Settings from anywhere on Home.
+- The section that holds focus (Favourites or All apps) is drawn as is; the other one fades to 50 %
+  in 150 ms (title and tiles). Focus in the top bar fades nothing. No blur (see T31).
 - Scrolling follows focus calmly (`CalmScrollSpec`, not the TV pivot): a tile already on screen
   never scrolls the list, even while it grows; a tile off screen is brought just inside the edge
   (56 dp from the top so the section title shows, 27 dp from the bottom, 48 dp at the row ends).
