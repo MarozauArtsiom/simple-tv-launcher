@@ -72,6 +72,7 @@ import io.github.marozauartsiom.tvlauncher.ui.home.TopBarState
 import io.github.marozauartsiom.tvlauncher.ui.hdmi.HdmiPrompt
 import io.github.marozauartsiom.tvlauncher.ui.iphone.IphoneHintDialog
 import io.github.marozauartsiom.tvlauncher.ui.settings.HdmiSettingsPage
+import io.github.marozauartsiom.tvlauncher.ui.settings.AboutPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.HiddenAppsPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.UsbInstallerPage
 import io.github.marozauartsiom.tvlauncher.ui.home.WeatherChip
@@ -167,6 +168,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     val hiddenFocus = remember { FocusMemory() }
     val backgroundFocus = remember { FocusMemory() }
     val usbFocus = remember { FocusMemory() }
+    val aboutFocus = remember { FocusMemory() }
     val thumbnailDispatcher = remember { Dispatchers.Default.limitedParallelism(2) }
     val systemLocale = remember { android.content.res.Resources.getSystem().configuration.locales[0] }
     val scheduleFocus = remember { FocusMemory() }
@@ -386,6 +388,10 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                         },
                         onDone = graph.usbInstaller::refresh,
                     )
+                }
+                SettingsPage.About -> {
+                    val info = remember { runCatching { context.packageManager.getPackageInfo(context.packageName, 0) }.getOrNull() }
+                    AboutPage(theme, info?.versionName.orEmpty(), info?.longVersionCode ?: 0L, aboutFocus)
                 }
                 SettingsPage.Weather -> CitySearch(theme, graph, languageTag, viewModel)
                 SettingsPage.Language -> LanguagePickerPage(

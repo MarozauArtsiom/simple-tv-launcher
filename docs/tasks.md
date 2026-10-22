@@ -247,7 +247,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   states. A newer version of the launcher itself installs as an update.
   **Done:** tests with fakes; screenshot of each state.
 
-- [ ] **T23 About page.** Version, build, licences (Nunito OFL; "Данные о погоде: Open-Meteo.com,
+- [x] **T23 About page.** Version, build, licences (Nunito OFL; "Данные о погоде: Open-Meteo.com,
   CC BY 4.0"), and a short "no ads, no tracking" line. **Done:** screenshot.
 
 ## M5 — Hardening and handover

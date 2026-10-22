@@ -120,6 +120,9 @@ One line per finished task: date, task id, what was done, anything notable.
   `UsbInstaller` state machine (Install / Update / Installed labels; a downgrade is never offered). Page states: list, empty, no
   storage access, unknown apps not allowed (own adb command), installing, done (Open / Done), failed / cancelled. Scans only when the
   page opens or on "Check again". Tests with fakes + temp dirs, screenshots of every state viewed against the mockup.
+- 2026-10-22 — T23 About page: name, version from `PackageManager`, the no-ads line and three licence rows (Open-Meteo CC BY 4.0,
+  Nunito OFL, Android components Apache 2.0); rows take focus, OK does nothing. With it every Settings row now opens a page.
+  2 + 1 tests, screenshots in 3 themes and `be`/`fr` viewed against the mockup.
 
 ## Decisions to review
 
