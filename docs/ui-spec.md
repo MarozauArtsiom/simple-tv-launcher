@@ -85,6 +85,9 @@ For each screen: initial focus, Back, Home, and the mockup.
 - Initial focus: the first favourite. When there are no favourites, the first app in the grid.
 - Focus memory: the favourites row and each grid row restore their last item (`focusRestorer`).
   Up from the first row goes to the top bar.
+- Scrolling follows focus calmly (`CalmScrollSpec`, not the TV pivot): a tile already on screen
+  never scrolls the list, even while it grows; a tile off screen is brought just inside the edge
+  (56 dp from the top so the section title shows, 27 dp from the bottom, 48 dp at the row ends).
 - Back: close any overlay, else scroll to the top and focus the first favourite. Never exit.
   Home pressed while on Home does the same. TV turned on: first favourite. Back from an
   app: the tile the user left from.

@@ -284,7 +284,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
 
 Found by the owner on the real TV after the first install. Recorded first, fixed in a later run.
 
-- [ ] **T28 Bug: Home jerks when focus moves between All apps tiles.** Read: `tv-ui-design`,
+- [x] **T28 Bug: Home jerks when focus moves between All apps tiles.** Read: `tv-ui-design`,
   `jetpack-compose-performance`, `leanback-to-compose-tv-migration`.
   Owner: only in **All apps**, Favourites are fine. The tile grows, and during the growth the whole
   screen scrolls a little down; when the animation ends it comes back.

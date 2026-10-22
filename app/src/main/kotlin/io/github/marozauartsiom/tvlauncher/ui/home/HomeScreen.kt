@@ -15,12 +15,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -91,7 +94,7 @@ private val CardGap = 16.dp
  * appear and again on every reset in [resets] (Home key, screen on, Back at the top). The favourites
  * row and each grid row remember their last item with `focusRestorer`.
  */
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     content: HomeContent,
@@ -151,51 +154,55 @@ fun HomeScreen(
     val favourites = if (safeMode) emptyList() else content.favourites
     val rows = remember(content.all) { content.all.chunked(GridColumns) }
 
-    LazyColumn(
-        state = listState,
-        modifier = modifier.fillMaxSize().focusProperties { canFocus = !overlayOpen },
-        contentPadding = PaddingValues(bottom = SafeVertical),
-    ) {
-        item(key = "top", contentType = "top") {
-            TopBar(
-                state = if (safeMode) TopBarState(showIphone = false) else topBar,
-                clock = clock,
-                theme = theme,
-                onWeather = actions.onWeather,
-                onHdmi = actions.onHdmi,
-                onIphone = actions.onIphone,
-                onSettings = actions.onSettings,
-                focus = focus,
-            )
-        }
-        if (safeMode) {
-            item(key = "safe", contentType = "note") {
-                Text(
-                    text = stringResource(R.string.safe_mode_note),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = theme.colors.onSurfaceVariant,
-                    modifier = Modifier.padding(start = SafeHorizontal, end = SafeHorizontal, top = 16.dp),
+    // Our own scroll rule instead of the TV pivot, which jerked the screen during the focus animation (T28).
+    // The top margin keeps a section's title in view above its first row.
+    CompositionLocalProvider(LocalBringIntoViewSpec provides rememberCalmScrollSpec(leadingMargin = 56.dp, trailingMargin = SafeVertical)) {
+        LazyColumn(
+            state = listState,
+            modifier = modifier.fillMaxSize().focusProperties { canFocus = !overlayOpen },
+            contentPadding = PaddingValues(bottom = SafeVertical),
+        ) {
+            item(key = "top", contentType = "top") {
+                TopBar(
+                    state = if (safeMode) TopBarState(showIphone = false) else topBar,
+                    clock = clock,
+                    theme = theme,
+                    onWeather = actions.onWeather,
+                    onHdmi = actions.onHdmi,
+                    onIphone = actions.onIphone,
+                    onSettings = actions.onSettings,
+                    focus = focus,
                 )
             }
-        } else {
-            item(key = "favourites", contentType = "favourites") {
-                Column(Modifier.padding(top = 24.dp)) {
-                    SectionTitle(stringResource(R.string.favourites), count = null, theme = theme)
-                    if (favourites.isEmpty()) {
-                        EmptyFavouritesHint(theme)
-                    } else {
-                        FavouritesRow(favourites, theme, art, actions, favouritesState, focus, moveKey, pinnedId)
+            if (safeMode) {
+                item(key = "safe", contentType = "note") {
+                    Text(
+                        text = stringResource(R.string.safe_mode_note),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = theme.colors.onSurfaceVariant,
+                        modifier = Modifier.padding(start = SafeHorizontal, end = SafeHorizontal, top = 16.dp),
+                    )
+                }
+            } else {
+                item(key = "favourites", contentType = "favourites") {
+                    Column(Modifier.padding(top = 24.dp)) {
+                        SectionTitle(stringResource(R.string.favourites), count = null, theme = theme)
+                        if (favourites.isEmpty()) {
+                            EmptyFavouritesHint(theme)
+                        } else {
+                            FavouritesRow(favourites, theme, art, actions, favouritesState, focus, moveKey, pinnedId)
+                        }
                     }
                 }
             }
-        }
-        item(key = "all-title", contentType = "title") {
-            Box(Modifier.padding(top = 12.dp)) {
-                SectionTitle(stringResource(R.string.all_apps), count = content.all.size, theme = theme)
+            item(key = "all-title", contentType = "title") {
+                Box(Modifier.padding(top = 12.dp)) {
+                    SectionTitle(stringResource(R.string.all_apps), count = content.all.size, theme = theme)
+                }
             }
-        }
-        items(rows, key = { row -> row.first().key.value }, contentType = { "grid-row" }) { row ->
-            GridRow(row, theme, art, actions, focus, pinnedId)
+            items(rows, key = { row -> row.first().key.value }, contentType = { "grid-row" }) { row ->
+                GridRow(row, theme, art, actions, focus, pinnedId)
+            }
         }
     }
 }
@@ -203,7 +210,7 @@ fun HomeScreen(
 internal fun favouriteId(tile: HomeTile) = "fav:${tile.key.value}"
 internal fun gridId(tile: HomeTile?) = tile?.let { "all:${it.key.value}" }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun FavouritesRow(
     tiles: List<HomeTile>,
@@ -220,14 +227,16 @@ private fun FavouritesRow(
     LaunchedEffect(moveKey, movingIndex) {
         if (movingIndex >= 0 && state.layoutInfo.visibleItemsInfo.none { it.index == movingIndex }) state.animateScrollToItem(movingIndex)
     }
-    LazyRow(
-        state = state,
-        modifier = Modifier.focusRestorer(),
-        contentPadding = PaddingValues(start = SafeHorizontal, end = SafeHorizontal, top = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(CardGap),
-    ) {
-        items(tiles, key = { tile -> tile.key.value }, contentType = { "tile" }) { tile ->
-            FavouriteItem(tile, theme, art, actions, focus, moving = tile.key == moveKey, pinned = favouriteId(tile) == pinnedId)
+    CompositionLocalProvider(LocalBringIntoViewSpec provides rememberCalmScrollSpec(SafeHorizontal, SafeHorizontal)) {
+        LazyRow(
+            state = state,
+            modifier = Modifier.focusRestorer(),
+            contentPadding = PaddingValues(start = SafeHorizontal, end = SafeHorizontal, top = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(CardGap),
+        ) {
+            items(tiles, key = { tile -> tile.key.value }, contentType = { "tile" }) { tile ->
+                FavouriteItem(tile, theme, art, actions, focus, moving = tile.key == moveKey, pinned = favouriteId(tile) == pinnedId)
+            }
         }
     }
 }

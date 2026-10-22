@@ -153,6 +153,9 @@ One line per finished task: date, task id, what was done, anything notable.
 - 2026-10-22 — First install on the TV: the owner reported two bugs and one feature, recorded as T28–T30 (M6) in `docs/tasks.md`,
   not fixed yet: Home jerks when focus moves, Settings are hard to find, account avatar at the top right should open Settings.
   Then T31: dim (and maybe blur) the Home section that has no focus; T32: a collapsed "Hidden" accordion section on Home.
+- 2026-10-22 — T28 fixed: Home's `LazyColumn` and the Favourites `LazyRow` use `CalmScrollSpec` instead of Compose's TV pivot
+  (on leanback devices the pivot kept re-aiming at the growing, scaled tile). `HomeScrollTest` turns on the leanback feature in
+  Robolectric. `LocalBringIntoViewSpec` is an experimental foundation API (opt-in); the library itself is stable.
 
 ## Decisions to review
 
