@@ -1,7 +1,7 @@
 # Launcher backgrounds
 
-The launcher is offline (no `INTERNET` permission), so every background is either built in
-or comes from the TV's own storage.
+Backgrounds are built in or come from the TV's own storage. Nothing is downloaded in the
+background.
 
 - Launcher Settings → Background, with a live preview. Choices:
   - built-in gradients or solid colours (shipped as tiny vectors or code, no PNGs);

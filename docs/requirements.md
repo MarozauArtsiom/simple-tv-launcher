@@ -5,9 +5,11 @@ Status: ✅ in the launcher, ⚠️ in the launcher with caveats, ❌ not a laun
 
 ## 0. Principles (the owner's top priorities)
 
-- **No ads.** The launcher has no `INTERNET` permission, so it cannot load ads or send data.
-  Side benefit: if the stock Google TV launcher is disabled (see `android-tv-launcher`),
-  its sponsored rows disappear too.
+- **No ads.** No sponsored rows or service recommendations like on the stock Google TV home,
+  and no ad or analytics SDKs. If the stock launcher is disabled (see `android-tv-launcher`),
+  its ads disappear from the system entirely.
+- **Network only on demand.** Internet and local-network access are fine for features the owner
+  asked for, but only while that feature is in use. Nothing downloads in the background.
 - **Minimal resources.** No background services, no scheduled jobs, no polling. Target
   ≤ 120 MB RAM while on screen, nothing extra while in the background, first frame in < 1 s.
 
@@ -94,12 +96,12 @@ The owner wants it **only if it costs the TV nothing**.
   opened by the remote's mic button. This works only if the remote's mic audio is available to
   third-party apps on this TV, which we test with a small debug screen first. Recognition would
   use either Google's on-device recognizer, if it works, or offline Vosk (RU + EN models about
-  45 MB each, run in a separate process only while listening). Because of the size and the
-  offline principle, this would be a separate optional app, not part of the launcher APK.
+  45 MB each, run in a separate process only while listening). Because of the size, this would
+  be a separate optional app, not part of the launcher APK.
 
 ## 8. Extra features (approved) ✅
 
-All of these are offline and do no background work.
+None of these do background work.
 
 1. **Hide apps + clean-up of preinstalled apps.** Hidden apps disappear from "All apps"
    (Settings lists them, to bring them back). Separately, adb `pm disable-user --user 0 <pkg>`
@@ -116,22 +118,33 @@ All of these are offline and do no background work.
    They open the matching system or Xiaomi settings page; which pages exist is checked on the TV.
 
 Not chosen: PIN lock on apps.
-Not possible or against the principles: weather/news (needs internet); a "Continue watching" row
+Possible now that the network is allowed (not chosen yet): weather in the top bar, refreshed
+only while the home screen is visible and at most every 30 minutes.
+Not possible: a "Continue watching" row
 (other apps' Watch Next needs a system-only permission); remote button remapping (needs an
 always-on accessibility service, so use Button Mapper if ever needed).
 
-## 9. Phone screen on the TV ⚠️ (system features; the launcher only adds a shortcut)
+## 9. iPhone screen on the TV ⚠️ (separate open-source app; the launcher adds a button)
 
-- The TV already has **Chromecast built-in** and **Miracast** (Xiaomi's "Miracast" app).
-  Both work without our launcher.
-- Android phone: Google Home → device → Cast → "Cast screen", or the phone's own screen-cast
-  tile (Miracast). Photos and videos also cast from Google Photos or YouTube with the Cast button.
-- iPhone: no screen mirroring to Google TV out of the box. Photos and videos cast from
-  Google Photos or YouTube. Mirroring needs a third-party AirPlay receiver app.
-- The launcher adds a **"Phone screen"** button that opens Xiaomi's Miracast receiver
-  (package name from the device probe), because Miracast waits only while that app is open.
-- A custom receiver inside the launcher is ruled out: any network socket, even on the local
-  network, needs the `INTERNET` permission.
+The owner has an iPhone. Google TV has no AirPlay, and the TV's Chromecast and Miracast don't
+help with mirroring an iPhone screen.
+
+- **Screen mirroring: AirPlay Server** (`io.github.jqssun.airplay`, github.com/jqssun/android-airplay-server).
+  Open source (GPL-3.0), built on UxPlay. Supports Android TV and the D-pad, H.264/H.265
+  mirroring, and audio. It's on Google Play, F-Droid and GitHub. On the iPhone: Control Centre →
+  Screen Mirroring → pick the TV.
+- The launcher's top bar gets an **"iPhone screen"** button that opens AirPlay Server, so the
+  receiver runs only when wanted.
+- Check on the TV: stability and latency on this hardware, and whether the app keeps a service
+  running after it is closed (the resources principle). DRM content (the Apple TV app, Netflix)
+  won't mirror; for those, use the TV's own app.
+- **Photos and videos without mirroring:** the Google Photos and YouTube apps on the iPhone have a
+  Cast button, which works with the TV's Chromecast built-in. Nothing to build.
+- Not built into the launcher: an AirPlay receiver is native code, a reverse-engineered protocol and
+  a constantly running discovery service. A separate app keeps the launcher light. Fallback idea
+  if AirPlay Server disappoints: a launcher "Photos from phone" screen that shows a QR code. The
+  iPhone opens it in Safari and uploads photos over the local network, and the small server runs
+  only while that screen is open.
 
 ## Open questions for the owner
 

@@ -1,6 +1,6 @@
 ---
 name: android-tv-launcher
-description: How to build a custom HOME launcher for Google TV / Android TV in Kotlin + Compose. Covers the manifest (HOME + LEANBACK_LAUNCHER, package visibility), listing installed TV apps with banners, launching them, reacting to installs/removals, HDMI inputs and the event-driven "signal on HDMI" prompt, offline launcher backgrounds, launcher-specific Back/Home behaviour, making it the default Home on Google TV, and build/install over adb. Use for any non-visual code in this repo.
+description: How to build a custom HOME launcher for Google TV / Android TV in Kotlin + Compose. Covers the manifest (HOME + LEANBACK_LAUNCHER, package visibility), listing installed TV apps with banners, launching them, reacting to installs/removals, HDMI inputs and the event-driven "signal on HDMI" prompt, launcher backgrounds, launcher-specific Back/Home behaviour, making it the default Home on Google TV, and build/install over adb. Use for any non-visual code in this repo.
 ---
 
 # Android TV launcher: engineering guide
@@ -41,7 +41,8 @@ app/src/main/
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- No INTERNET permission, on purpose: the launcher stays offline (no ads, no tracking). -->
+    <!-- INTERNET is added only with the first feature that needs it (on-demand use only).
+         Never add ad, analytics or tracking SDKs. -->
     <uses-feature android:name="android.software.leanback" android:required="true" />
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
@@ -247,7 +248,7 @@ class HdmiWatcher(context: Context, private val onSignal: (TvInputInfo) -> Unit)
 
 ## Backgrounds
 
-Built-in gradients, or images from USB, all offline:
+Built-in gradients, or images from USB:
 [references/backgrounds.md](references/backgrounds.md).
 
 ## Not the launcher's job
@@ -256,6 +257,8 @@ Built-in gradients, or images from USB, all offline:
   (github.com/truefedex/tv-bro). Web search in the launcher opens URLs with `ACTION_VIEW`.
 - **Screensaver:** a system feature that works with any launcher. Use Google's Ambient mode or
   Aerial Views. See [references/backgrounds.md](references/backgrounds.md).
+- **iPhone screen mirroring:** the AirPlay Server app (`io.github.jqssun.airplay`, open source).
+  The top bar has a button that launches it, so it runs only on demand.
 - **Keyboard:** the system IME (Gboard) is used by every text field. Russian/English is set in Gboard.
 - **Google Assistant:** it can't be fixed from a launcher. See the voice diagnostics in the
   `xiaomi-tv-a-pro-2025` skill and `docs/requirements.md` §7.
