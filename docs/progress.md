@@ -136,6 +136,20 @@ One line per finished task: date, task id, what was done, anything notable.
     no cleartext (https-only fetcher, targetSdk 36 default).
   - Left as is: `MANAGE_EXTERNAL_STORAGE` and `REQUEST_INSTALL_PACKAGES` are broad but are the owner's explicit features and are granted
     only over adb; stored names of copied images/APK paths are validated by regex before use.
+- 2026-10-22 — T25 performance + Baseline Profile: audited the UI against the compose-performance checklist: lazy rows have keys and
+  `contentType`, animated values are read in draw/layer lambdas (`FocusProgress`), no `mutableStateListOf`, no per-item flow
+  collection. One finding fixed: every tile used `onGloballyPositioned` only to know its bounds on a long press; replaced by
+  `BoundsProbe` (a `Modifier.Node` + `requireLayoutCoordinates()` on demand, no layout callback). `BoxWithConstraints` stays in the
+  app menu (one-off, not a hot path). `:baselineprofile` module added (compiles; recording needs the TV). Release build: **3.07 MB**
+  (`app-release-unsigned.apk`, R8 + resource shrinking, empty `proguard-rules.pro`, no keep rules to review); debug APK 36.9 MB
+  (unminified, tooling). CI now also builds the release variant.
+- 2026-10-22 — T26 owner guide: `README.md` in Russian (install over adb, default Home methods with restore commands, the three
+  adb grants, TV Bro / AirPlay Server, updating, troubleshooting, the on-TV checklist). Commands are taken from the skills and
+  were checked against the code (package ids, page names, safe mode rules).
+- 2026-10-22 — T27 docs sync: `requirements.md` (status section), `ui-spec.md` (USB states built beyond the mockup), `tech-stack.md`
+  (`:baselineprofile`, debug/release signing, CI release check). **Summary:** T01–T27 are done; the full gate
+  (`assembleDebug`, `testDebugUnitTest`, `verifyRoborazziDebug`) is green; release APK 3.07 MB unsigned; nothing is blocked. What remains
+  needs the TV (`tasks.md` → "On the TV").
 
 ## Decisions to review
 
@@ -178,6 +192,14 @@ Defaults taken during unattended runs that the owner should look at.
 - T22: `REQUEST_INSTALL_PACKAGES` is not grantable from a dialog on every Google TV build, so the page shows the adb command
   (`appops set --uid … REQUEST_INSTALL_PACKAGES allow`) like the other special permissions. Check on the TV whether the system's own
   "allow unknown apps" screen is reachable and prefer it if so.
+- T25/T26: the owner's APK is the CI **debug** build, signed with a committed throwaway key `app/debug.keystore` (password `android`),
+  so updates over USB or `adb install -r` keep working between CI runs (a per-runner key would break every update). The key
+  protects nothing; if you prefer, replace it with your own debug key and keep it out of git. Its package id is
+  `io.github.marozauartsiom.tvlauncher.debug` (all adb commands in the README use it).
+- T25: the release APK is unsigned until a release keystore is provided (kept outside the repo as agreed); a tag-triggered signed
+  release in CI is not set up for the same reason.
+- T25: the Baseline Profile journey presses D-pad keys by count (right ×3, down ×6, up ×8, right ×6 to the gear). Adjust the counts
+  after the first run on the TV if the gear is not reached.
 
 ## Blockers
 

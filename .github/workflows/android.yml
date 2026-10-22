@@ -20,6 +20,11 @@ jobs:
       - name: Build, unit tests and screenshot verification
         run: ./gradlew assembleDebug testDebugUnitTest verifyRoborazziDebug --stacktrace
 
+      - name: Release build (R8) and its size
+        run: |
+          ./gradlew assembleRelease --stacktrace
+          ls -l app/build/outputs/apk/release/*.apk
+
       - uses: actions/upload-artifact@v4
         with:
           name: debug-apk

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.roborazzi)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.baselineprofile)
 }
 
 android {
@@ -19,6 +20,17 @@ android {
 
     androidResources {
         generateLocaleConfig = true
+    }
+
+    signingConfigs {
+        // Every debug build (also the CI ones) is signed with the same project key, so a newer APK installs over an older one.
+        // It is a throwaway key with the public password "android"; the release key is never in the repository.
+        getByName("debug") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
     }
 
     buildTypes {
@@ -85,6 +97,9 @@ dependencies {
     implementation(libs.profileinstaller)
     implementation(libs.coroutines.android)
     implementation(libs.serialization.json)
+
+    // The profile recorded on the TV by :baselineprofile is merged into the release build (src/release/generated/baselineProfiles).
+    baselineProfile(project(":baselineprofile"))
 
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)

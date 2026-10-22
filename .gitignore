@@ -2,6 +2,7 @@
 build/
 local.properties
 *.keystore
+!app/debug.keystore
 *.jks
 .idea/
 *.iml

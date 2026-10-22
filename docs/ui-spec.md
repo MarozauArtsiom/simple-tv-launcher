@@ -188,6 +188,11 @@ For each screen: initial focus, Back, Home, and the mockup.
 - No permission: a warning note with the exact adb command and a "Проверить снова" button.
 - Installing: one row "Устанавливается…" plus a hint to confirm in the system dialog.
 - Done: a row with a check, then buttons "Открыть" and "Готово".
+- Built beyond the mockup (same components, screenshot-tested in `app/src/test/snapshots/settings-usb-*`):
+  "unknown apps not allowed" (a note with its own adb command and "Проверить снова"), and "failed" / "cancelled"
+  (the archive row with the message and "Проверить снова"). An archive that is already installed (same or newer
+  version) reads "Установлено" and does nothing on OK. The drive is scanned only when the page opens or on
+  "Проверить снова" / "Готово".
 
 ### About — `design/mockups/settings-about.html`
 - App icon, name, version and build, one sentence on privacy, and the licence list as two-line

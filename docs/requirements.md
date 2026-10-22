@@ -194,6 +194,13 @@ help with mirroring an iPhone screen.
 - Mockups: `design/mockups/settings/language-picker.png`, `design/mockups/settings/languages.png`.
 - Details: `android-tv-launcher` skill, `references/settings-themes-i18n.md`.
 
+## Status after the first unattended run
+
+Everything marked ✅ above is built and covered by unit, behaviour and screenshot tests (`docs/progress.md` has
+the log and "Decisions to review"). What only the TV can confirm is listed in `docs/tasks.md` ("On the TV"):
+vendor intents (Picture, Sleep timer, input picker), HDMI behaviour, the default-Home method, memory and
+startup budgets, Belarusian dates, the Baseline Profile and the voice diagnostics (§7).
+
 ## Open questions for the owner
 
 - Over other apps: is the prompt worth granting the overlay permission over adb (one command)?

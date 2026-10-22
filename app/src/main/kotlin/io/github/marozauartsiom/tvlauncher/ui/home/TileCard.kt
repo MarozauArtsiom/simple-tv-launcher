@@ -22,9 +22,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInRoot
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
@@ -75,13 +73,13 @@ fun TileCard(
     pinned: Boolean = false,
 ) {
     val shape = remember(theme.cardRadius) { RoundedCornerShape(theme.cardRadius) }
-    val coordinates = remember { arrayOfNulls<LayoutCoordinates>(1) } // read only on long press, so not state
+    val probe = remember { BoundsProbe() } // asked only on a long press: no layout callback runs for it
     Surface(
         onClick = onClick,
-        onLongClick = { onLongClick(coordinates[0]?.takeIf { it.isAttached }?.boundsInRoot()) },
+        onLongClick = { onLongClick(probe.bounds()) },
         modifier = modifier
             .size(CardWidth, CardHeight)
-            .onGloballyPositioned { coordinates[0] = it }
+            .then(probe.modifier)
             .then(focus.track())
             .cardFrame(theme, shape, focus, moving, pinned)
             .semantics { contentDescription = tile.label },

@@ -21,7 +21,7 @@ scaffolding or upgrading, re-run
 
 Plugins: `com.android.application` 9.4.1, `org.jetbrains.kotlin.plugin.compose` 2.4.21,
 `org.jetbrains.kotlin.plugin.serialization` 2.4.21, `io.github.takahirom.roborazzi` 1.77.0,
-and later `androidx.baselineprofile` 1.5.0 plus `com.android.test` 9.4.1 for the
+`androidx.baselineprofile` 1.5.0 (applied to `:app`), and `com.android.test` 9.4.1 for the
 `:baselineprofile` module.
 
 AGP 9 notes (details in the `agp-9-upgrade` skill):
@@ -83,7 +83,9 @@ Tests:
 
 ## Architecture
 
-- **Modules:** `:app` now; later `:baselineprofile` (`com.android.test`).
+- **Modules:** `:app`, and `:baselineprofile` (`com.android.test`, a D-pad journey: start, Favourites, All apps grid,
+  Settings). The profile is recorded on the TV with `./gradlew :app:generateBaselineProfile` and committed to
+  `app/src/release/generated/baselineProfiles`; until then the release build has none.
 - **applicationId / namespace:** `io.github.marozauartsiom.tvlauncher`.
 - **Packages** (inside the namespace):
   - `LauncherApp`, `LauncherActivity`, `AppGraph` (manual DI container)
@@ -113,9 +115,12 @@ Tests:
 - `debug`: `applicationIdSuffix = ".debug"`, so it can sit next to the release build on the TV.
 - `release`: `isMinifyEnabled = true`, `isShrinkResources = true`,
   `proguard-android-optimize.txt`. Use the `r8-analyzer` skill when touching keep rules.
-- Signing: a single release keystore kept **outside the repo** (path and passwords from
-  `~/.gradle/gradle.properties` locally, GitHub secrets in CI). Updates from USB only work
-  while the signature stays the same, so the keystore must never be lost.
+- Signing, debug: every debug build (local and CI) uses the committed throwaway key `app/debug.keystore`
+  (password `android`), so a newer debug APK installs over an older one. The owner installs this build.
+- Signing, release: a single release keystore kept **outside the repo** (path and passwords from
+  `~/.gradle/gradle.properties` locally, GitHub secrets in CI). Not wired yet: `assembleRelease` produces an
+  unsigned APK (about 3.0 MB with R8) that CI only builds as a check. Updates from USB only work
+  while the signature stays the same, so a release keystore must never be lost.
 
 ## Testing
 
@@ -124,7 +129,7 @@ Tests:
 | Logic (repositories, sorting, weather parsing, theme schedule) | JUnit 4 + fakes + coroutines-test | yes |
 | UI behaviour (focus order, focus restore, Back/Home reset) | Compose UI test on Robolectric, D-pad via `performKeyInput { pressKey(Key.DirectionRight) }` | yes |
 | Screenshots | Roborazzi on Robolectric, `@GraphicsMode(NATIVE)`, `@Config(sdk = [36], qualifiers = "w960dp-h540dp-land-television-xhdpi")`. Every key screen in all 9 themes, plus `be` and `fr` (the longest strings) | yes |
-| Startup and Baseline Profile | Macrobenchmark + UiAutomator | no, needs the TV |
+| Startup and Baseline Profile | Macrobenchmark + UiAutomator (`:baselineprofile`, compiles in the cloud) | no, needs the TV |
 
 - Goldens live in `app/src/test/snapshots/`. Turn on `roborazzi { separateOutputDirs.set(true) }`
   to avoid the Gradle 9 race on `roborazziImageInput`.
@@ -136,8 +141,8 @@ Tests:
 
 On every push: JDK 21, the Gradle cache, then
 `./gradlew :app:assembleDebug :app:testDebugUnitTest :app:verifyRoborazziDebug`. Upload the
-debug APK as an artifact. A tag builds a signed release APK. The workflow is written together
-with the scaffold.
+debug APK as an artifact, then `assembleRelease` (R8) as a check. A tag-triggered signed release is not
+implemented: it needs the owner's keystore as a GitHub secret.
 
 ## Android SDK in a cloud session
 

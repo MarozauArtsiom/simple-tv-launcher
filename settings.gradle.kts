@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "simple-tv-launcher"
 include(":app")
+include(":baselineprofile")

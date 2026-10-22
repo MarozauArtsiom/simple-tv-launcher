@@ -257,7 +257,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   `LauncherActivity` (HOME/LEANBACK), plus receivers registered at runtime as not exported.
   **Done:** findings fixed or documented in `docs/progress.md`.
 
-- [ ] **T25 Performance + Baseline Profile.** Read: the `jetpack-compose-performance` skill
+- [x] **T25 Performance + Baseline Profile.** Read: the `jetpack-compose-performance` skill
   and the `r8-analyzer` skill.
   Audit the UI code against the performance checklist and fix findings. Add the
   `:baselineprofile` module (`com.android.test`, `androidx.baselineprofile` plugin, a
@@ -266,14 +266,14 @@ string lives in resources in all six languages from the start (`values/` = Engli
   rules with `r8-analyzer`.
   **Done:** `./gradlew :app:assembleRelease` is green (unsigned is fine) and the size is noted.
 
-- [ ] **T26 Owner guide.** Write `README.md` in Russian: what the launcher is; installing the
+- [x] **T26 Owner guide.** Write `README.md` in Russian: what the launcher is; installing the
   APK (adb, or from USB once installed); making it the default Home (methods from
   `references/default-home.md`, with the restore commands); the one-time adb grants
   (overlay, all-files access, "unknown apps"); where to download TV Bro and AirPlay Server;
   updating; troubleshooting (black screen → re-enable the stock launcher).
   **Done:** every command in the guide is copied from the skills and docs, not invented.
 
-- [ ] **T27 Docs sync + final gate.** Update `docs/requirements.md` statuses,
+- [x] **T27 Docs sync + final gate.** Update `docs/requirements.md` statuses,
   `docs/ui-spec.md` (mockup index, final behaviour) and `docs/tech-stack.md` (anything that
   changed). Finish `docs/progress.md` with a summary and the "Decisions to review" list.
   The full gate passes, CI is green, and everything is pushed.
