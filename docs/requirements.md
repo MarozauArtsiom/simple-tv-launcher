@@ -203,6 +203,9 @@ startup budgets, Belarusian dates, the Baseline Profile and the voice diagnostic
 
 ## Open questions for the owner
 
+- Account avatar (T30): which photo should it show? The Google account photo is not available to a
+  launcher without Google sign-in; the default is a picture from USB or the first letter of a name.
+
 - Over other apps: is the prompt worth granting the overlay permission over adb (one command)?
 - What are the results of the voice checks in section 7?
 - Visual style: is the mockup direction right (dark, photo background, white focus)?

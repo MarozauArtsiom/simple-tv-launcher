@@ -150,6 +150,8 @@ One line per finished task: date, task id, what was done, anything notable.
   (`:baselineprofile`, debug/release signing, CI release check). **Summary:** T01–T27 are done; the full gate
   (`assembleDebug`, `testDebugUnitTest`, `verifyRoborazziDebug`) is green; release APK 3.07 MB unsigned; nothing is blocked. What remains
   needs the TV (`tasks.md` → "On the TV").
+- 2026-10-22 — First install on the TV: the owner reported two bugs and one feature, recorded as T28–T30 (M6) in `docs/tasks.md`,
+  not fixed yet: Home jerks when focus moves, Settings are hard to find, account avatar at the top right should open Settings.
 
 ## Decisions to review
 

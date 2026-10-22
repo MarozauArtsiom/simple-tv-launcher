@@ -280,6 +280,43 @@ string lives in resources in all six languages from the start (`values/` = Engli
 
 ---
 
+## M6 — Owner feedback from the TV (reported 2026-10-22, not fixed yet)
+
+Found by the owner on the real TV after the first install. Recorded first, fixed in a later run.
+
+- [ ] **T28 Bug: Home jerks when focus moves between tiles.** Read: `tv-ui-design`,
+  `jetpack-compose-performance`, `leanback-to-compose-tv-migration`.
+  Owner: "when I move between apps the whole UI jerks, as if the growing item pushes all the
+  others". Not reproduced yet (screenshots are static). Suspects, check in this order:
+  1. Focus scrolling: `LazyRow`/`LazyColumn` scroll on every focus change (the default
+     `BringIntoViewSpec`, which may be a pivot spec on TV), so the whole row slides each step.
+     Fix with a calm spec: scroll only when the focused tile would leave the safe area.
+  2. Something in the focused card changes layout size instead of drawing only (scale, ring,
+     glow and tilt must stay in `graphicsLayer`/draw), e.g. the name pill under a favourite or
+     the grid row height.
+  3. Frame drops on the Mali-G52 during the focus animation (glow shadow, tilt).
+  **Done:** a Compose test asserts that tile bounds (`boundsInRoot`) of the neighbours don't
+  change while focus moves inside the visible area; the scroll rule is written into
+  `ui-spec.md`; checked on the TV (ideally a short video before/after).
+
+- [ ] **T29 Bug: Settings are hard to find.** Owner: "it's not clear how to open settings to
+  change the theme, language and the rest". Today the only way is Up from the first row to the
+  top bar, then Right to the small gear chip at the end. Fix together with T30 (the account
+  avatar becomes the obvious entry point), and also: the remote's Menu key (if the probe shows
+  one) opens Settings; the empty-favourites hint mentions where Settings are. Update
+  `ui-spec.md` (Home, top bar) and the README.
+  **Done:** behaviour test (Up from the first favourite reaches the entry point in at most
+  two presses; Menu key opens the panel), screenshots, README updated.
+
+- [ ] **T30 Feature: account avatar at the top right opens Settings** (like the stock Google TV
+  home). Needs a mockup first (top bar with the avatar in 9 themes), then code.
+  Open question for the owner: where does the photo come from? A third-party launcher cannot read
+  the Google account photo without Google sign-in and a network call to Google, which goes against
+  "no tracking". Default unless the owner decides otherwise: a round avatar with a picture chosen
+  from USB (same flow as the background picker) or, without one, the first letter of a name set in
+  Settings; OK opens the Settings panel. It replaces the gear chip at the right end of the top bar.
+  **Done:** mockup approved, avatar in 9 themes (screenshots), OK opens Settings, picker tested.
+
 ## On the TV (owner, or Claude Code running on a computer in the same network)
 
 Not part of the cloud run. Do these after M5:
