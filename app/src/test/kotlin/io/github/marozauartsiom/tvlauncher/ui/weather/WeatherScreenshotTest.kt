@@ -60,7 +60,7 @@ class WeatherScreenshotTest : TvScreenshotTest() {
                     io.github.marozauartsiom.tvlauncher.ui.home.TopBar(
                         state = TopBarState(weather = chip, showIphone = false),
                         clock = { io.github.marozauartsiom.tvlauncher.ui.home.HomeFixtures.clock }, theme = theme,
-                        onWeather = {}, onInputs = {}, onIphone = {}, onSettings = {},
+                        onWeather = {}, onInputs = {}, onTimer = {}, onIphone = {}, onSettings = {},
                         focus = io.github.marozauartsiom.tvlauncher.ui.components.FocusMemory(),
                     )
                 }

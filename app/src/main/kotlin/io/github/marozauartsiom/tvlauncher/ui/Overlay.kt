@@ -27,6 +27,10 @@ sealed interface Overlay {
     data object IphoneHint : Overlay
     /** The HDMI inputs popup of the top bar. */
     data object Inputs : Overlay
+    /** The sleep timer popup of the top bar. */
+    data object SleepTimer : Overlay
+    /** "Turn the TV off completely?" */
+    data object PowerOff : Overlay
 
     /** The overlay that Back leads to. [None] means the next Back is handled by Home itself. */
     fun back(): Overlay = when (this) {

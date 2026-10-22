@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -60,6 +61,7 @@ fun TopBar(
     theme: ThemeSpec,
     onWeather: () -> Unit,
     onInputs: () -> Unit,
+    onTimer: () -> Unit,
     onIphone: () -> Unit,
     onSettings: () -> Unit,
     focus: FocusMemory,
@@ -105,6 +107,18 @@ fun TopBar(
                     Text(description, style = MaterialTheme.typography.labelLarge, color = theme.colors.chipFg, maxLines = 1)
                     if (connected) Box(Modifier.size(8.dp).background(theme.colors.signal, CircleShape))
                 }
+            }
+            // Sleep timer: the minutes left once it runs. clock() changes every minute, so reading it here keeps them current.
+            val timerLabel = stringResource(R.string.timer_chip)
+            val left = state.sleepTimerAt?.let { at -> clock(); ((at - System.currentTimeMillis() + 59_999) / 60_000).toInt().coerceAtLeast(0) }
+            TopChip(theme, onTimer, focus.track("chip:timer").semantics { contentDescription = timerLabel }) {
+                ChipIcon(Icons.Sleep, theme)
+                Text(
+                    if (left == null) timerLabel else pluralStringResource(R.plurals.timer_minutes, left, left),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = theme.colors.chipFg,
+                    maxLines = 1,
+                )
             }
             if (state.showIphone) {
                 val description = stringResource(R.string.cd_iphone)

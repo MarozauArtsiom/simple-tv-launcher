@@ -148,4 +148,20 @@
     <string name="inputs_chip">Входы</string>
     <string name="input_connected">Подключено</string>
     <string name="input_empty">Не подключено</string>
+    <string name="power_service_label">Simple TV: выключение</string>
+    <string name="power_service_description">Позволяет лаунчеру выключать телевизор, когда вы попросите (кнопка в настройках или таймер сна). Больше ничего не читает и не делает.</string>
+    <string name="power_off">Выключить телевизор</string>
+    <string name="power_off_question">Полностью выключить телевизор?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="power_needs_service">Для выключения нужна служба, которую один раз включают с компьютера:</string>
+    <string name="timer_chip">Таймер</string>
+    <string name="timer_title">Выключить телевизор через</string>
+    <string name="timer_off">Выкл.</string>
+    <plurals name="timer_minutes">
+        <item quantity="one">%1$d мин</item>
+        <item quantity="few">%1$d мин</item>
+        <item quantity="many">%1$d мин</item>
+        <item quantity="other">%1$d мин</item>
+    </plurals>
 </resources>

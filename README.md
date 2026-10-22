@@ -120,6 +120,19 @@ adb shell pm enable com.google.android.tungsten.setupwraith
 | Карточка HDMI поверх других приложений | `adb shell appops set <pkg> SYSTEM_ALERT_WINDOW allow` |
 | Чтение флешки (картинки фона, `.apk`) | `adb shell appops set --uid <pkg> MANAGE_EXTERNAL_STORAGE allow` |
 | Установка приложений с флешки | `adb shell appops set --uid <pkg> REQUEST_INSTALL_PACKAGES allow` |
+| Таймер сна точно в срок (без этого может опоздать на пару минут) | `adb shell appops set <pkg> SCHEDULE_EXACT_ALARM allow` |
+
+**Выключение телевизора** (кнопка «Выключить телевизор» в настройках и «Таймер» вверху). Обычное приложение
+не может выключить ТВ, поэтому это делает служба доступности лаунчера: она ничего не читает и включается только
+по вашей команде. Один раз включите её (команда перезапишет список других служб доступности, если они у вас есть):
+
+```bash
+adb shell settings put secure enabled_accessibility_services <pkg>/io.github.marozauartsiom.tvlauncher.system.power.PowerService
+adb shell settings put secure accessibility_enabled 1
+```
+
+По «Да» служба открывает системное меню питания и сама нажимает «Выключить». Если на вашем ТВ пункт называется
+иначе, меню просто останется открытым — нажмите сами и сообщите название.
 
 Интернет нужен только погоде и поиску города и только пока открыт главный экран. Остальное работает без сети.
 

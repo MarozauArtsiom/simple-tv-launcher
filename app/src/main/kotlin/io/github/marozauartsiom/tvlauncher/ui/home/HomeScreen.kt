@@ -84,6 +84,8 @@ data class HomeActions(
     val onWeather: () -> Unit = {},
     /** The top bar's "Inputs" button: show the HDMI inputs popup. */
     val onInputs: () -> Unit = {},
+    /** The top bar's sleep timer button. */
+    val onTimer: () -> Unit = {},
     val onIphone: () -> Unit = {},
     val onSettings: () -> Unit = {},
     /** Move mode: swap the tile one place left (-1) or right (+1). */
@@ -206,6 +208,7 @@ fun HomeScreen(
                     theme = theme,
                     onWeather = actions.onWeather,
                     onInputs = actions.onInputs,
+                    onTimer = actions.onTimer,
                     onIphone = actions.onIphone,
                     onSettings = actions.onSettings,
                     focus = focus,

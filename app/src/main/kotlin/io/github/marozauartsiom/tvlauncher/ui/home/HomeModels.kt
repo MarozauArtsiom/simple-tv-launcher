@@ -49,4 +49,6 @@ data class TopBarState(
     val showIphone: Boolean = true,
     /** The owner's photo, shown in the round Settings button at the right end; null shows a person icon. */
     val avatar: ImageBitmap? = null,
+    /** When the sleep timer turns the TV off (epoch millis), or null. */
+    val sleepTimerAt: Long? = null,
 )

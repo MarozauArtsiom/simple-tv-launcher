@@ -148,4 +148,20 @@
     <string name="inputs_chip">Wejścia</string>
     <string name="input_connected">Podłączone</string>
     <string name="input_empty">Nic nie podłączono</string>
+    <string name="power_service_label">Simple TV: wyłączanie</string>
+    <string name="power_service_description">Pozwala launcherowi wyłączyć telewizor na Twoje polecenie (przycisk w ustawieniach lub wyłącznik czasowy). Nic więcej nie czyta ani nie robi.</string>
+    <string name="power_off">Wyłącz telewizor</string>
+    <string name="power_off_question">Całkowicie wyłączyć telewizor?</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+    <string name="power_needs_service">Do wyłączania potrzebna jest usługa, którą włącza się raz z komputera:</string>
+    <string name="timer_chip">Minutnik</string>
+    <string name="timer_title">Wyłącz telewizor za</string>
+    <string name="timer_off">Wył.</string>
+    <plurals name="timer_minutes">
+        <item quantity="one">%1$d min</item>
+        <item quantity="few">%1$d min</item>
+        <item quantity="many">%1$d min</item>
+        <item quantity="other">%1$d min</item>
+    </plurals>
 </resources>

@@ -28,6 +28,7 @@ import io.github.marozauartsiom.tvlauncher.ui.theme.Themes
 import io.github.marozauartsiom.tvlauncher.ui.SettingsPage
 import io.github.marozauartsiom.tvlauncher.ui.components.FocusMemory
 import io.github.marozauartsiom.tvlauncher.ui.components.Icons
+import io.github.marozauartsiom.tvlauncher.ui.components.PanelItem
 import io.github.marozauartsiom.tvlauncher.ui.components.PanelRow
 import io.github.marozauartsiom.tvlauncher.ui.components.PanelScroll
 import io.github.marozauartsiom.tvlauncher.ui.components.PanelTile
@@ -81,6 +82,7 @@ fun SettingsPanel(
     memory: FocusMemory,
     onTile: (SystemTile) -> Unit,
     onPage: (SettingsPage) -> Unit,
+    onPowerOff: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     LaunchedEffect(Unit) {
@@ -103,7 +105,15 @@ fun SettingsPanel(
                     }
                 }
             }
-            SectionLabel(stringResource(R.string.section_launcher), theme, first = tiles.isEmpty())
+            // One press (and a Yes) instead of Settings → Power → Network → Turn off completely.
+            PanelItem(
+                title = stringResource(R.string.power_off),
+                theme = theme,
+                icon = Icons.Power,
+                onClick = onPowerOff,
+                modifier = memory.track("power").padding(top = if (tiles.isEmpty()) 0.dp else 8.dp),
+            )
+            SectionLabel(stringResource(R.string.section_launcher), theme, first = false)
             val items = listOf(
                 Entry(SettingsPage.Theme, Icons.Palette, R.string.item_theme, values.theme),
                 Entry(SettingsPage.Background, Icons.Image, R.string.item_background, values.background),

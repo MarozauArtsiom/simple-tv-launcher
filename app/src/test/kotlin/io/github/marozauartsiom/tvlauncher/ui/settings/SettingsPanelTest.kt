@@ -61,6 +61,8 @@ class SettingsPanelTest : TvScreenshotTest() {
     @Test fun downFromTilesGoesToTheLauncherList() {
         show()
         press(Key.DirectionDown, 2)
+        composeRule.onNodeWithText("Turn off TV").assertIsFocused() // the power button sits between the tiles and the list
+        press(Key.DirectionDown)
         composeRule.onNodeWithText("Theme").assertIsFocused()
         press(Key.Enter)
         assertEquals(listOf(SettingsPage.Theme), pages)
@@ -82,7 +84,7 @@ class SettingsPanelTest : TvScreenshotTest() {
             }
         }
         composeRule.waitForIdle()
-        press(Key.DirectionDown, 3) // Background
+        press(Key.DirectionDown, 4) // Background (after the power button and Theme)
         composeRule.onNodeWithText("Background").assertIsFocused()
         open = false // a page replaces the panel ...
         composeRule.waitForIdle()

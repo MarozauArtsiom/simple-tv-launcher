@@ -161,4 +161,18 @@
     <string name="inputs_chip">Inputs</string>
     <string name="input_connected">Connected</string>
     <string name="input_empty">Nothing connected</string>
+    <string name="power_service_label">Simple TV: turn off</string>
+    <string name="power_service_description">Lets the launcher turn the TV off when you ask it to (Settings button or sleep timer). It reads nothing and does nothing else.</string>
+    <string name="power_off">Turn off TV</string>
+    <string name="power_off_question">Turn the TV off completely?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="power_needs_service">Turning the TV off needs a helper that is enabled once. Run on a computer:</string>
+    <string name="timer_chip">Timer</string>
+    <string name="timer_title">Turn off the TV in</string>
+    <string name="timer_off">Off</string>
+    <plurals name="timer_minutes">
+        <item quantity="one">%1$d min</item>
+        <item quantity="other">%1$d min</item>
+    </plurals>
 </resources>

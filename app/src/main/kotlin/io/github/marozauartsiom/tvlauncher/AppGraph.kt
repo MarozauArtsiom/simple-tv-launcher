@@ -65,6 +65,7 @@ class AppGraph(private val context: Context) {
             storeDir = File(context.filesDir, "backgrounds"),
         )
     }
+    val sleepTimer by lazy { io.github.marozauartsiom.tvlauncher.system.power.SleepTimer(context) }
     /** The owner's photo for the top bar: same USB scan, its own folder, a small square copy. */
     val avatarImages by lazy { BackgroundImages(roots = ::usbRoots, storeDir = File(context.filesDir, "avatar")) }
     /** The only network code: Open-Meteo (forecast, city search) and the IP location services. Idle until the UI asks. */

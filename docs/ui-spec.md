@@ -86,6 +86,10 @@ For each screen: initial focus, Back, Home, and the mockup.
 - Focus memory: the favourites row and each grid row restore their last item (`focusRestorer`).
   Up from the first row goes to the top bar.
 - The remote's Menu key opens Settings from anywhere on Home.
+- Top bar order: weather · Inputs · Timer · iPhone · avatar. **Timer** (moon icon, "Timer" or the minutes left)
+  opens a popup under the bar: Off, 15, 30, 45, 60, 90, 120 min; the running choice is focused and checked.
+- Settings: under the TV tiles a full-width **Turn off TV** row → dialog "Turn the TV off completely?" Yes
+  (focused) / No. Without the power helper both the dialog and the timer popup show its adb command instead.
 - **Hidden** section (only when something is hidden): the last section, a chip "Hidden · N" with a chevron.
   Collapsed by default and after every reset (Home key, TV on, Back); its tiles are not composed, so Down
   from the header goes nowhere. OK toggles it; open, it is a 5-column grid like All apps. The app menu of a

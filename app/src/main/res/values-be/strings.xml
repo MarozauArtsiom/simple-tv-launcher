@@ -148,4 +148,20 @@
     <string name="inputs_chip">Уваходы</string>
     <string name="input_connected">Падключана</string>
     <string name="input_empty">Не падключана</string>
+    <string name="power_service_label">Simple TV: выключэнне</string>
+    <string name="power_service_description">Дазваляе лаўнчару выключаць тэлевізар, калі вы папросіце (кнопка ў наладах або таймер сну). Больш нічога не чытае і не робіць.</string>
+    <string name="power_off">Выключыць тэлевізар</string>
+    <string name="power_off_question">Цалкам выключыць тэлевізар?</string>
+    <string name="yes">Так</string>
+    <string name="no">Не</string>
+    <string name="power_needs_service">Для выключэння патрэбна служба, якую адзін раз уключаюць з камп’ютара:</string>
+    <string name="timer_chip">Таймер</string>
+    <string name="timer_title">Выключыць тэлевізар праз</string>
+    <string name="timer_off">Выкл.</string>
+    <plurals name="timer_minutes">
+        <item quantity="one">%1$d хв</item>
+        <item quantity="few">%1$d хв</item>
+        <item quantity="many">%1$d хв</item>
+        <item quantity="other">%1$d хв</item>
+    </plurals>
 </resources>

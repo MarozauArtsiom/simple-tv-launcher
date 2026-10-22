@@ -146,4 +146,18 @@
     <string name="inputs_chip">Eingänge</string>
     <string name="input_connected">Verbunden</string>
     <string name="input_empty">Nichts verbunden</string>
+    <string name="power_service_label">Simple TV: Ausschalten</string>
+    <string name="power_service_description">Lässt den Launcher den Fernseher ausschalten, wenn du es willst (Taste in den Einstellungen oder Sleep-Timer). Liest und tut sonst nichts.</string>
+    <string name="power_off">Fernseher ausschalten</string>
+    <string name="power_off_question">Fernseher ganz ausschalten?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="power_needs_service">Zum Ausschalten muss einmal ein Helfer aktiviert werden. Am Computer ausführen:</string>
+    <string name="timer_chip">Timer</string>
+    <string name="timer_title">Fernseher ausschalten in</string>
+    <string name="timer_off">Aus</string>
+    <plurals name="timer_minutes">
+        <item quantity="one">%1$d Min.</item>
+        <item quantity="other">%1$d Min.</item>
+    </plurals>
 </resources>

@@ -147,4 +147,19 @@
     <string name="inputs_chip">Entrées</string>
     <string name="input_connected">Connecté</string>
     <string name="input_empty">Rien de connecté</string>
+    <string name="power_service_label">Simple TV : extinction</string>
+    <string name="power_service_description">Permet au lanceur d’éteindre le téléviseur à votre demande (bouton des paramètres ou minuterie). Ne lit et ne fait rien d’autre.</string>
+    <string name="power_off">Éteindre le téléviseur</string>
+    <string name="power_off_question">Éteindre complètement le téléviseur ?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="power_needs_service">Pour éteindre, un service doit être activé une fois. Sur un ordinateur, lancez :</string>
+    <string name="timer_chip">Minuterie</string>
+    <string name="timer_title">Éteindre le téléviseur dans</string>
+    <string name="timer_off">Désactivée</string>
+    <plurals name="timer_minutes">
+        <item quantity="one">%1$d min</item>
+        <item quantity="many">%1$d min</item>
+        <item quantity="other">%1$d min</item>
+    </plurals>
 </resources>

@@ -166,6 +166,9 @@ One line per finished task: date, task id, what was done, anything notable.
 - 2026-10-22 — Owner feedback round 2: HDMI chips merged into one "Inputs" button with a popup (status per input); focus in
   the top bar now fades the sections below; the clock side of the bar shrinks first so the avatar can't be pushed off screen
   (several HDMI chips did that on the TV). Goldens re-recorded.
+- 2026-10-22 — Turn off TV + sleep timer: `PowerService` (accessibility service, no event types, enabled once over adb) opens the
+  system power menu and clicks its "Power off" item; Settings row + Yes/No dialog; top-bar Timer chip with a popup; one alarm
+  (`SleepTimer`, non-exported receiver) while a timer is set. Owner chose the accessibility route.
 
 ## Decisions to review
 
@@ -223,6 +226,10 @@ Defaults taken during unattended runs that the owner should look at.
   wants blur, try 2–4 dp on the TV and keep it only if focus moves stay smooth. No separate mockup (approved Home, faded).
 - T32: no separate mockup; the header reuses the top-bar chip and the open section the All apps grid. Its look is not in a
   screenshot test (it sits below the first screen); check it on the TV.
+- Power off: the owner chose an accessibility service (the only non-root way). It is exported to the system only
+  (`BIND_ACCESSIBILITY_SERVICE`), asks for no events and acts only on request; the sleep timer is one alarm, set only while
+  a timer runs. Both are exceptions to "no services, no scheduled jobs", asked for by the owner. The item label in Xiaomi's power
+  menu is a guess ("Выключить"/"Power off"…); check on the TV.
 
 ## Blockers
 

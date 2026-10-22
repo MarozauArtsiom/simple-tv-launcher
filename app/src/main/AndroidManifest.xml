@@ -7,6 +7,8 @@
     <!-- Permissions are added together with the feature that needs each one (docs/tasks.md). -->
     <!-- T22: install .apk files from a USB drive through the system installer (the owner confirms each one). -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- Sleep timer: on time when granted over adb (appops SCHEDULE_EXACT_ALARM allow), a little late otherwise. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <!-- T19: the "signal on HDMI" card over other apps. Optional; granted once over adb (see the owner guide). -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!-- T18: the weather feature (Open-Meteo, IP location) uses the network, only while Home is on screen. -->
@@ -81,5 +83,21 @@
 
         <!-- The installer's status for a session we committed. Not exported: only our own PendingIntent reaches it. -->
         <receiver android:name=".system.InstallResultReceiver" android:exported="false" />
+
+        <!-- The sleep timer's alarm. Not exported: only our own PendingIntent reaches it. -->
+        <receiver android:name=".system.power.SleepTimerReceiver" android:exported="false" />
+
+        <!-- Turns the TV off on request (Settings button, sleep timer). Enabled once over adb; receives no events.
+             Exported only to the system: BIND_ACCESSIBILITY_SERVICE is held by the system alone. -->
+        <service
+            android:name=".system.power.PowerService"
+            android:exported="true"
+            android:label="@string/power_service_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data android:name="android.accessibilityservice" android:resource="@xml/power_service" />
+        </service>
     </application>
 </manifest>

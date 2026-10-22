@@ -47,6 +47,7 @@ class Settings(private val store: DataStore<Preferences>) {
         val hdmiOverlay = booleanPreferencesKey("hdmi_overlay")
         val hdmiMuted = stringSetPreferencesKey("hdmi_muted")
         val avatar = stringPreferencesKey("avatar")
+        val sleepTimerAt = longPreferencesKey("sleep_timer_at")
     }
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -68,6 +69,7 @@ class Settings(private val store: DataStore<Preferences>) {
             ),
             background = parseBackground(this[Keys.background]),
             avatar = this[Keys.avatar],
+            sleepTimerAt = this[Keys.sleepTimerAt],
             language = parseLanguage(this[Keys.language]),
             weatherLocation = decode(WeatherPlace.serializer(), this[Keys.weatherLocation])?.let { WeatherLocation.Manual(it) } ?: WeatherLocation.Auto,
             autoPlace = decode(WeatherPlace.serializer(), this[Keys.autoPlace]),
@@ -144,6 +146,10 @@ class Settings(private val store: DataStore<Preferences>) {
 
     suspend fun setAvatar(fileName: String?) = store.edit {
         if (fileName == null) it.remove(Keys.avatar) else it[Keys.avatar] = fileName
+    }
+
+    suspend fun setSleepTimer(atMillis: Long?) = store.edit {
+        if (atMillis == null) it.remove(Keys.sleepTimerAt) else it[Keys.sleepTimerAt] = atMillis
     }
 
     suspend fun setLanguage(choice: LanguageChoice) = store.edit {

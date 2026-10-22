@@ -91,4 +91,6 @@ data class SettingsData(
     val hdmi: HdmiSettings = HdmiSettings(),
     /** The owner's photo in the top bar (file name inside the avatar folder), or null for the plain icon. */
     val avatar: String? = null,
+    /** When the sleep timer turns the TV off (epoch millis), or null when no timer is set. */
+    val sleepTimerAt: Long? = null,
 )

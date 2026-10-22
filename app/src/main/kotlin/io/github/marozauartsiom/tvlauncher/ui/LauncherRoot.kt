@@ -74,6 +74,9 @@ import io.github.marozauartsiom.tvlauncher.ui.iphone.IphoneHintDialog
 import io.github.marozauartsiom.tvlauncher.ui.settings.HdmiSettingsPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.AboutPage
 import io.github.marozauartsiom.tvlauncher.ui.hdmi.InputsMenu
+import io.github.marozauartsiom.tvlauncher.ui.power.PowerOffDialog
+import io.github.marozauartsiom.tvlauncher.ui.power.SleepTimerMenu
+import io.github.marozauartsiom.tvlauncher.system.power.PowerService
 import io.github.marozauartsiom.tvlauncher.ui.settings.AvatarPickerPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.HiddenAppsPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.UsbInstallerPage
@@ -195,6 +198,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
             // The panels below are opened by their own tasks; until then these do nothing.
             onWeather = { viewModel.open(Overlay.Weather) },
             onInputs = { viewModel.open(Overlay.Inputs) },
+            onTimer = { viewModel.open(Overlay.SleepTimer) },
             onIphone = { if (!Airplay.open(graph.launcher)) viewModel.open(Overlay.IphoneHint) },
             onSettings = { viewModel.open(Overlay.Settings()) },
             onMoveStep = { key, delta ->
@@ -234,13 +238,13 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
             HomeScreen(
                 content = content,
                 theme = theme,
-                topBar = TopBarState(weather = weatherChip(weatherView, context), hdmi = hdmiStatus.map { HdmiChip(it.input.id, it.input.label, it.connected) }, avatar = avatar),
+                topBar = TopBarState(weather = weatherChip(weatherView, context), hdmi = hdmiStatus.map { HdmiChip(it.input.id, it.input.label, it.connected) }, avatar = avatar, sleepTimerAt = settings.sleepTimerAt?.takeIf { it > System.currentTimeMillis() }),
                 clock = { clock },
                 art = graph.banners,
                 resets = viewModel.resets,
                 actions = actions,
                 safeMode = safeMode,
-                overlayOpen = menu != null || settingsOverlay != null || overlay is Overlay.Weather || overlay is Overlay.WeatherSearch || overlay is Overlay.Hdmi || overlay is Overlay.IphoneHint || overlay is Overlay.Inputs,
+                overlayOpen = menu != null || settingsOverlay != null || overlay is Overlay.Weather || overlay is Overlay.WeatherSearch || overlay is Overlay.Hdmi || overlay is Overlay.IphoneHint || overlay is Overlay.Inputs || overlay is Overlay.SleepTimer || overlay is Overlay.PowerOff,
                 moveKey = moveKey,
             )
             when (overlay) {
@@ -268,6 +272,35 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                         viewModel.open(Overlay.None)
                     },
                 )
+                Overlay.SleepTimer -> {
+                    var checks by remember { mutableIntStateOf(0) }
+                    val helper = remember(checks) { PowerService.isEnabled }
+                    val at = settings.sleepTimerAt?.takeIf { it > System.currentTimeMillis() }
+                    SleepTimerMenu(
+                        theme = theme,
+                        runningMinutes = at?.let { ((it - System.currentTimeMillis()) / 60_000).toInt() },
+                        helperEnabled = helper,
+                        adbCommand = powerServiceCommand(context),
+                        onChoose = { minutes ->
+                            val newAt = minutes?.let { System.currentTimeMillis() + it * 60_000L }
+                            if (newAt == null) graph.sleepTimer.cancel() else graph.sleepTimer.schedule(newAt)
+                            graph.appScope.launch { graph.settings.setSleepTimer(newAt) }
+                            viewModel.open(Overlay.None)
+                        },
+                        onCheckAgain = { checks++ },
+                    )
+                }
+                Overlay.PowerOff -> {
+                    var checks by remember { mutableIntStateOf(0) }
+                    PowerOffDialog(
+                        theme = theme,
+                        helperEnabled = remember(checks) { PowerService.isEnabled },
+                        adbCommand = powerServiceCommand(context),
+                        onYes = { viewModel.open(Overlay.None); PowerService.powerOff() },
+                        onNo = { viewModel.onBack() },
+                        onCheckAgain = { checks++ },
+                    )
+                }
                 Overlay.IphoneHint -> IphoneHintDialog(
                     theme = theme,
                     onInstallFromUsb = {
@@ -290,6 +323,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                         if (!systemSettings.open(tile)) unavailable(context)
                     },
                     onPage = { page -> if (page.hasUi) viewModel.open(Overlay.Settings(page)) },
+                    onPowerOff = { viewModel.open(Overlay.PowerOff) },
                 )
                 SettingsPage.Shortcuts -> ShortcutsPage(
                     theme = theme,
@@ -520,6 +554,12 @@ private fun handleMenuAction(
 
 /** Side of the stored profile photo in px: the button is 36 dp, so 2× xhdpi with room to spare. */
 private const val AvatarSize = 160
+
+/** The adb commands that enable the power helper (accessibility service), as one line to copy. */
+private fun powerServiceCommand(context: Context): String {
+    val service = "${context.packageName}/${PowerService::class.java.name}"
+    return "adb shell settings put secure enabled_accessibility_services $service && adb shell settings put secure accessibility_enabled 1"
+}
 
 private fun unavailable(context: Context) =
     Toast.makeText(context, context.getString(R.string.unavailable_on_tv), Toast.LENGTH_SHORT).show()
