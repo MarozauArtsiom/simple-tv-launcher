@@ -25,6 +25,7 @@ class LauncherActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val safeMode = graph.crashGuard.safeMode()
+        graph.apps.start()
         setContent { LauncherRoot(graph, viewModel, safeMode) }
     }
 
@@ -33,6 +34,11 @@ class LauncherActivity : ComponentActivity() {
         // If the screen turned on while Home was not in front, reset now.
         if (graph.screenOn.attach { viewModel.onHomePressed() }) viewModel.onHomePressed()
         handler.postDelayed({ graph.crashGuard.markStable() }, CrashGuard.STABLE_AFTER_MS)
+    }
+
+    override fun onDestroy() {
+        graph.apps.stop()
+        super.onDestroy()
     }
 
     override fun onPause() {

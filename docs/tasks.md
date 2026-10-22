@@ -147,7 +147,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
 
 ## M3 — Home
 
-- [ ] **T11 App repository.** Read: the `android-tv-launcher` skill (Listing apps, Banners,
+- [x] **T11 App repository.** Read: the `android-tv-launcher` skill (Listing apps, Banners,
   Launching, Reacting to installs).
   `data/apps/`: query LEANBACK_LAUNCHER + LAUNCHER and dedupe (leanback wins); labels;
   `BannerLoader` (activity banner → app banner → icon; rasterised at 320×180 px on `Default`;

@@ -47,6 +47,13 @@ One line per finished task: date, task id, what was done, anything notable.
   (locale wrap, HOME `onNewIntent`, screen-on reset via `ScreenOnWatcher`), `Overlay` state machine +
   `LauncherViewModel` (Back never exits), `CrashGuard` (two crashes in ten minutes → safe mode),
   `LauncherRoot` placeholder. 10 tests. M2 complete.
+- 2026-10-22 — T11 apps: `PackageSource` interface (+ `PackageManagerSource`), `AppLists` (dedupe with
+  leanback priority, own package excluded, hidden filter, usage sort with locale collator),
+  `AppRepository` (JSON snapshot for instant start, 500 ms debounced package events, no polling,
+  failing query keeps the last list), `AppLauncher` (leanback intent → launch intent → NotFound,
+  platform errors mapped), `BannerLoader` (320×180 tiles, generated tinted tile for icon-only apps,
+  16 MB LRU by bytes). 19 tests. Caches are freed at TRIM_MEMORY_BACKGROUND, not on every UI_HIDDEN,
+  so Home reappears instantly after an app.
 
 ## Decisions to review
 
