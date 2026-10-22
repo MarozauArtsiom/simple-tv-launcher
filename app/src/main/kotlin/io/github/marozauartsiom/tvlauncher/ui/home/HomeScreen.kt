@@ -43,6 +43,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.graphics.graphicsLayer
@@ -159,7 +160,13 @@ fun HomeScreen(
     CompositionLocalProvider(LocalBringIntoViewSpec provides rememberCalmScrollSpec(leadingMargin = 56.dp, trailingMargin = SafeVertical)) {
         LazyColumn(
             state = listState,
-            modifier = modifier.fillMaxSize().focusProperties { canFocus = !overlayOpen },
+            modifier = modifier
+                .fillMaxSize()
+                .focusProperties { canFocus = !overlayOpen }
+                // The remote's Menu key opens Settings from anywhere on Home (T29).
+                .onKeyEvent { event ->
+                    (event.key == Key.Menu && event.type == KeyEventType.KeyUp).also { if (it) actions.onSettings() }
+                },
             contentPadding = PaddingValues(bottom = SafeVertical),
         ) {
             item(key = "top", contentType = "top") {

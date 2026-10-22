@@ -46,6 +46,7 @@ class Settings(private val store: DataStore<Preferences>) {
         val hdmiPrompt = booleanPreferencesKey("hdmi_prompt")
         val hdmiOverlay = booleanPreferencesKey("hdmi_overlay")
         val hdmiMuted = stringSetPreferencesKey("hdmi_muted")
+        val avatar = stringPreferencesKey("avatar")
     }
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -66,6 +67,7 @@ class Settings(private val store: DataStore<Preferences>) {
                 nightTheme = ThemeId.entries.firstOrNull { it.key == this[Keys.scheduleNight] } ?: d.themeSchedule.nightTheme,
             ),
             background = parseBackground(this[Keys.background]),
+            avatar = this[Keys.avatar],
             language = parseLanguage(this[Keys.language]),
             weatherLocation = decode(WeatherPlace.serializer(), this[Keys.weatherLocation])?.let { WeatherLocation.Manual(it) } ?: WeatherLocation.Auto,
             autoPlace = decode(WeatherPlace.serializer(), this[Keys.autoPlace]),
@@ -138,6 +140,10 @@ class Settings(private val store: DataStore<Preferences>) {
             is BackgroundChoice.Solid -> "color:" + (choice.argb.toLong() and 0xFFFFFFFFL).toString(16)
             is BackgroundChoice.Image -> "image:" + choice.fileName
         }
+    }
+
+    suspend fun setAvatar(fileName: String?) = store.edit {
+        if (fileName == null) it.remove(Keys.avatar) else it[Keys.avatar] = fileName
     }
 
     suspend fun setLanguage(choice: LanguageChoice) = store.edit {

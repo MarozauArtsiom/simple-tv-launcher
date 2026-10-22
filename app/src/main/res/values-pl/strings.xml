@@ -141,4 +141,6 @@
     <string name="bg_import_failed">Nie można użyć tego obrazu</string>
     <string name="usb_unknown_apps">Instalowanie aplikacji wymaga zgody dla tego launchera. Wykonaj raz na komputerze:</string>
     <string name="usb_cancelled">Instalacja anulowana</string>
+    <string name="item_avatar">Zdjęcie profilowe</string>
+    <string name="avatar_none">Bez zdjęcia</string>
 </resources>

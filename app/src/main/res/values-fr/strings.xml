@@ -140,4 +140,6 @@
     <string name="bg_import_failed">Impossible d’utiliser cette image</string>
     <string name="usb_unknown_apps">L’installation d’applications demande une autorisation pour ce lanceur. À exécuter une fois sur un ordinateur :</string>
     <string name="usb_cancelled">Installation annulée</string>
+    <string name="item_avatar">Photo de profil</string>
+    <string name="avatar_none">Pas de photo</string>
 </resources>

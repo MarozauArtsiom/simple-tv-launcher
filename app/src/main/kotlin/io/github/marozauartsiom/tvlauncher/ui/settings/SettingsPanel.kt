@@ -107,6 +107,7 @@ fun SettingsPanel(
             val items = listOf(
                 Entry(SettingsPage.Theme, Icons.Palette, R.string.item_theme, values.theme),
                 Entry(SettingsPage.Background, Icons.Image, R.string.item_background, values.background),
+                Entry(SettingsPage.Avatar, Icons.Person, R.string.item_avatar, null),
                 Entry(SettingsPage.Language, Icons.Language, R.string.item_language, values.language),
                 Entry(SettingsPage.Weather, Icons.Cloud, R.string.item_weather, values.weather),
                 Entry(SettingsPage.Hdmi, Icons.Hdmi, R.string.item_hdmi, values.hdmi),

@@ -210,7 +210,7 @@ private fun Swatch(
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
-private fun PictureThumb(
+internal fun PictureThumb(
     image: PickedImage,
     theme: ThemeSpec,
     thumbnail: suspend (PickedImage) -> ImageBitmap?,

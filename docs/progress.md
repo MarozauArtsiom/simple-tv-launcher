@@ -156,6 +156,9 @@ One line per finished task: date, task id, what was done, anything notable.
 - 2026-10-22 — T28 fixed: Home's `LazyColumn` and the Favourites `LazyRow` use `CalmScrollSpec` instead of Compose's TV pivot
   (on leanback devices the pivot kept re-aiming at the growing, scaled tile). `HomeScrollTest` turns on the leanback feature in
   Robolectric. `LocalBringIntoViewSpec` is an experimental foundation API (opt-in); the library itself is stable.
+- 2026-10-22 — T29+T30: the gear became a round avatar button (owner's photo or a person icon) that opens Settings; the
+  remote's Menu key opens Settings from Home; new page Settings → Profile photo (USB picture, stored as a 160 px square copy in
+  `files/avatar`). 1 behaviour test (Menu key); Home and panel goldens re-recorded (only the button changed).
 
 ## Decisions to review
 
@@ -206,6 +209,9 @@ Defaults taken during unattended runs that the owner should look at.
   release in CI is not set up for the same reason.
 - T25: the Baseline Profile journey presses D-pad keys by count (right ×3, down ×6, up ×8, right ×6 to the gear). Adjust the counts
   after the first run on the TV if the gear is not reached.
+- T30: the avatar is a picture from USB, not the Google account photo (that needs Google sign-in and a call to Google). No separate
+  mockup: the button keeps the approved chip shape and the page reuses the background picker's parts. Whether the remote has a
+  Menu key is unknown until the probe; Up+Right to the button always works.
 
 ## Blockers
 

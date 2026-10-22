@@ -1,5 +1,8 @@
 package io.github.marozauartsiom.tvlauncher.ui.home
 
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -108,8 +111,14 @@ fun TopBar(
                 }
             }
             val settings = stringResource(R.string.cd_settings)
+            // The owner's photo (or a person icon) opens Settings, like the account button of the stock Google TV home.
             TopChip(theme, onSettings, focus.track("chip:settings").semantics { contentDescription = settings }, iconOnly = true) {
-                ChipIcon(Icons.Gear, theme)
+                val avatar = state.avatar
+                if (avatar != null) {
+                    Image(avatar, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.size(36.dp).clip(CircleShape))
+                } else {
+                    ChipIcon(Icons.Person, theme)
+                }
             }
         }
     }

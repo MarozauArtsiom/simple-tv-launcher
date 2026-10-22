@@ -1,6 +1,7 @@
 package io.github.marozauartsiom.tvlauncher.ui.home
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.ImageBitmap
 import io.github.marozauartsiom.tvlauncher.data.apps.TvApp
 import io.github.marozauartsiom.tvlauncher.data.prefs.ItemKey
 import io.github.marozauartsiom.tvlauncher.data.prefs.Shortcut
@@ -44,4 +45,6 @@ data class TopBarState(
     val weather: WeatherChip? = null,
     val hdmi: List<HdmiChip> = emptyList(),
     val showIphone: Boolean = true,
+    /** The owner's photo, shown in the round Settings button at the right end; null shows a person icon. */
+    val avatar: ImageBitmap? = null,
 )

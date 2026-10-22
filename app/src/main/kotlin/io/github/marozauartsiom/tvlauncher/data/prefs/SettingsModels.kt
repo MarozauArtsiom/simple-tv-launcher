@@ -89,4 +89,6 @@ data class SettingsData(
     val autoPlaceSavedAtMillis: Long = 0,
     val weatherCache: CachedJson? = null,
     val hdmi: HdmiSettings = HdmiSettings(),
+    /** The owner's photo in the top bar (file name inside the avatar folder), or null for the plain icon. */
+    val avatar: String? = null,
 )

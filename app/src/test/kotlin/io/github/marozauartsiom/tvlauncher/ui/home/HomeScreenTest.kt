@@ -131,6 +131,13 @@ class HomeScreenTest : TvScreenshotTest() {
         fav("YouTube").assertIsFocused()
     }
 
+    @Test fun menuKeyOpensSettingsFromAnywhere() {
+        show()
+        press(Key.DirectionDown, 2)
+        press(Key.Menu)
+        assertEquals(1, settingsClicks)
+    }
+
     @Test fun okOpensTheFocusedApp() {
         show()
         press(Key.DirectionRight)

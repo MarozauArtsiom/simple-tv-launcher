@@ -141,4 +141,6 @@
     <string name="bg_import_failed">Не атрымалася выкарыстаць гэты малюнак</string>
     <string name="usb_unknown_apps">Для ўсталёўкі праграм лаўнчару патрэбны дазвол. Адзін раз выканайце на кампутары:</string>
     <string name="usb_cancelled">Усталёўка скасавана</string>
+    <string name="item_avatar">Фота профілю</string>
+    <string name="avatar_none">Без фота</string>
 </resources>

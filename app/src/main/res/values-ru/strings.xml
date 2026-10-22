@@ -141,4 +141,6 @@
     <string name="bg_import_failed">Не удалось использовать эту картинку</string>
     <string name="usb_unknown_apps">Для установки приложений лаунчеру нужно разрешение. Один раз выполните на компьютере:</string>
     <string name="usb_cancelled">Установка отменена</string>
+    <string name="item_avatar">Фото профиля</string>
+    <string name="avatar_none">Без фото</string>
 </resources>

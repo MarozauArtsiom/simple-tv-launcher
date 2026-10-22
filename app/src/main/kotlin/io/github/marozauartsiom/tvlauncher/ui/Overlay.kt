@@ -4,13 +4,13 @@ import androidx.compose.ui.geometry.Rect
 import io.github.marozauartsiom.tvlauncher.data.prefs.ItemKey
 
 enum class SettingsPage {
-    Root, Theme, Schedule, SchedulePickDay, SchedulePickNight, Background, Language, Weather, Hdmi, Hidden, Usb, About, Shortcuts;
+    Root, Theme, Schedule, SchedulePickDay, SchedulePickNight, Background, Avatar, Language, Weather, Hdmi, Hidden, Usb, About, Shortcuts;
 
     /** Pages that are built so far. Opening one that is not does nothing, so there are no invisible dead ends. */
     val hasUi: Boolean get() = this in built
 
     private companion object {
-        val built = setOf(Root, Theme, Schedule, SchedulePickDay, SchedulePickNight, Background, Language, Weather, Hdmi, Hidden, Usb, About, Shortcuts)
+        val built = setOf(Root, Theme, Schedule, SchedulePickDay, SchedulePickNight, Background, Avatar, Language, Weather, Hdmi, Hidden, Usb, About, Shortcuts)
     }
 }
 

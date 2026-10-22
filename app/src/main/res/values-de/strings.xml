@@ -139,4 +139,6 @@
     <string name="bg_import_failed">Dieses Bild lässt sich nicht verwenden</string>
     <string name="usb_unknown_apps">Zum Installieren von Apps braucht dieser Launcher eine Berechtigung. Einmal am Computer ausführen:</string>
     <string name="usb_cancelled">Installation abgebrochen</string>
+    <string name="item_avatar">Profilfoto</string>
+    <string name="avatar_none">Kein Foto</string>
 </resources>

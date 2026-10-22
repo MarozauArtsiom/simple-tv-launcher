@@ -307,7 +307,7 @@ Found by the owner on the real TV after the first install. Recorded first, fixed
   `LazyListState` scroll does not change during the focus animation (fails before the fix); the
   scroll rule is written into `ui-spec.md`; checked on the TV.
 
-- [ ] **T29 Bug: Settings are hard to find.** Owner: "it's not clear how to open settings to
+- [x] **T29 Bug: Settings are hard to find.** Owner: "it's not clear how to open settings to
   change the theme, language and the rest". Today the only way is Up from the first row to the
   top bar, then Right to the small gear chip at the end. Fix together with T30 (the account
   avatar becomes the obvious entry point), and also: the remote's Menu key (if the probe shows
@@ -316,7 +316,7 @@ Found by the owner on the real TV after the first install. Recorded first, fixed
   **Done:** behaviour test (Up from the first favourite reaches the entry point in at most
   two presses; Menu key opens the panel), screenshots, README updated.
 
-- [ ] **T30 Feature: account avatar at the top right opens Settings** (like the stock Google TV
+- [x] **T30 Feature: account avatar at the top right opens Settings** (like the stock Google TV
   home). Needs a mockup first (top bar with the avatar in 9 themes), then code.
   Open question for the owner: where does the photo come from? A third-party launcher cannot read
   the Google account photo without Google sign-in and a network call to Google, which goes against

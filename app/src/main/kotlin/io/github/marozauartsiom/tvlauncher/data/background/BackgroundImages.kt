@@ -98,9 +98,9 @@ class BackgroundImages(
         }
     }
 
-    /** Copies [source] into app storage as the background (replacing the previous one); returns the stored file name. */
-    suspend fun import(source: File): String? = withContext(io) {
-        val bitmap = BackgroundDecoder.cover(source) ?: return@withContext null
+    /** Copies [source] into app storage, cropped to [width]×[height], replacing the previous one; returns the stored file name. */
+    suspend fun import(source: File, width: Int = BackgroundDecoder.WIDTH, height: Int = BackgroundDecoder.HEIGHT): String? = withContext(io) {
+        val bitmap = BackgroundDecoder.cover(source, width, height) ?: return@withContext null
         try {
             storeDir.mkdirs()
             val name = "bg_${System.currentTimeMillis()}.webp"

@@ -67,7 +67,7 @@ Nine themes ship. The family decides font and card style, and the theme decides 
 | App banner card | 160×90 dp, theme radius | Unfocused: art (+ cartoon outline/shadow). Focused: theme focus style (§2). Pressed: scale back to 1.0. The label under the card shows only in Favourites, only when focused |
 | Generated banner (app without TV banner) | same | Icon 36 dp (radius 10) above the app name (14 sp), on a tint from the icon (palette) |
 | Section title | text, or a pill (cartoon) | Static. "All apps" has a muted "· N" count |
-| Top-bar chip | height 36, radius 18, padding 14 | Types: weather (icon + "+7°" + "· City"), HDMI N (icon + label + green signal dot when connected), iPhone (phone icon), settings (36×36 gear). Focused: theme focus ring 3 dp + ×1.05 |
+| Top-bar chip | height 36, radius 18, padding 14 | Types: weather (icon + "+7°" + "· City"), HDMI N (icon + label + green signal dot when connected), iPhone (phone icon), settings: a round 36×36 button with the owner's photo (Settings → Profile photo) or a person icon, like the account button of the stock home. Focused: theme focus ring 3 dp + ×1.05 |
 | Side panel | 400 dp wide (560 for the theme picker), full height, pad 27/48/27/32, radius 0 (24 in cartoon) | Opens from the right over a dim of 45% black (15% in the theme picker, so the preview shows) |
 | List item | height 44, radius 10, padding 12, icon 20, title 16 sp, value 14 sp muted, chevron | Focused: `item-focus-fill` + 3 dp `item-focus-ring` + ×1.03 (**never a full white fill**). Selected: check icon in `signal` colour |
 | Quick tile | 3 columns × 58 dp, radius 12, icon 20 + label 14 sp | Focus like list items |
@@ -85,6 +85,7 @@ For each screen: initial focus, Back, Home, and the mockup.
 - Initial focus: the first favourite. When there are no favourites, the first app in the grid.
 - Focus memory: the favourites row and each grid row restore their last item (`focusRestorer`).
   Up from the first row goes to the top bar.
+- The remote's Menu key opens Settings from anywhere on Home.
 - Scrolling follows focus calmly (`CalmScrollSpec`, not the TV pivot): a tile already on screen
   never scrolls the list, even while it grows; a tile off screen is brought just inside the edge
   (56 dp from the top so the section title shows, 27 dp from the bottom, 48 dp at the row ends).
@@ -96,7 +97,7 @@ For each screen: initial focus, Back, Home, and the mockup.
   favourites below).
 - "All apps" is re-sorted by launch count only on Home key, screen on and Back at the top, never
   while the owner is looking at it.
-- Safe mode (the launcher crashed twice within 10 minutes): default theme, clock, settings gear and
+- Safe mode (the launcher crashed twice within 10 minutes): default theme, clock, settings button and
   the app grid only, with one line of explanation. Nothing from the weather, HDMI or favourites
   features is drawn.
 
@@ -119,7 +120,7 @@ For each screen: initial focus, Back, Home, and the mockup.
   Android. Section "Лаунчер": Тема, Фон, Язык, Погода, Сигнал на HDMI, Скрытые приложения,
   Установить с флешки, О лаунчере.
 - Initial focus: the Wi-Fi tile. Back: out of a sub-page, then close the panel and return focus
-  to the gear chip. Coming back from a sub-page, focus returns to the row that opened it.
+  to the settings (avatar) button. Coming back from a sub-page, focus returns to the row that opened it.
 - A tile appears only if this TV has a screen for it. Picture falls back to the display settings;
   the Sleep timer is hidden unless a vendor screen is known. "Website shortcuts" is a launcher row
   after "Hidden apps".
@@ -196,6 +197,10 @@ For each screen: initial focus, Back, Home, and the mockup.
   (the archive row with the message and "Проверить снова"). An archive that is already installed (same or newer
   version) reads "Установлено" and does nothing on OK. The drive is scanned only when the page opens or on
   "Проверить снова" / "Готово".
+
+### Profile photo — no separate mockup (same parts as the background picker)
+- "No photo" (person icon, check mark when chosen), then "Images from USB" as the background picker's
+  3-column thumbnails, or the all-files note. OK keeps a 160 px square copy, sets the avatar and goes back.
 
 ### About — `design/mockups/settings-about.html`
 - App icon, name, version and build, one sentence on privacy, and the licence list as two-line

@@ -73,6 +73,7 @@ import io.github.marozauartsiom.tvlauncher.ui.hdmi.HdmiPrompt
 import io.github.marozauartsiom.tvlauncher.ui.iphone.IphoneHintDialog
 import io.github.marozauartsiom.tvlauncher.ui.settings.HdmiSettingsPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.AboutPage
+import io.github.marozauartsiom.tvlauncher.ui.settings.AvatarPickerPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.HiddenAppsPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.UsbInstallerPage
 import io.github.marozauartsiom.tvlauncher.ui.home.WeatherChip
@@ -88,6 +89,8 @@ import io.github.marozauartsiom.tvlauncher.ui.theme.ThemeId
 import io.github.marozauartsiom.tvlauncher.ui.theme.ThemeSpec
 import io.github.marozauartsiom.tvlauncher.ui.theme.Themes
 import android.os.Environment
+import androidx.compose.ui.graphics.ImageBitmap
+import android.graphics.BitmapFactory
 import java.io.File
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -148,6 +151,12 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
 
     val context = LocalContext.current
     val installedApps by graph.apps.apps.collectAsStateWithLifecycle()
+    // The owner's photo for the round Settings button: a small stored square, decoded off the main thread.
+    val avatar by produceState<ImageBitmap?>(null, settings.avatar) {
+        value = settings.avatar?.let { name ->
+            withContext(Dispatchers.IO) { graph.avatarImages.fileFor(name)?.let { BitmapFactory.decodeFile(it.path)?.asImageBitmap() } }
+        }
+    }
     val hiddenApps = remember(installedApps, settings.hidden) { installedApps.filter { it.packageName in settings.hidden } }
     val hdmiStatus by graph.hdmi.status.collectAsStateWithLifecycle()
     val pendingHdmi by graph.hdmi.pending.collectAsStateWithLifecycle()
@@ -168,6 +177,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     val hiddenFocus = remember { FocusMemory() }
     val backgroundFocus = remember { FocusMemory() }
     val usbFocus = remember { FocusMemory() }
+    val avatarFocus = remember { FocusMemory() }
     val aboutFocus = remember { FocusMemory() }
     val thumbnailDispatcher = remember { Dispatchers.Default.limitedParallelism(2) }
     val systemLocale = remember { android.content.res.Resources.getSystem().configuration.locales[0] }
@@ -223,7 +233,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
             HomeScreen(
                 content = content,
                 theme = theme,
-                topBar = TopBarState(weather = weatherChip(weatherView, context), hdmi = hdmiStatus.map { HdmiChip(it.input.id, it.input.label, it.connected) }),
+                topBar = TopBarState(weather = weatherChip(weatherView, context), hdmi = hdmiStatus.map { HdmiChip(it.input.id, it.input.label, it.connected) }, avatar = avatar),
                 clock = { clock },
                 art = graph.banners,
                 resets = viewModel.resets,
@@ -343,6 +353,33 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                                     }
                                 }
                             }
+                        },
+                        onCheckAccess = { accessChecks++ },
+                    )
+                }
+                SettingsPage.Avatar -> {
+                    var accessChecks by remember { mutableIntStateOf(0) }
+                    val pictures by produceState<PicturesState>(PicturesState.Loading, accessChecks) {
+                        value = if (Environment.isExternalStorageManager()) PicturesState.Loaded(graph.avatarImages.scan()) else PicturesState.NoAccess
+                    }
+                    AvatarPickerPage(
+                        theme = theme,
+                        hasPhoto = settings.avatar != null,
+                        pictures = pictures,
+                        adbCommand = "adb shell appops set --uid ${context.packageName} MANAGE_EXTERNAL_STORAGE allow",
+                        memory = avatarFocus,
+                        thumbnail = { image -> withContext(thumbnailDispatcher) { BackgroundDecoder.thumbnail(File(image.path))?.asImageBitmap() } },
+                        onChoose = { image ->
+                            graph.appScope.launch {
+                                if (image == null) {
+                                    graph.settings.setAvatar(null); graph.avatarImages.clear()
+                                } else {
+                                    val name = graph.avatarImages.import(File(image.path), AvatarSize, AvatarSize)
+                                    if (name != null) graph.settings.setAvatar(name)
+                                    else withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.bg_import_failed), Toast.LENGTH_SHORT).show() }
+                                }
+                            }
+                            viewModel.onBack()
                         },
                         onCheckAccess = { accessChecks++ },
                     )
@@ -470,6 +507,9 @@ private fun handleMenuAction(
     }
     viewModel.open(Overlay.None)
 }
+
+/** Side of the stored profile photo in px: the button is 36 dp, so 2× xhdpi with room to spare. */
+private const val AvatarSize = 160
 
 private fun unavailable(context: Context) =
     Toast.makeText(context, context.getString(R.string.unavailable_on_tv), Toast.LENGTH_SHORT).show()
