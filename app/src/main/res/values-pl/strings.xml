@@ -145,4 +145,7 @@
     <string name="avatar_none">Bez zdjęcia</string>
     <string name="menu_show_on_home">Pokaż na ekranie głównym</string>
     <string name="hidden_section">Ukryte</string>
+    <string name="inputs_chip">Wejścia</string>
+    <string name="input_connected">Podłączone</string>
+    <string name="input_empty">Nic nie podłączono</string>
 </resources>

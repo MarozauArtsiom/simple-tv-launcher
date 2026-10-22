@@ -73,6 +73,7 @@ import io.github.marozauartsiom.tvlauncher.ui.hdmi.HdmiPrompt
 import io.github.marozauartsiom.tvlauncher.ui.iphone.IphoneHintDialog
 import io.github.marozauartsiom.tvlauncher.ui.settings.HdmiSettingsPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.AboutPage
+import io.github.marozauartsiom.tvlauncher.ui.hdmi.InputsMenu
 import io.github.marozauartsiom.tvlauncher.ui.settings.AvatarPickerPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.HiddenAppsPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.UsbInstallerPage
@@ -193,7 +194,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
             onMenu = { tile, anchor -> viewModel.open(Overlay.AppMenu(tile.key, anchor)) },
             // The panels below are opened by their own tasks; until then these do nothing.
             onWeather = { viewModel.open(Overlay.Weather) },
-            onHdmi = { id -> if (!graph.inputLauncher.open(id)) unavailable(context) },
+            onInputs = { viewModel.open(Overlay.Inputs) },
             onIphone = { if (!Airplay.open(graph.launcher)) viewModel.open(Overlay.IphoneHint) },
             onSettings = { viewModel.open(Overlay.Settings()) },
             onMoveStep = { key, delta ->
@@ -239,7 +240,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                 resets = viewModel.resets,
                 actions = actions,
                 safeMode = safeMode,
-                overlayOpen = menu != null || settingsOverlay != null || overlay is Overlay.Weather || overlay is Overlay.WeatherSearch || overlay is Overlay.Hdmi || overlay is Overlay.IphoneHint,
+                overlayOpen = menu != null || settingsOverlay != null || overlay is Overlay.Weather || overlay is Overlay.WeatherSearch || overlay is Overlay.Hdmi || overlay is Overlay.IphoneHint || overlay is Overlay.Inputs,
                 moveKey = moveKey,
             )
             when (overlay) {
@@ -259,6 +260,14 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                         )
                     }
                 } ?: LaunchedEffect(Unit) { viewModel.onBack() } // the input vanished
+                Overlay.Inputs -> InputsMenu(
+                    inputs = hdmiStatus.map { HdmiChip(it.input.id, it.input.label, it.connected) },
+                    theme = theme,
+                    onOpen = { id ->
+                        if (!graph.inputLauncher.open(id)) unavailable(context)
+                        viewModel.open(Overlay.None)
+                    },
+                )
                 Overlay.IphoneHint -> IphoneHintDialog(
                     theme = theme,
                     onInstallFromUsb = {

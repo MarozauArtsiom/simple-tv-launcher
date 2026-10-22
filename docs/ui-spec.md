@@ -67,7 +67,7 @@ Nine themes ship. The family decides font and card style, and the theme decides 
 | App banner card | 160×90 dp, theme radius | Unfocused: art (+ cartoon outline/shadow). Focused: theme focus style (§2). Pressed: scale back to 1.0. The label under the card shows only in Favourites, only when focused |
 | Generated banner (app without TV banner) | same | Icon 36 dp (radius 10) above the app name (14 sp), on a tint from the icon (palette) |
 | Section title | text, or a pill (cartoon) | Static. "All apps" has a muted "· N" count |
-| Top-bar chip | height 36, radius 18, padding 14 | Types: weather (icon + "+7°" + "· City"), HDMI N (icon + label + green signal dot when connected), iPhone (phone icon), settings: a round 36×36 button with the owner's photo (Settings → Profile photo) or a person icon, like the account button of the stock home. Focused: theme focus ring 3 dp + ×1.05 |
+| Top-bar chip | height 36, radius 18, padding 14 | Types: weather (icon + "+7°" + "· City"), Inputs (one button for all HDMI inputs, green dot when any is connected; OK opens a popup under the bar listing each input with "Connected" / "Nothing connected", OK switches), iPhone (phone icon), settings: a round 36×36 button with the owner's photo (Settings → Profile photo) or a person icon, like the account button of the stock home. Focused: theme focus ring 3 dp + ×1.05 |
 | Side panel | 400 dp wide (560 for the theme picker), full height, pad 27/48/27/32, radius 0 (24 in cartoon) | Opens from the right over a dim of 45% black (15% in the theme picker, so the preview shows) |
 | List item | height 44, radius 10, padding 12, icon 20, title 16 sp, value 14 sp muted, chevron | Focused: `item-focus-fill` + 3 dp `item-focus-ring` + ×1.03 (**never a full white fill**). Selected: check icon in `signal` colour |
 | Quick tile | 3 columns × 58 dp, radius 12, icon 20 + label 14 sp | Focus like list items |
@@ -91,7 +91,8 @@ For each screen: initial focus, Back, Home, and the mockup.
   from the header goes nowhere. OK toggles it; open, it is a 5-column grid like All apps. The app menu of a
   hidden tile offers "Show on Home", App info and Uninstall. Settings → Hidden apps stays as a second way back.
 - The section that holds focus (Favourites or All apps) is drawn as is; the other one fades to 50 %
-  in 150 ms (title and tiles). Focus in the top bar fades nothing. No blur (see T31).
+  in 150 ms (title and tiles). Focus in the top bar fades every section below; the top bar never fades.
+  The clock side of the top bar gives way when it is crowded, so the avatar button always stays on screen. No blur (see T31).
 - Scrolling follows focus calmly (`CalmScrollSpec`, not the TV pivot): a tile already on screen
   never scrolls the list, even while it grows; a tile off screen is brought just inside the edge
   (56 dp from the top so the section title shows, 27 dp from the bottom, 48 dp at the row ends).

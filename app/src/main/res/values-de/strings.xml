@@ -143,4 +143,7 @@
     <string name="avatar_none">Kein Foto</string>
     <string name="menu_show_on_home">Auf Startseite zeigen</string>
     <string name="hidden_section">Ausgeblendet</string>
+    <string name="inputs_chip">Eingänge</string>
+    <string name="input_connected">Verbunden</string>
+    <string name="input_empty">Nichts verbunden</string>
 </resources>

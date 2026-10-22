@@ -144,4 +144,7 @@
     <string name="avatar_none">Pas de photo</string>
     <string name="menu_show_on_home">Afficher sur l’accueil</string>
     <string name="hidden_section">Masquées</string>
+    <string name="inputs_chip">Entrées</string>
+    <string name="input_connected">Connecté</string>
+    <string name="input_empty">Rien de connecté</string>
 </resources>

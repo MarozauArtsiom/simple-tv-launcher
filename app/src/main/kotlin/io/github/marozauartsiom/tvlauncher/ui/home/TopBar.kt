@@ -59,7 +59,7 @@ fun TopBar(
     clock: () -> ClockText,
     theme: ThemeSpec,
     onWeather: () -> Unit,
-    onHdmi: (String) -> Unit,
+    onInputs: () -> Unit,
     onIphone: () -> Unit,
     onSettings: () -> Unit,
     focus: FocusMemory,
@@ -73,7 +73,8 @@ fun TopBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+        // The left side gives way when the bar is crowded, so the buttons on the right (the avatar last) always stay on screen.
+        Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(24.dp)) {
             ClockAndDate(clock, theme)
             state.weather?.let { w ->
                 val description = stringResource(R.string.cd_weather, w.description)
@@ -95,12 +96,14 @@ fun TopBar(
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            state.hdmi.forEach { input ->
-                val signalText = if (input.hasSignal) stringResource(R.string.cd_hdmi_signal, input.label) else input.label
-                TopChip(theme, { onHdmi(input.id) }, focus.track("chip:hdmi:${input.id}").semantics { contentDescription = signalText }) {
+            // All HDMI inputs behind one button (T33); the popup lists them with their status. The dot: something is connected.
+            if (state.hdmi.isNotEmpty()) {
+                val connected = state.hdmi.any { it.hasSignal }
+                val description = stringResource(R.string.inputs_chip)
+                TopChip(theme, onInputs, focus.track("chip:inputs").semantics { contentDescription = description }) {
                     ChipIcon(Icons.Hdmi, theme)
-                    Text(input.label, style = MaterialTheme.typography.labelLarge, color = theme.colors.chipFg)
-                    if (input.hasSignal) Box(Modifier.size(8.dp).background(theme.colors.signal, CircleShape))
+                    Text(description, style = MaterialTheme.typography.labelLarge, color = theme.colors.chipFg, maxLines = 1)
+                    if (connected) Box(Modifier.size(8.dp).background(theme.colors.signal, CircleShape))
                 }
             }
             if (state.showIphone) {

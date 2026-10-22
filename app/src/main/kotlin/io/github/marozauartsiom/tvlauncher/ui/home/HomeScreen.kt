@@ -82,7 +82,8 @@ data class HomeActions(
     /** Long press on a tile; the rectangle is where it is on screen, for placing the menu. */
     val onMenu: (HomeTile, Rect?) -> Unit = { _, _ -> },
     val onWeather: () -> Unit = {},
-    val onHdmi: (String) -> Unit = {},
+    /** The top bar's "Inputs" button: show the HDMI inputs popup. */
+    val onInputs: () -> Unit = {},
     val onIphone: () -> Unit = {},
     val onSettings: () -> Unit = {},
     /** Move mode: swap the tile one place left (-1) or right (+1). */
@@ -95,7 +96,7 @@ private const val GridColumns = 5
 /** Opacity of the Home section that does not hold focus. */
 private const val InactiveAlpha = 0.5f
 
-private enum class Section { None, Favourites, All, Hidden }
+private enum class Section { None, Top, Favourites, All, Hidden }
 
 internal const val HiddenHeaderId = "hidden-header"
 private val CardGap = 16.dp
@@ -171,8 +172,8 @@ fun HomeScreen(
     val favourites = if (safeMode) emptyList() else content.favourites
     val rows = remember(content.all) { content.all.chunked(GridColumns) }
 
-    // The section that holds focus stays as is; the other one fades, so the eye stays on the selected tile (T31).
-    // Focus in the top bar fades nothing. The alphas are read only in layer lambdas.
+    // The section that holds focus stays as is; the others fade, so the eye stays on the selected element (T31).
+    // Focus in the top bar fades every section below it; the top bar itself never fades. Alphas are read only in layer lambdas.
     var activeSection by remember { mutableStateOf(Section.None) }
     fun alphaOf(section: Section) = if (activeSection != Section.None && activeSection != section) InactiveAlpha else 1f
     val favouritesAlpha = animateFloatAsState(alphaOf(Section.Favourites), tween(150), label = "favouritesAlpha")
@@ -199,11 +200,12 @@ fun HomeScreen(
         ) {
             item(key = "top", contentType = "top") {
                 TopBar(
+                    modifier = Modifier.onFocusChanged { if (it.hasFocus) activeSection = Section.Top else if (activeSection == Section.Top) activeSection = Section.None },
                     state = if (safeMode) TopBarState(showIphone = false) else topBar,
                     clock = clock,
                     theme = theme,
                     onWeather = actions.onWeather,
-                    onHdmi = actions.onHdmi,
+                    onInputs = actions.onInputs,
                     onIphone = actions.onIphone,
                     onSettings = actions.onSettings,
                     focus = focus,

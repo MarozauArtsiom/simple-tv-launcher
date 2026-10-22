@@ -158,4 +158,7 @@
     <string name="avatar_none">No photo</string>
     <string name="menu_show_on_home">Show on Home</string>
     <string name="hidden_section">Hidden</string>
+    <string name="inputs_chip">Inputs</string>
+    <string name="input_connected">Connected</string>
+    <string name="input_empty">Nothing connected</string>
 </resources>

@@ -145,4 +145,7 @@
     <string name="avatar_none">Без фото</string>
     <string name="menu_show_on_home">Показать на главном</string>
     <string name="hidden_section">Скрытые</string>
+    <string name="inputs_chip">Входы</string>
+    <string name="input_connected">Подключено</string>
+    <string name="input_empty">Не подключено</string>
 </resources>

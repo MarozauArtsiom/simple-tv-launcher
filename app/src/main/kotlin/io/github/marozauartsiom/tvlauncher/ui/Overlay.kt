@@ -25,6 +25,8 @@ sealed interface Overlay {
     data class AppMenu(val key: ItemKey, val anchor: Rect? = null) : Overlay
     data class MoveMode(val key: ItemKey) : Overlay
     data object IphoneHint : Overlay
+    /** The HDMI inputs popup of the top bar. */
+    data object Inputs : Overlay
 
     /** The overlay that Back leads to. [None] means the next Back is handled by Home itself. */
     fun back(): Overlay = when (this) {

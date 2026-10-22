@@ -163,6 +163,9 @@ One line per finished task: date, task id, what was done, anything notable.
   offscreen buffer). Home goldens re-recorded.
 - 2026-10-22 — T32: collapsed "Hidden · N" section at the bottom of Home (chip header, OK toggles, closes on reset, tiles not
   composed while collapsed); hidden apps' menu has "Show on Home"; Settings → Hidden apps kept (owner's answer). 1 behaviour test.
+- 2026-10-22 — Owner feedback round 2: HDMI chips merged into one "Inputs" button with a popup (status per input); focus in
+  the top bar now fades the sections below; the clock side of the bar shrinks first so the avatar can't be pushed off screen
+  (several HDMI chips did that on the TV). Goldens re-recorded.
 
 ## Decisions to review
 
