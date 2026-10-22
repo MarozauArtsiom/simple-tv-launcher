@@ -14,6 +14,10 @@ skill files stay in English.
 | `docs/ui-spec.md` | Every screen and component: sizes, states, initial focus, Back behaviour, which mockups exist and which screens still need one |
 | `docs/tech-stack.md` | Versions (verified 2026-10-22), libraries used and deliberately not used, architecture, testing, CI, SDK setup |
 | `design/mockups/` | Approved HTML mockups; `themes.css` has the exact tokens of all nine themes |
+| `docs/sow.md` | Scope, deliverables, acceptance criteria and milestones of v1 |
+| `docs/tasks.md` | Ordered tasks T01–T27 with verification gates, plus the on-TV checklist |
+| `docs/progress.md` | Log of finished tasks, "Decisions to review", blockers. Resume from the first unchecked task |
+| `docs/run-prompt.md` | The single prompt (in Russian) the owner pastes to run all of v1 |
 
 Workflow: requirement → mockup → owner approves → code that matches `ui-spec.md` and the
 mockup → Roborazzi screenshot test. Before scaffolding or upgrading, re-check versions with

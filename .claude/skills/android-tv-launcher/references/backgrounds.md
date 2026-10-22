@@ -5,9 +5,14 @@ background.
 
 - Launcher Settings → Background, with a live preview. Choices:
   - built-in gradients or solid colours (shipped as tiny vectors or code, no PNGs);
-  - images from a USB drive through MediaStore (`READ_MEDIA_IMAGES` on API 33+,
-    `READ_EXTERNAL_STORAGE` below). Google TV has no system photo picker, so we draw our own
-    grid of thumbnails, decoded small (about 160×90 dp) and only while the picker is open.
+  - images from a USB drive. Reading USB storage uses **all-files access**
+    (`MANAGE_EXTERNAL_STORAGE`, granted once over adb with
+    `adb shell appops set --uid <pkg> MANAGE_EXTERNAL_STORAGE allow`; check with
+    `Environment.isExternalStorageManager()`). The same access serves the USB APK installer,
+    which MediaStore can't do (APKs aren't media), and Google TV often has no system file or
+    photo picker. Scan `StorageManager.storageVolumes` for jpg/png/webp and draw our own grid of
+    thumbnails, decoded small (about 160×90 dp) and only while the picker is open. Without the
+    permission, show the adb command as a hint.
 - Copy the chosen image into app storage, downscaled to 960×540, so the background still
   works after the USB drive is removed.
 - Decode the background at 960×540 (about 2 MB). It sits under a dark scrim and the UI, so
