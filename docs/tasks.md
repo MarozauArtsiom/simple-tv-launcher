@@ -317,6 +317,19 @@ Found by the owner on the real TV after the first install. Recorded first, fixed
   Settings; OK opens the Settings panel. It replaces the gear chip at the right end of the top bar.
   **Done:** mockup approved, avatar in 9 themes (screenshots), OK opens Settings, picker tested.
 
+- [ ] **T31 Feature: dim the section without focus.** Owner: "the section that is not active
+  (Favourites or All apps) should be a bit blurred and transparent, so my attention stays where the
+  selected app really is". Needs a mockup first (both states, 9 themes), then code.
+  Plan: the section that holds focus stays as is; the other one (title and tiles) fades to about
+  50–60 % opacity with a short animation (~150 ms), read in `graphicsLayer` only. The top bar is not
+  dimmed. Blur: `Modifier.blur` needs API 31+ (RenderEffect) and costs GPU time on the Mali-G52 at
+  every frame of scrolling, so the default is fade only; a light blur (2–4 dp) is tried on the TV
+  and kept only if focus moves stay smooth (T28) and the frame time stays within budget.
+  Contrast: dimmed names may drop below 4.5:1; acceptable for an inactive section, but the focused
+  section must keep full contrast.
+  **Done:** mockup approved; screenshots of both states in 9 themes; a test that the inactive
+  section's alpha changes when focus crosses between sections; frame check on the TV.
+
 ## On the TV (owner, or Claude Code running on a computer in the same network)
 
 Not part of the cloud run. Do these after M5:
