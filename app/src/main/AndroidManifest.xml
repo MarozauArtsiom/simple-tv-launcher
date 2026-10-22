@@ -5,6 +5,8 @@
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <!-- Permissions are added together with the feature that needs each one (docs/tasks.md). -->
+    <!-- T19: the "signal on HDMI" card over other apps. Optional; granted once over adb (see the owner guide). -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!-- T18: the weather feature (Open-Meteo, IP location) uses the network, only while Home is on screen. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- T13: the app menu's "Uninstall" opens the system confirmation for an app. -->
@@ -21,6 +23,11 @@
         <intent>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <!-- T19: so the launcher can tell whether anything handles an HDMI input's passthrough address. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="content" android:host="android.media.tv" />
         </intent>
         <!-- T14: so the Settings panel can tell which system settings screens exist on this TV. -->
         <intent><action android:name="android.settings.WIFI_SETTINGS" /></intent>

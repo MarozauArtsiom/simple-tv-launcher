@@ -3,6 +3,8 @@ package io.github.marozauartsiom.tvlauncher
 import android.content.Context
 import android.content.res.Resources
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.os.storage.StorageManager
 import io.github.marozauartsiom.tvlauncher.data.apps.AppLauncher
 import io.github.marozauartsiom.tvlauncher.data.apps.AppRepository
@@ -10,12 +12,21 @@ import io.github.marozauartsiom.tvlauncher.data.apps.BannerLoader
 import io.github.marozauartsiom.tvlauncher.data.apps.PackageManagerSource
 import io.github.marozauartsiom.tvlauncher.data.background.BackgroundImages
 import io.github.marozauartsiom.tvlauncher.data.prefs.Settings
+import io.github.marozauartsiom.tvlauncher.data.prefs.SettingsData
 import io.github.marozauartsiom.tvlauncher.data.weather.GeoIp
 import io.github.marozauartsiom.tvlauncher.data.weather.OpenMeteoClient
 import io.github.marozauartsiom.tvlauncher.data.weather.UrlConnectionFetcher
 import io.github.marozauartsiom.tvlauncher.data.weather.WeatherRepository
 import io.github.marozauartsiom.tvlauncher.i18n.LocaleController
 import io.github.marozauartsiom.tvlauncher.system.CrashGuard
+import io.github.marozauartsiom.tvlauncher.system.hdmi.HdmiController
+import io.github.marozauartsiom.tvlauncher.system.hdmi.HdmiInput
+import io.github.marozauartsiom.tvlauncher.system.hdmi.InputLauncher
+import io.github.marozauartsiom.tvlauncher.system.hdmi.OverlayHost
+import io.github.marozauartsiom.tvlauncher.system.hdmi.TvInputManagerSource
+import io.github.marozauartsiom.tvlauncher.ui.hdmi.HdmiPrompt
+import io.github.marozauartsiom.tvlauncher.ui.theme.LauncherTheme
+import io.github.marozauartsiom.tvlauncher.ui.theme.Themes
 import io.github.marozauartsiom.tvlauncher.system.ScreenOnWatcher
 import io.github.marozauartsiom.tvlauncher.ui.theme.BackgroundCache
 import java.io.File
@@ -61,5 +72,49 @@ class AppGraph(private val context: Context) {
             languageTag = { LocaleController.effectiveTag(locale.savedChoice(), Resources.getSystem().configuration.locales[0]) },
         )
     }
+    /** The latest settings, for code that reacts to system events and cannot wait for a flow (the HDMI signal). */
+    @Volatile
+    var latestSettings: SettingsData = SettingsData()
+
+    val inputLauncher by lazy {
+        InputLauncher(
+            canHandle = { intent -> context.packageManager.resolveActivity(intent, 0) != null },
+            start = { context.startActivity(it) },
+        )
+    }
+
+    private var overlay: OverlayHost? = null
+
+    /** HDMI: the system's callback, the decision where to ask, and the optional window over other apps. */
+    val hdmi by lazy {
+        HdmiController(
+            inputs = TvInputManagerSource(context),
+            settings = { latestSettings.hdmi },
+            clock = System::currentTimeMillis,
+            canDrawOverlays = { android.provider.Settings.canDrawOverlays(context) },
+            showOverOtherApps = ::showHdmiOverOtherApps,
+        )
+    }
+
+    private fun showHdmiOverOtherApps(input: HdmiInput) {
+        Handler(Looper.getMainLooper()).post {
+            val snapshot = latestSettings
+            val theme = Themes.byId(snapshot.theme)
+            val host = OverlayHost(LocaleController.localized(context, snapshot.language))
+            overlay?.hide()
+            overlay = host
+            host.show { dismiss ->
+                LauncherTheme(theme) {
+                    HdmiPrompt(
+                        theme = theme,
+                        input = input,
+                        onSwitch = { inputLauncher.open(input.id); hdmi.dismiss(input.id); dismiss() },
+                        onDismiss = { hdmi.dismiss(input.id); dismiss() },
+                    )
+                }
+            }
+        }
+    }
+
     val launcher by lazy { AppLauncher(packageSource) { intent -> context.startActivity(intent) } }
 }

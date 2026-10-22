@@ -105,8 +105,11 @@ For each screen: initial focus, Back, Home, and the mockup.
 - Initial focus: "Сменить город". Back closes the panel and returns focus to the chip.
 
 ### HDMI prompt — `design/mockups/hdmi-prompt.html`
-- "Сигнал на HDMI 2" + CEC device name; buttons "Переключить" / "Не сейчас"; a countdown
-  in muted text. Initial focus: "Переключить". Back = "Не сейчас".
+- "Сигнал на HDMI 2" + the device name when known; buttons "Переключить" / "Не сейчас"; a countdown
+  in muted text. Initial focus: "Переключить". Back = "Не сейчас"; the card hides itself after 15 s.
+  Over Home it sits in the bottom-right corner of the safe area over a 40 % dim; over another app it is a
+  window of its own (needs the overlay permission). While it is open Home takes no focus. Once dismissed
+  for any reason, the same input is not asked about again until it disconnects.
 
 ### Settings panel — `design/mockups/settings.html`, `settings/settings-*.png`
 - Title "Настройки". Section "Телевизор": Wi-Fi, Bluetooth, Звук, Картинка, Таймер сна,

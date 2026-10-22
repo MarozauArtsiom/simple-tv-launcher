@@ -3,12 +3,18 @@ package io.github.marozauartsiom.tvlauncher.ui
 import android.content.Context
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -60,7 +66,10 @@ import io.github.marozauartsiom.tvlauncher.ui.home.HomeContentSource
 import io.github.marozauartsiom.tvlauncher.ui.home.HomeScreen
 import io.github.marozauartsiom.tvlauncher.ui.home.HomeTile
 import io.github.marozauartsiom.tvlauncher.ui.home.MenuAction
+import io.github.marozauartsiom.tvlauncher.ui.home.HdmiChip
 import io.github.marozauartsiom.tvlauncher.ui.home.TopBarState
+import io.github.marozauartsiom.tvlauncher.ui.hdmi.HdmiPrompt
+import io.github.marozauartsiom.tvlauncher.ui.settings.HdmiSettingsPage
 import io.github.marozauartsiom.tvlauncher.ui.home.WeatherChip
 import io.github.marozauartsiom.tvlauncher.ui.weather.CitySearchPage
 import io.github.marozauartsiom.tvlauncher.ui.weather.WeatherPanel
@@ -133,6 +142,8 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     }
 
     val context = LocalContext.current
+    val hdmiStatus by graph.hdmi.status.collectAsStateWithLifecycle()
+    val pendingHdmi by graph.hdmi.pending.collectAsStateWithLifecycle()
     val editor = remember(graph) { FavouritesEditor(graph.settings) }
     val packageActions = remember(context) { PackageActions { context.startActivity(it) } }
     val webLauncher = remember(context) { WebLauncher { context.startActivity(it) } }
@@ -146,6 +157,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     val settingsFocus = remember { FocusMemory() }
     val themeFocus = remember { FocusMemory() }
     val languageFocus = remember { FocusMemory() }
+    val hdmiSettingsFocus = remember { FocusMemory() }
     val backgroundFocus = remember { FocusMemory() }
     val thumbnailDispatcher = remember { Dispatchers.Default.limitedParallelism(2) }
     val systemLocale = remember { android.content.res.Resources.getSystem().configuration.locales[0] }
@@ -161,7 +173,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
             onMenu = { tile, anchor -> viewModel.open(Overlay.AppMenu(tile.key, anchor)) },
             // The panels below are opened by their own tasks; until then these do nothing.
             onWeather = { viewModel.open(Overlay.Weather) },
-            onHdmi = { },
+            onHdmi = { id -> if (!graph.inputLauncher.open(id)) unavailable(context) },
             onIphone = { },
             onSettings = { viewModel.open(Overlay.Settings()) },
             onMoveStep = { key, delta ->
@@ -179,6 +191,15 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
         )
     }
 
+    // A signal on HDMI: ask in the launcher once nothing else is open. Taking it clears it, so it is asked once.
+    LaunchedEffect(pendingHdmi, overlay is Overlay.None) {
+        val input = pendingHdmi
+        if (input != null && overlay is Overlay.None) {
+            graph.hdmi.consume(input)
+            viewModel.open(Overlay.Hdmi(input.id))
+        }
+    }
+
     // Back never leaves the launcher: it closes a panel, or sends Home to the first favourite.
     BackHandler { viewModel.onBack() }
 
@@ -192,16 +213,32 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
             HomeScreen(
                 content = content,
                 theme = theme,
-                topBar = TopBarState(weather = weatherChip(weatherView, context)),
+                topBar = TopBarState(weather = weatherChip(weatherView, context), hdmi = hdmiStatus.map { HdmiChip(it.input.id, it.input.label, it.connected) }),
                 clock = { clock },
                 art = graph.banners,
                 resets = viewModel.resets,
                 actions = actions,
                 safeMode = safeMode,
-                overlayOpen = menu != null || settingsOverlay != null || overlay is Overlay.Weather || overlay is Overlay.WeatherSearch,
+                overlayOpen = menu != null || settingsOverlay != null || overlay is Overlay.Weather || overlay is Overlay.WeatherSearch || overlay is Overlay.Hdmi,
                 moveKey = moveKey,
             )
             when (overlay) {
+                is Overlay.Hdmi -> hdmiStatus.firstOrNull { it.input.id == (overlay as Overlay.Hdmi).inputId }?.input?.let { input ->
+                    // The card is dismissed however it goes away (button, Back, timeout, Home key): no more questions until it disconnects.
+                    DisposableEffect(input.id) { onDispose { graph.hdmi.dismiss(input.id) } }
+                    Box(Modifier.fillMaxSize().background(Color(0x660B0D12))) {
+                        HdmiPrompt(
+                            theme = theme,
+                            input = input,
+                            onSwitch = {
+                                if (!graph.inputLauncher.open(input.id)) unavailable(context)
+                                viewModel.onBack()
+                            },
+                            onDismiss = { viewModel.onBack() },
+                            modifier = Modifier.align(Alignment.BottomEnd).padding(end = 48.dp, bottom = 27.dp),
+                        )
+                    }
+                } ?: LaunchedEffect(Unit) { viewModel.onBack() } // the input vanished
                 Overlay.Weather -> WeatherPanel(theme, weatherView, languageTag, onChangeCity = { viewModel.open(Overlay.WeatherSearch) })
                 Overlay.WeatherSearch -> CitySearch(theme, graph, languageTag, viewModel)
                 else -> Unit
@@ -290,6 +327,20 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                             }
                         },
                         onCheckAccess = { accessChecks++ },
+                    )
+                }
+                SettingsPage.Hdmi -> {
+                    var permissionChecks by remember { mutableIntStateOf(0) }
+                    val canDraw = remember(permissionChecks) { android.provider.Settings.canDrawOverlays(context) }
+                    HdmiSettingsPage(
+                        theme = theme,
+                        settings = settings.hdmi,
+                        inputs = hdmiStatus.map { it.input },
+                        canDrawOverlays = canDraw,
+                        adbCommand = "adb shell appops set ${context.packageName} SYSTEM_ALERT_WINDOW allow",
+                        memory = hdmiSettingsFocus,
+                        onChange = { new -> graph.appScope.launch { graph.settings.setHdmi(new) } },
+                        onCheckPermission = { permissionChecks++ },
                     )
                 }
                 SettingsPage.Weather -> CitySearch(theme, graph, languageTag, viewModel)

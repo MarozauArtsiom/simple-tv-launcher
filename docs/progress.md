@@ -100,6 +100,15 @@ One line per finished task: date, task id, what was done, anything notable.
   the real sunrise/sunset when the forecast is from today. 54 tests on the real Open-Meteo JSON (fetched from the cloud) and fakes.
   Live smoke check from the cloud: forecast 200 (first attempt timed out, as the skill warned), geocoding 200, ipinfo.io 200
   (reports the data-centre city), ipapi.co 429 (as the skill warned).
+- 2026-10-22 — T19 HDMI: `TvInputManagerSource` (system callback, hidden inputs filtered), `HdmiWatcher` (asks when an input
+  goes to CONNECTED from anything else; 30 s debounce per input; "not now"/timeout is remembered until the input
+  disconnects; refresh on resume catches missed events; the owner's switches decide), `HdmiController` (routes: launcher in front →
+  card inside Home; another app + overlay permission + allowed → `OverlayHost` window; otherwise it waits and is dropped if the
+  signal is gone when Home returns), `InputLauncher` (passthrough `ACTION_VIEW`, vendor picker fallback), `HdmiPrompt` (460 dp card,
+  15 s countdown, Back = not now), top-bar chips with the signal dot and the Settings → HDMI page (switches, adb hint, one
+  switch per input). Registered 2 s after process start, nothing polls. 41 tests; screenshots viewed against the mockups.
+  Process note: when several Gradle tasks are given with `--tests` filters, tests of the first task may be skipped; the full
+  gate is what counts.
 
 ## Decisions to review
 
@@ -134,6 +143,10 @@ Defaults taken during unattended runs that the owner should look at.
   VPN shows the wrong city) the owner sets the city in Settings → Weather. City names stay in the language they were fetched in
   until the next refresh of the place.
 - T18: the search lists at most three matches (the keyboard covers the rest of the screen); typing more narrows the search.
+- T19: **to verify on the TV** — what the HDMI inputs are called (chips use the labels Android reports), whether Xiaomi reports
+  CONNECTED when a device powers on (CEC) or only on plug-in, which app opens the passthrough address, and whether the overlay card
+  takes the remote's focus. The CEC device name is not in the public API, so the card shows only "Signal on <input label>".
+  The vendor input picker fallback (`VendorInputIntents.picker`) is empty until the probe finds it.
 - Gboard's keyboard height (~168 dp) is an estimate in the city-search mockup; check on the TV.
 
 ## Blockers

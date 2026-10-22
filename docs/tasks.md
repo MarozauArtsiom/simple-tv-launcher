@@ -225,7 +225,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   layer; screenshots of the panel and search in 3 themes. One live request from the cloud
   as a smoke check.
 
-- [ ] **T19 HDMI.** Read: the `android-tv-launcher` skill §HDMI and the T06 settings mockup.
+- [x] **T19 HDMI.** Read: the `android-tv-launcher` skill §HDMI and the T06 settings mockup.
   `InputRepository` (`TvInputManager`, labels, hidden inputs filtered), `HdmiWatcher`
   (callback, 30 s debounce, "not now" until disconnect, catch-up on resume), chips with the
   signal dot, opening an input (passthrough `ACTION_VIEW`, with a fallback), the in-launcher

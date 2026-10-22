@@ -33,6 +33,7 @@ class LauncherActivity : ComponentActivity() {
         super.onResume()
         // If the screen turned on while Home was not in front, reset now.
         if (graph.screenOn.attach { viewModel.onHomePressed() }) viewModel.onHomePressed()
+        graph.hdmi.onHomeVisible()
         handler.postDelayed({ graph.crashGuard.markStable() }, CrashGuard.STABLE_AFTER_MS)
     }
 
@@ -42,6 +43,7 @@ class LauncherActivity : ComponentActivity() {
     }
 
     override fun onPause() {
+        graph.hdmi.onHomeHidden()
         graph.screenOn.detach()
         handler.removeCallbacksAndMessages(null)
         super.onPause()
