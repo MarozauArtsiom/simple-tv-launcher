@@ -126,4 +126,9 @@
     <string name="shortcut_url_hint">Адрес сайта</string>
     <string name="shortcuts_empty">Ярлыков пока нет</string>
     <string name="shortcut_invalid_url">Введите корректный адрес</string>
+    <string name="safe_mode_note">Безопасный режим: лаунчер дважды подряд остановился, поэтому показаны только приложения и настройки.</string>
+    <string name="cd_hdmi_signal">%1$s, есть сигнал</string>
+    <string name="cd_weather">Погода: %1$s</string>
+    <string name="cd_iphone">Показать экран iPhone</string>
+    <string name="all_apps_count">· %1$d</string>
 </resources>

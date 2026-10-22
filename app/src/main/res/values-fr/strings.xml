@@ -125,4 +125,9 @@
     <string name="shortcut_url_hint">Adresse du site</string>
     <string name="shortcuts_empty">Aucun raccourci</string>
     <string name="shortcut_invalid_url">Saisissez une adresse valide</string>
+    <string name="safe_mode_note">Mode sans échec : le lanceur s’est arrêté deux fois de suite, seules les applications et les réglages sont affichés.</string>
+    <string name="cd_hdmi_signal">%1$s, signal présent</string>
+    <string name="cd_weather">Météo : %1$s</string>
+    <string name="cd_iphone">Afficher l’écran de l’iPhone</string>
+    <string name="all_apps_count">· %1$d</string>
 </resources>

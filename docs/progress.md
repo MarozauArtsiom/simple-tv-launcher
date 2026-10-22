@@ -54,6 +54,13 @@ One line per finished task: date, task id, what was done, anything notable.
   platform errors mapped), `BannerLoader` (320×180 tiles, generated tinted tile for icon-only apps,
   16 MB LRU by bytes). 19 tests. Caches are freed at TRIM_MEMORY_BACKGROUND, not on every UI_HIDDEN,
   so Home reappears instantly after an app.
+- 2026-10-22 — T12 Home: `HomeScreen` (LazyColumn: top bar, favourites LazyRow, 5-column grid rows), `TileCard`
+  (theme frame: sticker outline + hard shadow at rest, ring/tilt/glow in focus, all driven by an animated
+  focus value read only in draw lambdas), `TopBar` (clock via `ACTION_TIME_TICK` only while started, chips),
+  `HomeContentSource` (apps + settings → tiles), empty-favourites hint, safe-mode screen. 13 behaviour tests
+  (initial focus, D-pad moves, focus memory in both rows, reset, OK vs long OK, empty hint, safe mode) and
+  Roborazzi Home in 9 themes + empty favourites + `be`/`fr`; all viewed and compared with `design/mockups/themes/`
+  (within 1–2 px; soft shadows are not drawn by Robolectric, they show on the TV).
 
 ## Decisions to review
 
@@ -64,10 +71,13 @@ Defaults taken during unattended runs that the owner should look at.
 - T07: soft shadows and glows use Android's elevation shadow tinted with the theme colour, not an
   exact CSS box-shadow, so glows look slightly different from the mockups. Hard cartoon shadows
   are exact.
-- T10: safe mode is detected (`CrashGuard.safeMode()`) but the safe screen (app grid + Settings only)
-  is drawn in T12 with the real grid.
 - T09: all translations (especially Belarusian) were written by Claude. Please read
   `app/src/main/res/values-be/strings.xml`.
+- T12: "All apps" order (launch counts) is re-applied only on Home key, screen on or Back at the top, so tiles
+  never move under the focus when you return from an app. Shortcut tiles are already supported by Home
+  (letter on a colour from the address); their editor comes in T13b.
+- T12: safe mode (two crashes within 10 minutes) shows the default theme, only the clock, the settings gear and
+  the app grid, with a one-line explanation. Weather, HDMI and iPhone chips appear when T18–T20 supply data.
 - Gboard's keyboard height (~168 dp) is an estimate in the city-search mockup; check on the TV.
 
 ## Blockers

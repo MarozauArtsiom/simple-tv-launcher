@@ -124,4 +124,9 @@
     <string name="shortcut_url_hint">Webadresse</string>
     <string name="shortcuts_empty">Noch keine Verknüpfungen</string>
     <string name="shortcut_invalid_url">Gültige Adresse eingeben</string>
+    <string name="safe_mode_note">Abgesicherter Modus: Der Launcher ist zweimal hintereinander abgestürzt, daher sind nur Apps und Einstellungen sichtbar.</string>
+    <string name="cd_hdmi_signal">%1$s, Signal vorhanden</string>
+    <string name="cd_weather">Wetter: %1$s</string>
+    <string name="cd_iphone">iPhone-Bildschirm anzeigen</string>
+    <string name="all_apps_count">· %1$d</string>
 </resources>

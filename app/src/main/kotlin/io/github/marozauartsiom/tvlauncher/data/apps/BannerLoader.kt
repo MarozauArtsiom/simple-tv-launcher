@@ -24,14 +24,14 @@ class BannerLoader(
     private val source: PackageSource,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
     maxBytes: Int = 16 * 1024 * 1024,
-) {
+) : ArtSource {
     private val cache = object : LruCache<String, BannerArt>(maxBytes) {
         override fun sizeOf(key: String, value: BannerArt) = value.bitmap.asAndroidBitmap().allocationByteCount
     }
 
-    fun peek(app: TvApp): BannerArt? = cache.get(app.packageName)
+    override fun peek(app: TvApp): BannerArt? = cache.get(app.packageName)
 
-    suspend fun load(app: TvApp): BannerArt {
+    override suspend fun load(app: TvApp): BannerArt {
         cache.get(app.packageName)?.let { return it }
         val art = withContext(dispatcher) { render(app) }
         cache.put(app.packageName, art)

@@ -40,3 +40,11 @@ interface PackageSource {
     /** Calls [onChange] after any install, removal or update. Returns a function that unregisters. */
     fun registerChanges(onChange: () -> Unit): () -> Unit
 }
+
+/** Where tiles get their art. [BannerLoader] is the real one; tests and previews use fakes. */
+interface ArtSource {
+    /** The art if it is already in memory, so the first frame needs no wait. */
+    fun peek(app: TvApp): BannerArt?
+
+    suspend fun load(app: TvApp): BannerArt
+}

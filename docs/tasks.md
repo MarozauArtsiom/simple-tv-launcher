@@ -158,7 +158,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   **Done:** unit tests for dedupe, sorting (launch count, then alphabetical), the hidden
   filter and the cache round-trip.
 
-- [ ] **T12 Home screen.** Read: `docs/ui-spec.md` §1, §4, §5 Home; the `tv-ui-design` skill;
+- [x] **T12 Home screen.** Read: `docs/ui-spec.md` §1, §4, §5 Home; the `tv-ui-design` skill;
   `compose-tv-patterns.md`; the `leanback-to-compose-tv-migration` and
   `jetpack-compose-performance` skills.
   - TopBar: clock (minute tick via `ACTION_TIME_TICK` while visible), localised date, weather

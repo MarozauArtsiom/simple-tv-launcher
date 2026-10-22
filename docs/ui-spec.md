@@ -88,10 +88,14 @@ For each screen: initial focus, Back, Home, and the mockup.
 - Back: close any overlay, else scroll to the top and focus the first favourite. Never exit.
   Home pressed while on Home does the same. TV turned on: first favourite. Back from an
   app: the tile the user left from.
-- Long-press OK on a tile opens the app menu (not yet designed: add/remove favourite, move,
-  hide, app info, uninstall).
-- Empty favourites: a hint card in the favourites row explaining the long press (not yet
-  designed).
+- Long-press OK on a tile opens the app menu (see App menu below).
+- Empty favourites: a hint card in the favourites row explaining the long press (see Empty
+  favourites below).
+- "All apps" is re-sorted by launch count only on Home key, screen on and Back at the top, never
+  while the owner is looking at it.
+- Safe mode (the launcher crashed twice within 10 minutes): default theme, clock, settings gear and
+  the app grid only, with one line of explanation. Nothing from the weather, HDMI or favourites
+  features is drawn.
 
 ### Weather panel — `design/mockups/weather-panel.html`
 - Opens from the weather chip. City (24 sp); now: icon 44 dp + temperature + condition +

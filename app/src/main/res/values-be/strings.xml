@@ -126,4 +126,9 @@
     <string name="shortcut_url_hint">Адрас сайта</string>
     <string name="shortcuts_empty">Ярлыкоў пакуль няма</string>
     <string name="shortcut_invalid_url">Увядзіце карэктны адрас</string>
+    <string name="safe_mode_note">Бяспечны рэжым: лаўнчар двойчы запар спыніўся, таму паказаны толькі праграмы і налады.</string>
+    <string name="cd_hdmi_signal">%1$s, ёсць сігнал</string>
+    <string name="cd_weather">Надвор’е: %1$s</string>
+    <string name="cd_iphone">Паказаць экран iPhone</string>
+    <string name="all_apps_count">· %1$d</string>
 </resources>

@@ -139,4 +139,9 @@
     <string name="shortcut_url_hint">Web address</string>
     <string name="shortcuts_empty">No shortcuts yet</string>
     <string name="shortcut_invalid_url">Enter a valid address</string>
+    <string name="safe_mode_note">Safe mode: the launcher stopped twice in a row, so only your apps and Settings are shown.</string>
+    <string name="cd_hdmi_signal">%1$s, signal present</string>
+    <string name="cd_weather">Weather: %1$s</string>
+    <string name="cd_iphone">Show the iPhone screen</string>
+    <string name="all_apps_count">· %1$d</string>
 </resources>

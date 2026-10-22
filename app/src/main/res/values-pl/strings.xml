@@ -126,4 +126,9 @@
     <string name="shortcut_url_hint">Adres strony</string>
     <string name="shortcuts_empty">Brak skrótów</string>
     <string name="shortcut_invalid_url">Podaj poprawny adres</string>
+    <string name="safe_mode_note">Tryb awaryjny: launcher zatrzymał się dwa razy z rzędu, więc widać tylko aplikacje i ustawienia.</string>
+    <string name="cd_hdmi_signal">%1$s, jest sygnał</string>
+    <string name="cd_weather">Pogoda: %1$s</string>
+    <string name="cd_iphone">Pokaż ekran iPhone’a</string>
+    <string name="all_apps_count">· %1$d</string>
 </resources>
