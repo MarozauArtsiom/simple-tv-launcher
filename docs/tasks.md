@@ -239,7 +239,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
 - [x] **T21 Hidden apps page.** Lists hidden apps with "show again". **Done:** test +
   screenshot.
 
-- [ ] **T22 USB APK installer.** Read: the T06 mockup.
+- [x] **T22 USB APK installer.** Read: the T06 mockup.
   Add `REQUEST_INSTALL_PACKAGES`. List `.apk` files on USB volumes (same storage access as
   T17), read the label and version with `getPackageArchiveInfo`, and install through a
   `PackageInstaller` session with a status `PendingIntent`. Show the "allow unknown apps"

@@ -114,6 +114,12 @@ One line per finished task: date, task id, what was done, anything notable.
   installer page once T22 exists). 4 + 2 tests, screenshots in 3 themes and `be`/`fr`.
 - 2026-10-22 — T21 hidden apps page: rows with a mini banner, name and "Show"; OK unhides, the row goes and focus moves to the row
   in its place (or above); empty state; the Settings row counts only installed hidden apps. 6 tests, screenshots viewed.
+- 2026-10-22 — T22 USB APK installer: `ApkScanner` (3 folder levels, ≤ 40 files, skips hidden/system folders), `PackageManagerInspector`
+  (`getPackageArchiveInfo`), `SessionApkInstaller` (PackageInstaller session, explicit mutable PendingIntent), non-exported
+  `InstallResultReceiver` (starts only the installer's own `CONFIRM_INSTALL` screen, never one aimed at our components) and the
+  `UsbInstaller` state machine (Install / Update / Installed labels; a downgrade is never offered). Page states: list, empty, no
+  storage access, unknown apps not allowed (own adb command), installing, done (Open / Done), failed / cancelled. Scans only when the
+  page opens or on "Check again". Tests with fakes + temp dirs, screenshots of every state viewed against the mockup.
 
 ## Decisions to review
 
@@ -153,6 +159,9 @@ Defaults taken during unattended runs that the owner should look at.
   takes the remote's focus. The CEC device name is not in the public API, so the card shows only "Signal on <input label>".
   The vendor input picker fallback (`VendorInputIntents.picker`) is empty until the probe finds it.
 - Gboard's keyboard height (~168 dp) is an estimate in the city-search mockup; check on the TV.
+- T22: `REQUEST_INSTALL_PACKAGES` is not grantable from a dialog on every Google TV build, so the page shows the adb command
+  (`appops set --uid … REQUEST_INSTALL_PACKAGES allow`) like the other special permissions. Check on the TV whether the system's own
+  "allow unknown apps" screen is reachable and prefer it if so.
 
 ## Blockers
 

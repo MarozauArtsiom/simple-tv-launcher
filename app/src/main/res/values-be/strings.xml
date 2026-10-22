@@ -139,4 +139,6 @@
     <string name="shortcut_no_browser">Браўзер не ўсталяваны. Спачатку ўсталюйце TV Bro.</string>
     <string name="bg_picture">Малюнак</string>
     <string name="bg_import_failed">Не атрымалася выкарыстаць гэты малюнак</string>
+    <string name="usb_unknown_apps">Для ўсталёўкі праграм лаўнчару патрэбны дазвол. Адзін раз выканайце на кампутары:</string>
+    <string name="usb_cancelled">Усталёўка скасавана</string>
 </resources>

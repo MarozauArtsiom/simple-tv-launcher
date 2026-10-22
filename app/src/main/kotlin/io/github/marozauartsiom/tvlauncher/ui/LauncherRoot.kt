@@ -73,6 +73,7 @@ import io.github.marozauartsiom.tvlauncher.ui.hdmi.HdmiPrompt
 import io.github.marozauartsiom.tvlauncher.ui.iphone.IphoneHintDialog
 import io.github.marozauartsiom.tvlauncher.ui.settings.HdmiSettingsPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.HiddenAppsPage
+import io.github.marozauartsiom.tvlauncher.ui.settings.UsbInstallerPage
 import io.github.marozauartsiom.tvlauncher.ui.home.WeatherChip
 import io.github.marozauartsiom.tvlauncher.ui.weather.CitySearchPage
 import io.github.marozauartsiom.tvlauncher.ui.weather.WeatherPanel
@@ -165,6 +166,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     val hdmiSettingsFocus = remember { FocusMemory() }
     val hiddenFocus = remember { FocusMemory() }
     val backgroundFocus = remember { FocusMemory() }
+    val usbFocus = remember { FocusMemory() }
     val thumbnailDispatcher = remember { Dispatchers.Default.limitedParallelism(2) }
     val systemLocale = remember { android.content.res.Resources.getSystem().configuration.locales[0] }
     val scheduleFocus = remember { FocusMemory() }
@@ -362,6 +364,27 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                         memory = hdmiSettingsFocus,
                         onChange = { new -> graph.appScope.launch { graph.settings.setHdmi(new) } },
                         onCheckPermission = { permissionChecks++ },
+                    )
+                }
+                SettingsPage.Usb -> {
+                    // The page looks at the drive when it opens and on "Check again" / "Done"; never in the background.
+                    LaunchedEffect(Unit) { graph.usbInstaller.refresh() }
+                    val usbState by graph.usbInstaller.state.collectAsStateWithLifecycle()
+                    UsbInstallerPage(
+                        theme = theme,
+                        state = usbState,
+                        storageCommand = "adb shell appops set --uid ${context.packageName} MANAGE_EXTERNAL_STORAGE allow",
+                        unknownAppsCommand = "adb shell appops set --uid ${context.packageName} REQUEST_INSTALL_PACKAGES allow",
+                        memory = usbFocus,
+                        onInstall = graph.usbInstaller::install,
+                        onCheckAgain = graph.usbInstaller::refresh,
+                        onOpen = { item ->
+                            when (graph.launcher.launch(item.info.packageName)) {
+                                LaunchResult.Started -> viewModel.open(Overlay.None)
+                                else -> Toast.makeText(context, context.getString(R.string.launch_failed, item.info.label), Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        onDone = graph.usbInstaller::refresh,
                     )
                 }
                 SettingsPage.Weather -> CitySearch(theme, graph, languageTag, viewModel)

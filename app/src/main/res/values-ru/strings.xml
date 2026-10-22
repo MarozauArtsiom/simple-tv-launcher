@@ -139,4 +139,6 @@
     <string name="shortcut_no_browser">Не установлен браузер. Сначала установите TV Bro.</string>
     <string name="bg_picture">Картинка</string>
     <string name="bg_import_failed">Не удалось использовать эту картинку</string>
+    <string name="usb_unknown_apps">Для установки приложений лаунчеру нужно разрешение. Один раз выполните на компьютере:</string>
+    <string name="usb_cancelled">Установка отменена</string>
 </resources>

@@ -11,6 +11,13 @@ import io.github.marozauartsiom.tvlauncher.data.apps.AppRepository
 import io.github.marozauartsiom.tvlauncher.data.apps.BannerLoader
 import io.github.marozauartsiom.tvlauncher.data.apps.PackageManagerSource
 import io.github.marozauartsiom.tvlauncher.data.background.BackgroundImages
+import io.github.marozauartsiom.tvlauncher.data.install.ApkScanner
+import io.github.marozauartsiom.tvlauncher.data.install.InstallResult
+import io.github.marozauartsiom.tvlauncher.data.install.PackageManagerInspector
+import io.github.marozauartsiom.tvlauncher.data.install.SessionApkInstaller
+import io.github.marozauartsiom.tvlauncher.data.install.UsbInstaller
+import io.github.marozauartsiom.tvlauncher.system.InstallResultReceiver
+import kotlinx.coroutines.flow.MutableSharedFlow
 import io.github.marozauartsiom.tvlauncher.data.prefs.Settings
 import io.github.marozauartsiom.tvlauncher.data.prefs.SettingsData
 import io.github.marozauartsiom.tvlauncher.data.weather.GeoIp
@@ -54,11 +61,7 @@ class AppGraph(private val context: Context) {
     /** Pictures on USB drives and the stored background. Only touched while the background picker is open. */
     val backgroundImages by lazy {
         BackgroundImages(
-            roots = {
-                context.getSystemService(StorageManager::class.java).storageVolumes
-                    .filter { it.isRemovable && it.state == Environment.MEDIA_MOUNTED }
-                    .mapNotNull { it.directory }
-            },
+            roots = ::usbRoots,
             storeDir = File(context.filesDir, "backgrounds"),
         )
     }
@@ -114,6 +117,27 @@ class AppGraph(private val context: Context) {
                 }
             }
         }
+    }
+
+    /** Mounted removable volumes (USB drives). */
+    private fun usbRoots(): List<File> = context.getSystemService(StorageManager::class.java).storageVolumes
+        .filter { it.isRemovable && it.state == Environment.MEDIA_MOUNTED }
+        .mapNotNull { it.directory }
+
+    /** Outcomes of installations, from the system installer (see `InstallResultReceiver`). */
+    val installEvents = MutableSharedFlow<InstallResult>(extraBufferCapacity = 8)
+
+    /** The USB installer's state machine. Idle until the page asks for a refresh. */
+    val usbInstaller by lazy {
+        UsbInstaller(
+            scanner = ApkScanner(::usbRoots),
+            inspector = PackageManagerInspector(context),
+            installer = SessionApkInstaller(context, InstallResultReceiver::class.java),
+            hasStorageAccess = { Environment.isExternalStorageManager() },
+            canInstallPackages = { context.packageManager.canRequestPackageInstalls() },
+            results = installEvents,
+            scope = appScope,
+        )
     }
 
     val launcher by lazy { AppLauncher(packageSource) { intent -> context.startActivity(intent) } }

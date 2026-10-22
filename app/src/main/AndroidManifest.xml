@@ -5,6 +5,8 @@
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <!-- Permissions are added together with the feature that needs each one (docs/tasks.md). -->
+    <!-- T22: install .apk files from a USB drive through the system installer (the owner confirms each one). -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- T19: the "signal on HDMI" card over other apps. Optional; granted once over adb (see the owner guide). -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!-- T18: the weather feature (Open-Meteo, IP location) uses the network, only while Home is on screen. -->
@@ -72,5 +74,8 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- The installer's status for a session we committed. Not exported: only our own PendingIntent reaches it. -->
+        <receiver android:name=".system.InstallResultReceiver" android:exported="false" />
     </application>
 </manifest>

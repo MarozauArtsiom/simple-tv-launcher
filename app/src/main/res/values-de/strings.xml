@@ -137,4 +137,6 @@
     <string name="shortcut_no_browser">Kein Browser installiert. Installieren Sie zuerst TV Bro.</string>
     <string name="bg_picture">Bild</string>
     <string name="bg_import_failed">Dieses Bild lässt sich nicht verwenden</string>
+    <string name="usb_unknown_apps">Zum Installieren von Apps braucht dieser Launcher eine Berechtigung. Einmal am Computer ausführen:</string>
+    <string name="usb_cancelled">Installation abgebrochen</string>
 </resources>
