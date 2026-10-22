@@ -117,13 +117,13 @@ string lives in resources in all six languages from the start (`values/` = Engli
   **Done:** a screenshot test of a sample screen in all 9 themes matches the theme renders
   in `design/mockups/themes/`.
 
-- [ ] **T08 Settings store.** Read: `references/settings-themes-i18n.md` (keys).
+- [x] **T08 Settings store.** Read: `references/settings-themes-i18n.md` (keys).
   `data/prefs/Settings.kt`: one Preferences DataStore with typed `Flow`s and setters for
   favourites (ordered list), hidden apps, launch counts, theme, theme schedule, background,
   language, weather location, weather cache and the HDMI prompt options.
   **Done:** unit tests for read/write and defaults (theme = midnight, language = follow TV).
 
-- [ ] **T09 Languages.** Read: `references/settings-themes-i18n.md` §Languages and
+- [x] **T09 Languages.** Read: `references/settings-themes-i18n.md` §Languages and
   `docs/ui-spec.md` §7.
   - String resources for every screen designed so far, in all 6 languages, with plurals
     (`one`/`few`/`many`/`other`). The language list labels are written natively:

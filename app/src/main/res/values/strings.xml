@@ -1,5 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Simple TV</string>
+    <string name="app_name" translatable="false">Simple TV</string>
+    <string name="close">Close</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="open">Open</string>
+    <string name="show">Show</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="check_again">Check again</string>
+    <string name="launch_failed">Can’t open %1$s</string>
+    <string name="unavailable_on_tv">Not available on this TV</string>
+    <string name="favourites">Favorites</string>
+    <string name="all_apps">All apps</string>
+    <string name="favourites_empty_title">Nothing here yet</string>
+    <string name="favourites_empty_hint">Select an app below, press and hold OK, then choose “Add to favorites”</string>
+    <string name="cd_settings">Settings</string>
+    <string name="iphone_chip" translatable="false">iPhone</string>
+    <string name="hdmi_input_fallback" translatable="false">HDMI %1$d</string>
+    <string name="menu_add_favourite">Add to favorites</string>
+    <string name="menu_remove_favourite">Remove from favorites</string>
+    <string name="menu_move">Move</string>
+    <string name="menu_hide">Hide</string>
+    <string name="menu_app_info">App info</string>
+    <string name="menu_uninstall">Uninstall</string>
+    <string name="move_hint">◀ ▶ Move · OK to finish</string>
+    <string name="settings_title">Settings</string>
+    <string name="section_tv">Television</string>
+    <string name="section_launcher">Launcher</string>
+    <string name="tile_wifi" translatable="false">Wi-Fi</string>
+    <string name="tile_bluetooth" translatable="false">Bluetooth</string>
+    <string name="tile_android" translatable="false">Android</string>
+    <string name="tile_sound">Sound</string>
+    <string name="tile_picture">Picture</string>
+    <string name="tile_sleep">Sleep timer</string>
+    <string name="item_theme">Theme</string>
+    <string name="item_background">Background</string>
+    <string name="item_language">Language</string>
+    <string name="item_weather">Weather</string>
+    <string name="item_hdmi">HDMI signal</string>
+    <string name="item_hidden">Hidden apps</string>
+    <string name="item_usb">Install from USB</string>
+    <string name="item_about">About</string>
+    <string name="item_shortcuts">Website shortcuts</string>
+    <string name="value_from_theme">From theme</string>
+    <string name="family_dark">Dark</string>
+    <string name="family_light">Light</string>
+    <string name="family_cartoon">Cartoon</string>
     <string name="theme_midnight">Midnight</string>
     <string name="theme_graphite">Graphite</string>
     <string name="theme_aurora">Aurora</string>
@@ -9,4 +60,83 @@
     <string name="theme_valley">Sunny valley</string>
     <string name="theme_ocean">Underwater</string>
     <string name="theme_space">Space</string>
+    <string name="theme_schedule_item">Change by time of day</string>
+    <string name="schedule_title">Theme by time of day</string>
+    <string name="schedule_switch">Change automatically</string>
+    <string name="schedule_day">Daytime</string>
+    <string name="schedule_night">Evening and night</string>
+    <string name="schedule_until_sunset">until sunset</string>
+    <string name="schedule_after_sunset">after sunset</string>
+    <string name="schedule_note">Sunset %1$s · sunrise %2$s. The times come from the weather data.</string>
+    <string name="schedule_note_fixed">Without weather data the theme changes at 07:00 and 20:00.</string>
+    <string name="language_follow_tv">Same as the TV</string>
+    <string name="lang_be" translatable="false">Беларуская</string>
+    <string name="lang_ru" translatable="false">Русский</string>
+    <string name="lang_en" translatable="false">English</string>
+    <string name="lang_pl" translatable="false">Polski</string>
+    <string name="lang_de" translatable="false">Deutsch</string>
+    <string name="lang_fr" translatable="false">Français</string>
+    <string name="bg_colors">Colour</string>
+    <string name="bg_usb_section">Images from USB</string>
+    <string name="bg_usb_empty">No images on the USB drive</string>
+    <string name="hidden_hint">Hidden apps are not shown on the home screen. Press OK to bring an app back.</string>
+    <string name="hidden_empty">No hidden apps</string>
+    <plurals name="usb_files">
+        <item quantity="one">USB · %1$d .apk file</item>
+        <item quantity="other">USB · %1$d .apk files</item>
+    </plurals>
+    <string name="usb_install">Install</string>
+    <string name="usb_update">Update</string>
+    <string name="usb_empty">No .apk files on the USB drive</string>
+    <string name="usb_no_permission">Access to all files is needed. Run once on a computer:</string>
+    <string name="usb_installing">Installing…</string>
+    <string name="usb_confirm_hint">Confirm the installation in the system dialog.</string>
+    <string name="usb_done">Installed</string>
+    <string name="usb_error">Installation failed</string>
+    <string name="about_title">About the launcher</string>
+    <string name="about_version">Version %1$s (%2$d)</string>
+    <string name="about_text">A home screen made for this TV only. No ads, no tracking, no background services.</string>
+    <string name="about_licenses">Licenses</string>
+    <string name="license_weather">Weather data</string>
+    <string name="license_weather_value" translatable="false">Open-Meteo.com · CC BY 4.0</string>
+    <string name="license_font">Nunito font</string>
+    <string name="license_font_value" translatable="false">SIL OFL 1.1</string>
+    <string name="license_android">Android components</string>
+    <string name="license_android_value" translatable="false">Apache 2.0</string>
+    <string name="hdmi_prompt_title">Signal on %1$s</string>
+    <string name="hdmi_switch">Switch</string>
+    <string name="hdmi_not_now">Not now</string>
+    <string name="hdmi_countdown">Hides in %1$d s</string>
+    <string name="hdmi_ask">Ask about a new signal</string>
+    <string name="hdmi_over_apps">Over other apps</string>
+    <string name="hdmi_permission_hint">The window over other apps needs a permission. Run once on a computer:</string>
+    <string name="hdmi_inputs_section">Ask for inputs</string>
+    <string name="iphone_title">iPhone screen</string>
+    <string name="iphone_text">Showing the screen needs the AirPlay Server app, which isn’t installed.</string>
+    <string name="iphone_step1">Put its .apk file on a USB drive and open “Install from USB”.</string>
+    <string name="iphone_step2">On the iPhone: Control Center → Screen Mirroring → pick this TV.</string>
+    <string name="weather_change_city">Change city</string>
+    <string name="weather_city_title">City</string>
+    <string name="weather_auto">Detect automatically</string>
+    <string name="weather_no_results">Nothing found</string>
+    <string name="weather_no_data">No data</string>
+    <string name="weather_feels">Feels like %1$s · wind %2$s m/s</string>
+    <string name="weather_today">Today</string>
+    <string name="wx_clear">Clear</string>
+    <string name="wx_mainly_clear">Mostly clear</string>
+    <string name="wx_partly_cloudy">Partly cloudy</string>
+    <string name="wx_overcast">Overcast</string>
+    <string name="wx_fog">Fog</string>
+    <string name="wx_drizzle">Drizzle</string>
+    <string name="wx_rain">Rain</string>
+    <string name="wx_snow">Snow</string>
+    <string name="wx_showers">Showers</string>
+    <string name="wx_snow_showers">Snow showers</string>
+    <string name="wx_thunderstorm">Thunderstorm</string>
+    <string name="shortcuts_title">Website shortcuts</string>
+    <string name="shortcut_add">Add shortcut</string>
+    <string name="shortcut_name_hint">Title</string>
+    <string name="shortcut_url_hint">Web address</string>
+    <string name="shortcuts_empty">No shortcuts yet</string>
+    <string name="shortcut_invalid_url">Enter a valid address</string>
 </resources>

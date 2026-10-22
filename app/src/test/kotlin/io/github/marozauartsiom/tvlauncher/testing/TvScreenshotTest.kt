@@ -1,6 +1,11 @@
 package io.github.marozauartsiom.tvlauncher.testing
 
+import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalContext
+import androidx.test.core.app.ApplicationProvider
+import io.github.marozauartsiom.tvlauncher.i18n.LocaleController
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -42,6 +47,29 @@ abstract class TvScreenshotTest {
             current = theme
             composeRule.waitForIdle()
             composeRule.onRoot().captureRoboImage("src/test/snapshots/$name/${theme.id.key}.png")
+        }
+    }
+
+    /**
+     * Renders [content] once per language (resources resolved through a locale-wrapped context)
+     * and records `<snapshots>/<name>/<tag>.png`.
+     */
+    protected fun captureLocales(
+        name: String,
+        tags: List<String> = listOf("be", "ru", "en", "pl", "de", "fr"),
+        theme: ThemeSpec = Themes.default,
+        content: @Composable (String) -> Unit,
+    ) {
+        var current by mutableStateOf(tags.first())
+        val base: Context = ApplicationProvider.getApplicationContext()
+        composeRule.setContent {
+            val localized = LocaleController.localizedTo(base, current)
+            CompositionLocalProvider(LocalContext provides localized) { LauncherTheme(theme) { content(current) } }
+        }
+        for (tag in tags) {
+            current = tag
+            composeRule.waitForIdle()
+            composeRule.onRoot().captureRoboImage("src/test/snapshots/$name/$tag.png")
         }
     }
 }

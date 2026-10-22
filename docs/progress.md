@@ -35,6 +35,14 @@ One line per finished task: date, task id, what was done, anything notable.
   `themeShadow`, WebP backgrounds and thumbnails (~440 KB), `ThemeCssSyncTest` guards drift against
   the CSS, nine-theme sample screenshots viewed and match the mockups.
 - 2026-10-22 — Gap found: shortcut tiles (approved feature 4) were not in the task list. Added T13b.
+- 2026-10-22 — T08 `Settings` (one Preferences DataStore, typed `SettingsData`, favourites as ordered
+  `ItemKey`s `pkg:`/`url:`, hidden set, launch counters, theme/schedule/background/language,
+  weather location and cache, HDMI options). Damaged values fall back to defaults. 8 tests.
+- 2026-10-22 — T09 languages: 136 string entries in be/ru/en/pl/de/fr via `scripts/add-strings.py`
+  (add strings for ALL languages with it), `StringsConsistencyTest` (same keys, placeholders and
+  complete plural forms), `LocaleController` (platform per-app locale on API 33+, context wrapping
+  + recreate below; SharedPreferences mirror for `attachBaseContext`), `DateText`, and a six-language
+  screenshot sample (viewed: nothing clipped).
 
 ## Decisions to review
 
@@ -45,6 +53,8 @@ Defaults taken during unattended runs that the owner should look at.
 - T07: soft shadows and glows use Android's elevation shadow tinted with the theme colour, not an
   exact CSS box-shadow, so glows look slightly different from the mockups. Hard cartoon shadows
   are exact.
+- T09: all translations (especially Belarusian) were written by Claude. Please read
+  `app/src/main/res/values-be/strings.xml`.
 - Gboard's keyboard height (~168 dp) is an estimate in the city-search mockup; check on the TV.
 
 ## Blockers
