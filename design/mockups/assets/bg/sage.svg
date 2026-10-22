@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <!-- Sage: calm light green with layered hills and a pale sun. -->
+  <rect width="960" height="540" fill="#E9EFE5"/>
+  <circle cx="800" cy="120" r="70" fill="#F4E7C9" opacity=".9"/>
+  <path d="M0 300 Q150 240 320 285 T640 270 T960 250 V540 H0 Z" fill="#DCE7D7"/>
+  <path d="M0 370 Q180 320 380 360 T760 345 T960 330 V540 H0 Z" fill="#CBDDC5"/>
+  <path d="M0 450 Q220 400 470 440 T960 420 V540 H0 Z" fill="#B9D1B3"/>
+  <g stroke="#9DBB96" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8">
+    <path d="M24 330 q10 -30 0 -60"/><path d="M24 300 q-14 -6 -18 -20"/><path d="M24 285 q14 -6 18 -20"/>
+    <path d="M900 300 q8 -26 0 -52"/><path d="M900 274 q-12 -5 -16 -18"/><path d="M900 261 q12 -5 16 -18"/>
+  </g>
+</svg>

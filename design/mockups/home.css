@@ -1,14 +1,10 @@
-/* Home screen layout shared by home.html and hdmi-prompt.html. 1 px = 1 dp. */
+/* Home screen layout shared by home.html, hdmi-prompt.html and weather-panel.html. 1 px = 1 dp.
+   Colours, background and focus style come from the theme variables in themes.css. */
 
-.backdrop {
-  position: fixed; inset: 0; z-index: -1;
-  background: url(assets/landscape-placeholder.svg) center / cover;
-}
-.backdrop::after { /* scrim keeps text legible over any photo */
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(to bottom,
-    rgba(11, 13, 18, .15) 0%, rgba(11, 13, 18, .60) 38%, rgba(11, 13, 18, .90) 72%);
-}
+body { font-family: var(--font); }
+
+.backdrop { position: fixed; inset: 0; z-index: -1; background: var(--bg); }
+.backdrop::after { content: ''; position: absolute; inset: 0; background: var(--scrim); }
 
 .top {
   display: flex; justify-content: space-between; align-items: center;
@@ -16,25 +12,38 @@
 }
 .left { display: flex; align-items: center; gap: 24px; }
 .clock { display: flex; align-items: baseline; gap: 16px; }
+.clock .display-small { font-weight: var(--clock-weight); }
 .date { color: var(--on-surface-variant); }
 
 .actions { display: flex; gap: 12px; align-items: center; }
 .chip {
   display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px;
-  border-radius: 18px; background: rgba(30, 35, 45, .78); color: var(--on-surface);
+  border-radius: 18px; background: var(--chip-bg); color: var(--chip-fg);
+  box-shadow: var(--chip-shadow);
 }
 .chip svg { width: 18px; height: 18px; fill: currentColor; }
 .chip.icon-only { width: 36px; padding: 0; justify-content: center; }
-.chip .meta { color: var(--on-surface-variant); font-weight: 400; }
+.chip .meta { color: var(--chip-meta); font-weight: 400; }
+.weather svg circle { fill: var(--wx-sun); }
+.weather svg path { fill: var(--wx-cloud); }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--signal); }
 
-.section-title { padding: 0 var(--safe-h); margin-bottom: 12px; display: flex; gap: 8px; align-items: baseline; }
-.count { color: var(--on-surface-variant); font-weight: 400; }
+.section-title {
+  margin: 0 var(--safe-h) 12px; display: flex; gap: 8px; align-items: baseline;
+  width: fit-content; padding: var(--title-pad); border-radius: 999px;
+  background: var(--title-bg); color: var(--title-fg);
+  text-transform: var(--title-case); letter-spacing: var(--title-tracking);
+  font-weight: var(--title-weight);
+}
+.count { color: var(--title-meta); font-weight: 400; }
 
 .favorites { margin-top: 24px; }
 .fav-row { display: flex; gap: var(--card-gap); padding: 8px var(--safe-h) 0; overflow: hidden; }
 .fav-item { display: grid; justify-items: center; gap: 10px; }
-.fav-label { height: 20px; color: var(--on-surface); }
+.fav-label {
+  height: 20px; padding: 0 var(--label-pad); border-radius: 10px;
+  background: var(--label-bg); color: var(--label-fg);
+}
 .card:not(.focused) + .fav-label { visibility: hidden; } /* name shows only under focus */
 
 .all { margin-top: 12px; }
@@ -43,7 +52,16 @@
   gap: var(--card-gap); padding: 8px var(--safe-h) 0;
 }
 
-.card span { color: var(--on-surface); text-shadow: 0 1px 2px rgba(0, 0, 0, .35); }
+/* App banners are the apps' own art; the theme only frames them. */
+.card {
+  border-radius: var(--card-radius); box-shadow: var(--card-outline), var(--card-shadow);
+}
+.card.focused {
+  outline: none;
+  box-shadow: 0 0 0 var(--focus-border) var(--focus), var(--focus-glow);
+  transform: scale(var(--focus-scale)) rotate(var(--focus-rotate));
+}
+.card span { color: #F4F5F8; text-shadow: 0 1px 2px rgba(0, 0, 0, .35); }
 /* App without a TV banner: generated banner = icon + name on a tinted surface. */
 .card.generated { display: flex; flex-direction: column; justify-content: center; gap: 6px; }
 .card.generated i { width: 36px; height: 36px; border-radius: 10px; background: rgba(255, 255, 255, .85); }

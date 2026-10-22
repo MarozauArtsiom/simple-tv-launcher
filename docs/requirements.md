@@ -151,12 +151,22 @@ help with mirroring an iPhone screen.
 - **Location by default: automatic**, from the internet connection (IP geolocation). The TV has
   no GPS, and this way there's no permission dialog. If the city is wrong (for example, because
   of a VPN), pick it once by hand: a search by name in Russian. "Automatic" stays one press away.
-- Data from Open-Meteo: free, no API key, no ads. The required credit "Данные: Open-Meteo.com"
-  is shown in the panel.
+- Data from Open-Meteo: free, no API key, no ads. The panel shows only the weather: no text
+  about the source or the location mode (the owner's request). The licence credit lives in
+  launcher Settings → «О лаунчере».
 - Network use: only while the home screen is on screen, at most every 30 minutes, a few KB per
   update. The last result is cached and shown instantly. Nothing runs in the background.
 - This is the first network feature, so the launcher gets the `INTERNET` permission.
 - Details: `android-tv-launcher` skill, `references/weather.md`. Mockup: `design/mockups/weather-panel.html`.
+
+## 11. Visual theme (choosing) ⚠️
+
+- Nine candidates in the same layout: dark (Midnight, Graphite, Aurora), light (Paper, Sky, Sage),
+  and cartoon (Sunny valley, Underwater, Space).
+  Mockups: `design/mockups/themes/*.png`; sources: `design/mockups/themes.css` + `assets/bg/`.
+- Backgrounds are static images, so the choice doesn't affect performance. Several themes can
+  ship and be switched in launcher Settings. Light themes are bright in a dark room, so
+  "light by day, dark at night" is a possible option.
 
 ## Open questions for the owner
 

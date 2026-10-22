@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <!-- Sunny valley: cartoon sky, smiling sun, clouds, rolling hills, trees, a little house. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4FB8FF"/><stop offset=".55" stop-color="#9FDDFF"/><stop offset="1" stop-color="#D4F2FF"/>
+    </linearGradient>
+    <g id="cloud">
+      <ellipse cx="0" cy="14" rx="62" ry="18" fill="#D6ECFA"/>
+      <circle cx="-30" cy="0" r="24" fill="#FFFFFF"/><circle cx="2" cy="-12" r="32" fill="#FFFFFF"/>
+      <circle cx="36" cy="2" r="22" fill="#FFFFFF"/><rect x="-54" y="0" width="110" height="20" rx="10" fill="#FFFFFF"/>
+    </g>
+    <g id="tree">
+      <rect x="-7" y="10" width="14" height="40" rx="5" fill="#8B5A2B"/>
+      <circle cx="0" cy="-8" r="34" fill="#2E9E3E"/><circle cx="-14" cy="-18" r="16" fill="#4CC25A"/>
+      <circle cx="16" cy="4" r="5" fill="#FF5A5F"/><circle cx="-10" cy="10" r="5" fill="#FF5A5F"/><circle cx="6" cy="-26" r="5" fill="#FF5A5F"/>
+    </g>
+    <g id="flower">
+      <circle cx="0" cy="-6" r="5"/><circle cx="6" cy="0" r="5"/><circle cx="0" cy="6" r="5"/><circle cx="-6" cy="0" r="5"/>
+      <circle r="4" fill="#FFD23F"/>
+    </g>
+  </defs>
+  <rect width="960" height="540" fill="url(#sky)"/>
+
+  <g transform="translate(470 108) scale(.78)">
+    <g stroke="#FFD23F" stroke-width="9" stroke-linecap="round">
+      <line y1="-58" y2="-76"/><line y1="58" y2="76"/><line x1="-58" x2="-76"/><line x1="58" x2="76"/>
+      <line x1="-41" y1="-41" x2="-54" y2="-54"/><line x1="41" y1="41" x2="54" y2="54"/>
+      <line x1="41" y1="-41" x2="54" y2="-54"/><line x1="-41" y1="41" x2="-54" y2="54"/>
+    </g>
+    <circle r="46" fill="#FFD23F" stroke="#FFB020" stroke-width="5"/>
+    <circle cx="-15" cy="-7" r="5" fill="#5A3B00"/><circle cx="15" cy="-7" r="5" fill="#5A3B00"/>
+    <path d="M-17 11 Q0 27 17 11" stroke="#5A3B00" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <circle cx="-27" cy="8" r="7" fill="#FF8FA3" opacity=".75"/><circle cx="27" cy="8" r="7" fill="#FF8FA3" opacity=".75"/>
+  </g>
+  <use href="#cloud" transform="translate(300 108) scale(.8)"/>
+  <use href="#cloud" transform="translate(820 112) scale(.7)"/>
+  <use href="#cloud" transform="translate(70 230) scale(.9)"/>
+  <g stroke="#23324A" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M690 100 q6 -6 12 0 q6 -6 12 0"/><path d="M722 86 q5 -5 10 0 q5 -5 10 0"/>
+  </g>
+
+  <path d="M0 290 Q120 220 270 270 T560 255 T820 240 T960 265 V540 H0 Z" fill="#A6E57E"/>
+  <path d="M0 350 Q170 280 340 330 T690 320 T960 300 V540 H0 Z" fill="#72CF4F"/>
+  <path d="M0 430 Q210 365 430 415 T830 400 T960 395 V540 H0 Z" fill="#4DB73C"/>
+  <path d="M600 540 Q640 470 560 430 T600 330" stroke="#F6DFA9" stroke-width="28" fill="none" stroke-linecap="round"/>
+
+  <g transform="translate(905 255)">
+    <rect x="-6" y="-46" width="12" height="22" fill="#B5523B"/>
+    <rect x="-38" y="-10" width="76" height="56" rx="4" fill="#FFF2D9"/>
+    <path d="M-48 -8 L0 -52 L48 -8 Z" fill="#FF5A5F" stroke="#D93F45" stroke-width="4" stroke-linejoin="round"/>
+    <rect x="-10" y="16" width="20" height="30" rx="8" fill="#8B5A2B"/>
+    <rect x="16" y="4" width="16" height="16" rx="3" fill="#7FD3FF" stroke="#FFFFFF" stroke-width="3"/>
+  </g>
+  <use href="#tree" transform="translate(24 330)"/>
+  <use href="#tree" transform="translate(936 400) scale(.9)"/>
+  <use href="#tree" transform="translate(470 290) scale(.7)"/>
+  <use href="#tree" transform="translate(22 500) scale(1.1)"/>
+  <g fill="#FF7FB0"><use href="#flower" transform="translate(120 515)"/><use href="#flower" transform="translate(700 520)"/><use href="#flower" transform="translate(930 515)"/></g>
+  <g fill="#FFFFFF"><use href="#flower" transform="translate(300 525)"/><use href="#flower" transform="translate(520 512)"/></g>
+</svg>

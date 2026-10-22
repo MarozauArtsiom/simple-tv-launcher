@@ -1,0 +1,177 @@
+/* Nine candidate themes for the home screen. Pick one with home.html?t=<id>.
+   Only colours, background art, fonts and focus style change; the layout is the same. */
+
+@font-face {
+  font-family: 'Nunito';
+  src: url(assets/fonts/Nunito-Variable.ttf) format('truetype');
+  font-weight: 200 1000;
+}
+
+/* ---------- 1. Midnight (dark, default) ---------- */
+:root, [data-theme="midnight"] {
+  --font: Roboto, system-ui, sans-serif;
+  --bg: url(assets/landscape-placeholder.svg) center / cover;
+  --scrim: linear-gradient(to bottom, rgba(11, 13, 18, .15) 0%, rgba(11, 13, 18, .60) 38%, rgba(11, 13, 18, .90) 72%);
+  --on-surface: #E8EAF0;
+  --on-surface-variant: #A3A9B7;
+  --clock-weight: 400;
+  --chip-bg: rgba(30, 35, 45, .78);
+  --chip-fg: var(--on-surface);
+  --chip-meta: var(--on-surface-variant);
+  --chip-shadow: none;
+  --wx-sun: currentColor;
+  --wx-cloud: currentColor;
+  --title-bg: transparent;
+  --title-fg: var(--on-surface);
+  --title-meta: var(--on-surface-variant);
+  --title-pad: 0;
+  --title-case: none;
+  --title-tracking: normal;
+  --title-weight: 500;
+  --label-bg: transparent;
+  --label-fg: var(--on-surface);
+  --label-pad: 0;
+  --card-radius: 12px;
+  --card-outline: 0 0 0 0 transparent;
+  --card-shadow: 0 0 0 0 transparent;
+  --focus: #FFFFFF;
+  --focus-border: 3px;
+  --focus-scale: 1.1;
+  --focus-rotate: 0deg;
+  --focus-glow: 0 0 0 0 transparent;
+  --signal: #7BD88F;
+}
+
+/* ---------- 2. Graphite (dark, minimal) ---------- */
+[data-theme="graphite"] {
+  --bg: radial-gradient(900px 520px at 18% -12%, #222226 0%, #0D0D0F 70%);
+  --scrim: none;
+  --on-surface: #EDEDED;
+  --on-surface-variant: #8E8E93;
+  --chip-bg: transparent;
+  --chip-shadow: inset 0 0 0 2px #2E2E33;
+  --wx-sun: #FFC46B;
+  --title-meta: #8E8E93;
+  --title-case: uppercase;
+  --title-tracking: .12em;
+  --card-radius: 6px;
+  --focus: #FFC46B;
+  --signal: #FFC46B;
+}
+[data-theme="graphite"] .row-title { font-size: 14px; }
+
+/* ---------- 3. Aurora (dark, colourful) ---------- */
+[data-theme="aurora"] {
+  --bg: url(assets/bg/aurora.svg) center / cover;
+  --scrim: linear-gradient(to bottom, transparent 40%, rgba(9, 12, 26, .55) 100%);
+  --on-surface: #EEF0FF;
+  --on-surface-variant: #AEB3D3;
+  --chip-bg: rgba(255, 255, 255, .10);
+  --card-radius: 16px;
+  --focus-glow: 0 0 28px rgba(160, 140, 255, .65);
+}
+
+/* ---------- 4. Paper (light, warm) ---------- */
+[data-theme="paper"] {
+  --bg: radial-gradient(800px 500px at 10% 0%, #FBF9F4 0%, #F1ECE2 70%);
+  --scrim: none;
+  --on-surface: #1F1D1A;
+  --on-surface-variant: #6E685F;
+  --chip-bg: #E6E0D4;
+  --card-radius: 10px;
+  --card-shadow: 0 2px 6px rgba(31, 29, 26, .14);
+  --focus: #1F1D1A;
+  --focus-glow: 0 10px 24px rgba(31, 29, 26, .28);
+  --signal: #2E9E5B;
+}
+
+/* ---------- 5. Sky (light, airy) ---------- */
+[data-theme="sky"] {
+  --bg: url(assets/bg/sky.svg) center / cover;
+  --scrim: none;
+  --on-surface: #0E2742;
+  --on-surface-variant: #4A6585;
+  --chip-bg: rgba(255, 255, 255, .88);
+  --chip-shadow: 0 2px 8px rgba(14, 39, 66, .10);
+  --card-radius: 16px;
+  --card-shadow: 0 4px 12px rgba(14, 39, 66, .16);
+  --focus: #1A6BFF;
+  --focus-glow: 0 8px 22px rgba(26, 107, 255, .35);
+  --signal: #1E9E57;
+}
+
+/* ---------- 6. Sage (light, natural) ---------- */
+[data-theme="sage"] {
+  --bg: url(assets/bg/sage.svg) center / cover;
+  --scrim: none;
+  --on-surface: #1D2A21;
+  --on-surface-variant: #5A6B5E;
+  --chip-bg: #F7F9F4;
+  --chip-shadow: 0 2px 6px rgba(29, 42, 33, .10);
+  --card-radius: 14px;
+  --card-shadow: 0 4px 10px rgba(29, 42, 33, .16);
+  --focus: #2F6B45;
+  --focus-glow: 0 8px 20px rgba(47, 107, 69, .30);
+  --signal: #2F8A4F;
+}
+
+/* ---------- Cartoon family: rounded font, sticker cards, playful focus ---------- */
+[data-theme="valley"], [data-theme="ocean"], [data-theme="space"] {
+  --font: 'Nunito', system-ui, sans-serif;
+  --scrim: none;
+  --clock-weight: 800;
+  --chip-bg: #FFFFFF;
+  --chip-fg: #23324A;
+  --chip-meta: #5B6B82;
+  --chip-shadow: 0 3px 0 rgba(0, 0, 0, .15);
+  --wx-sun: #FFC23C;
+  --wx-cloud: #9DB4CC;
+  --title-bg: #FFFFFF;
+  --title-fg: #23324A;
+  --title-meta: #5B6B82;
+  --title-pad: 2px 14px;
+  --title-weight: 800;
+  --label-bg: #FFFFFF;
+  --label-fg: #23324A;
+  --label-pad: 10px;
+  --card-radius: 20px;
+  --card-outline: 0 0 0 3px #FFFFFF;
+  --card-shadow: 0 5px 0 3px rgba(0, 0, 0, .16);
+  --focus-border: 5px;
+  --focus-scale: 1.12;
+  --focus-rotate: -2deg;
+}
+[data-theme="valley"] .card span, [data-theme="ocean"] .card span, [data-theme="space"] .card span { font-weight: 800; }
+
+/* ---------- 7. Sunny valley (cartoon) ---------- */
+[data-theme="valley"] {
+  --bg: url(assets/bg/valley.svg) center / cover;
+  --on-surface: #0E3354;
+  --on-surface-variant: #1F5A86;
+  --focus: #FFD400;
+  --focus-glow: 0 8px 0 rgba(0, 0, 0, .18);
+  --signal: #2DBE4E;
+}
+
+/* ---------- 8. Underwater (cartoon) ---------- */
+[data-theme="ocean"] {
+  --bg: url(assets/bg/ocean.svg) center / cover;
+  --on-surface: #06324D;
+  --on-surface-variant: #0B5577;
+  --focus: #FF7A59;
+  --focus-glow: 0 8px 0 rgba(0, 0, 0, .18);
+  --signal: #20C07A;
+}
+
+/* ---------- 9. Space (cartoon, evening-friendly) ---------- */
+[data-theme="space"] {
+  --bg: url(assets/bg/space.svg) center / cover;
+  --on-surface: #FFFFFF;
+  --on-surface-variant: #CFC6FF;
+  --title-bg: #FFE14D;
+  --title-fg: #2B1A63;
+  --title-meta: #5B4A9A;
+  --focus: #FFE14D;
+  --focus-glow: 0 0 26px rgba(255, 225, 77, .70);
+  --signal: #4CE38B;
+}

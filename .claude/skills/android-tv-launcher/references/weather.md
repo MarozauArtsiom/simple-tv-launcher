@@ -7,9 +7,9 @@ the project principles, it only touches the network while the home screen is vis
 
 - **Top bar chip:** a weather icon, the current temperature and the city (`☁ +7° · Минск`).
   The chip is focusable. OK opens the weather panel.
-- **Weather panel** (a side sheet on the right): city and location mode, current conditions,
-  feels-like temperature and wind, the next 12 h in 3 h steps, 5 days, a "Change city" button,
-  and the attribution "Данные: Open-Meteo.com".
+- **Weather panel** (a side sheet on the right): city, current conditions, feels-like
+  temperature and wind, the next 12 h in 3 h steps, 5 days, and a "Change city" button. The owner
+  asked that the panel show no text about the data source or the location mode.
 - **Location**, stored in DataStore:
   - `Auto` (default): IP geolocation. A TV has no GPS, and this way there's no permission
     dialog. Re-detect at most once a day.
@@ -21,7 +21,7 @@ the project principles, it only touches the network while the home screen is vis
 ## Data sources (free, no API key)
 
 Forecast: Open-Meteo (non-commercial, < 10,000 calls a day, data under CC BY 4.0, so the
-attribution must be visible):
+attribution must be visible somewhere. Put it in launcher Settings → «О лаунчере», not in the panel):
 ```
 https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}
   &current=temperature_2m,apparent_temperature,weather_code,is_day,wind_speed_10m

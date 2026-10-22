@@ -2,10 +2,12 @@
 // Renders an HTML mockup the way the TV draws the UI: a 960x540 dp canvas at 2 px per dp,
 // saved as a 1920x1080 PNG. Inside the mockup, 1 CSS px == 1 dp and font-size px == sp.
 //
-// Usage: node render-mockup.cjs <mockup.html> [out.png] [--grid]
+// Usage: node render-mockup.cjs <mockup.html[?query]> [out.png] [--grid]
+//   A query string is passed to the page, e.g. home.html?t=space picks a theme.
 //   --grid  overlays the safe area (48 dp sides, 27 dp top/bottom) and the 12-column grid.
 
 const path = require('path');
+const { pathToFileURL } = require('url');
 
 function loadPlaywright() {
   try {
@@ -31,13 +33,16 @@ async function main() {
     console.error('Usage: node render-mockup.cjs <mockup.html> [out.png] [--grid]');
     process.exit(2);
   }
-  const output = outArg || input.replace(/\.html?$/i, grid ? '.grid.png' : '.png');
+  const [file, query] = input.split('?');
+  const suffix = (query ? '.' + query.replace(/[^\w-]+/g, '-') : '') + (grid ? '.grid' : '');
+  const output = outArg || file.replace(/\.html?$/i, suffix + '.png');
 
   const { chromium } = loadPlaywright();
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage({ viewport: { width: 960, height: 540 }, deviceScaleFactor: 2 });
-    await page.goto('file://' + path.resolve(input), { waitUntil: 'networkidle' });
+    const url = pathToFileURL(path.resolve(file)).href + (query ? '?' + query : '');
+    await page.goto(url, { waitUntil: 'networkidle' });
     if (grid) await page.addStyleTag({ content: GRID_CSS });
     await page.evaluate(() => document.fonts.ready);
     await page.screenshot({ path: output });

@@ -17,6 +17,13 @@ focus states, text under 14 px, and anything outside the safe area.
 
 ## Conventions
 
+- Themes: `home.html?t=<id>` picks a theme from `themes.css` (midnight, graphite, aurora, paper,
+  sky, sage, valley, ocean, space). The renderer passes the query string through, e.g.
+  `render-mockup.cjs "design/mockups/home.html?t=space" out.png`. Layout code in `home.css` must
+  read colours, background, font and focus style only from theme variables.
+- Background art is static SVG in `assets/bg/`. In the app it becomes one 960×540 bitmap, so a
+  busy cartoon scene costs the same per frame as a plain colour.
+
 - Draw the focused state as a static `.focused` class. A mockup shows one frame, so put
   exactly one `.focused` element per file. To compare focus positions, make variants such
   as `home.focus-row2.html`.

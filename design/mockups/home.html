@@ -4,7 +4,13 @@
   <meta charset="utf-8">
   <title>Home</title>
   <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="themes.css">
   <link rel="stylesheet" href="home.css">
+  <script>
+    // home.html?t=<theme id> picks one of the themes in themes.css (default: midnight).
+    const theme = new URLSearchParams(location.search).get('t');
+    if (theme) document.documentElement.dataset.theme = theme;
+  </script>
 </head>
 <body>
   <script>

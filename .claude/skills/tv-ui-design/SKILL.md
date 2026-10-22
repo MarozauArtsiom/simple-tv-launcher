@@ -38,7 +38,9 @@ bodySmall 12/16, labelLarge 14/20 (Medium), labelMedium 12/16 (Medium), labelSma
   from across the room.
 - Card titles fit on one line with an ellipsis. Show a title only on the focused card if
   the art already carries the name (app banners do).
-- Use the system sans (Roboto). No decorative fonts.
+- Use the system sans (Roboto). No decorative fonts. The one exception is the cartoon themes,
+  which use Nunito: a rounded, very legible sans with Cyrillic, under the OFL licence, bundled
+  in the app at about 270 KB (`design/mockups/assets/fonts/`).
 
 ## Colour (dark, QLED-aware)
 
@@ -124,7 +126,9 @@ node .claude/skills/tv-ui-design/scripts/render-mockup.cjs design/mockups/home.h
 node .claude/skills/tv-ui-design/scripts/render-mockup.cjs design/mockups/home.html --grid   # safe-area overlay
 ```
 
-Starter template and conventions: [references/mockups.md](references/mockups.md). Show
+Starter template and conventions: [references/mockups.md](references/mockups.md). The nine theme
+candidates live in `design/mockups/themes.css`. Render one with `home.html?t=<id>`; comparison
+sheets are in `design/mockups/themes/`. Show
 the PNG to the user (it reads as the real TV frame), get agreement, then implement it in
 Compose with the same token values.
 

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Theme sheet</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <style>
+    body { background: #101216; padding: 12px 16px; display: grid; gap: 12px 16px;
+           grid-template-columns: repeat(2, 448px); grid-template-rows: repeat(2, 252px); justify-content: center; }
+    .intro { padding: 20px 24px; border-radius: 12px; background: #1A1D24; display: flex; flex-direction: column; gap: 10px; }
+    .intro ol { padding-left: 20px; display: grid; gap: 6px; }
+    .intro li b { font-weight: 600; }
+    .intro .muted { color: #A3A9B7; }
+    figure { position: relative; margin: 0; border-radius: 10px; overflow: hidden; }
+    figure img { width: 448px; height: 252px; display: block; }
+    figcaption { position: absolute; left: 10px; bottom: 10px; padding: 3px 12px; border-radius: 12px;
+                 background: rgba(10, 12, 16, .82); color: #fff; }
+  </style>
+</head>
+<body>
+  <section class="intro">
+    <div class="headline-small" id="title"></div>
+    <ol class="body-medium" id="list"></ol>
+  </section>
+  <script>
+    const families = {
+      dark: ['Тёмные темы', [
+        ['midnight', '1. Полночь', 'фото природы под затемнением, белая рамка фокуса'],
+        ['graphite', '2. Графит', 'минимализм без картинки, янтарный фокус, заголовки капсом'],
+        ['aurora', '3. Сияние', 'цветное северное сияние, мягкое свечение вокруг фокуса'],
+      ]],
+      light: ['Светлые темы', [
+        ['paper', '4. Бумага', 'тёплый светлый фон, тёмная рамка фокуса, лёгкие тени'],
+        ['sky', '5. Небо', 'голубое небо с облаками, синяя рамка'],
+        ['sage', '6. Шалфей', 'спокойный зелёный, холмы, зелёная рамка'],
+      ]],
+      cartoon: ['Мультяшные темы', [
+        ['valley', '7. Солнечная долина', 'холмы, домик, улыбчивое солнце, карточки-наклейки'],
+        ['ocean', '8. Подводный мир', 'рыбки, пузыри, водоросли, коралловая рамка'],
+        ['space', '9. Космос', 'ракета, луна, планета, светящаяся рамка; хорош вечером'],
+      ]],
+    };
+    const [title, themes] = families[new URLSearchParams(location.search).get('f') || 'dark'];
+    document.getElementById('title').textContent = title;
+    document.getElementById('list').start = parseInt(themes[0][1]);
+    for (const [id, name, note] of themes) {
+      const li = document.createElement('li');
+      li.innerHTML = `<b>${name.replace(/^\d+\.\s*/, '')}</b> <span class="muted">— ${note}</span>`;
+      document.getElementById('list').append(li);
+      const fig = document.createElement('figure');
+      fig.innerHTML = `<img src="${id}.png" alt=""><figcaption class="label-large">${name}</figcaption>`;
+      document.body.append(fig);
+    }
+  </script>
+</body>
+</html>
