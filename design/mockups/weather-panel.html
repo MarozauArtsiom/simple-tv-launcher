@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Weather panel</title>
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    iframe { position: fixed; inset: 0; width: 960px; height: 540px; border: 0; }
+    .dim { position: fixed; inset: 0; background: rgba(11, 13, 18, .45); }
+    .muted { color: var(--on-surface-variant); }
+    svg { fill: currentColor; }
+
+    .sheet {
+      position: fixed; top: 0; right: 0; bottom: 0; width: 400px;
+      padding: var(--safe-v) var(--safe-h) var(--safe-v) 32px;
+      background: var(--surface); border-left: 1px solid rgba(255, 255, 255, .06);
+      display: flex; flex-direction: column;
+    }
+    .now { display: flex; align-items: center; gap: 12px; margin-top: 16px; margin-bottom: 4px; }
+    .now svg { width: 44px; height: 44px; flex: none; }
+
+    .hours { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 16px;
+             padding: 10px 0; border-radius: 12px; background: var(--surface-variant); }
+    .hour { display: grid; justify-items: center; gap: 4px; }
+    .hour svg { width: 24px; height: 24px; }
+
+    .days { list-style: none; padding: 0; margin-top: 12px; }
+    .days li { display: grid; grid-template-columns: 1fr 24px 48px 40px; align-items: center;
+               height: 28px; column-gap: 12px; }
+    .days svg { width: 22px; height: 22px; }
+    .days .max { text-align: right; }
+    .days .min { text-align: right; }
+
+    .buttons { display: flex; gap: 12px; margin-top: auto; }
+    .btn { height: 40px; padding: 0 20px; border-radius: 20px; display: grid; place-items: center;
+           white-space: nowrap; background: var(--surface-variant); color: var(--on-surface); }
+    .btn.focused { background: var(--focus); color: var(--on-focus); transform: scale(1.05); }
+    .credit { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute">
+    <symbol id="cloud" viewBox="0 0 24 24"><path d="M6.5 19h11a4.5 4.5 0 0 0 .6-8.96A6 6 0 0 0 6.6 10.6 4.25 4.25 0 0 0 6.5 19z"/></symbol>
+    <symbol id="partly" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3.5" opacity=".7"/><path d="M8.5 20h9a3.75 3.75 0 0 0 .5-7.47A5 5 0 0 0 8.6 11.9 4 4 0 0 0 8.5 20z"/></symbol>
+    <symbol id="rain" viewBox="0 0 24 24"><path d="M6.5 15h11a4.5 4.5 0 0 0 .6-8.96A6 6 0 0 0 6.6 6.6 4.25 4.25 0 0 0 6.5 15z"/><path d="M8 17.5l-1 3M12 17.5l-1 3M16 17.5l-1 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="moon" viewBox="0 0 24 24"><path d="M14.5 3a8.5 8.5 0 1 0 6.5 13.9A7 7 0 0 1 14.5 3z"/></symbol>
+  </svg>
+
+  <iframe src="home.html?nofocus" title="home"></iframe>
+  <div class="dim"></div>
+
+  <aside class="sheet">
+    <div class="headline-small">Минск</div>
+    <div class="label-medium muted">Автоматически · по интернет-подключению</div>
+
+    <div class="now">
+      <svg><use href="#partly"/></svg>
+      <div class="display-small">+7°</div>
+    </div>
+    <div class="title-medium">Переменная облачность</div>
+    <div class="body-medium muted">Ощущается как +4° · ветер 5 м/с</div>
+
+    <div class="hours">
+      <div class="hour"><span class="label-medium muted">21:00</span><svg><use href="#moon"/></svg><span class="label-large">+6°</span></div>
+      <div class="hour"><span class="label-medium muted">00:00</span><svg><use href="#cloud"/></svg><span class="label-large">+4°</span></div>
+      <div class="hour"><span class="label-medium muted">03:00</span><svg><use href="#rain"/></svg><span class="label-large">+3°</span></div>
+      <div class="hour"><span class="label-medium muted">06:00</span><svg><use href="#cloud"/></svg><span class="label-large">+3°</span></div>
+    </div>
+
+    <ul class="days body-medium">
+      <li><span>Сегодня</span><svg><use href="#partly"/></svg><span class="max">+9°</span><span class="min muted">+3°</span></li>
+      <li><span>Чт</span><svg><use href="#rain"/></svg><span class="max">+8°</span><span class="min muted">+4°</span></li>
+      <li><span>Пт</span><svg><use href="#cloud"/></svg><span class="max">+7°</span><span class="min muted">+2°</span></li>
+      <li><span>Сб</span><svg><use href="#sun"/></svg><span class="max">+10°</span><span class="min muted">+1°</span></li>
+      <li><span>Вс</span><svg><use href="#partly"/></svg><span class="max">+11°</span><span class="min muted">+3°</span></li>
+    </ul>
+
+    <div class="buttons">
+      <span class="btn label-large focused">Сменить город</span>
+    </div>
+    <div class="credit label-medium muted">Данные: Open-Meteo.com</div>
+  </aside>
+</body>
+</html>

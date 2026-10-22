@@ -118,8 +118,6 @@ None of these do background work.
    They open the matching system or Xiaomi settings page; which pages exist is checked on the TV.
 
 Not chosen: PIN lock on apps.
-Possible now that the network is allowed (not chosen yet): weather in the top bar, refreshed
-only while the home screen is visible and at most every 30 minutes.
 Not possible: a "Continue watching" row
 (other apps' Watch Next needs a system-only permission); remote button remapping (needs an
 always-on accessibility service, so use Button Mapper if ever needed).
@@ -145,6 +143,20 @@ help with mirroring an iPhone screen.
   if AirPlay Server disappoints: a launcher "Photos from phone" screen that shows a QR code. The
   iPhone opens it in Safari and uploads photos over the local network, and the small server runs
   only while that screen is open.
+
+## 10. Weather ✅
+
+- A weather chip in the top bar (icon, temperature, city). OK opens a side panel with the
+  current conditions, the next 12 hours, 5 days, and a **"Change city"** button.
+- **Location by default: automatic**, from the internet connection (IP geolocation). The TV has
+  no GPS, and this way there's no permission dialog. If the city is wrong (for example, because
+  of a VPN), pick it once by hand: a search by name in Russian. "Automatic" stays one press away.
+- Data from Open-Meteo: free, no API key, no ads. The required credit "Данные: Open-Meteo.com"
+  is shown in the panel.
+- Network use: only while the home screen is on screen, at most every 30 minutes, a few KB per
+  update. The last result is cached and shown instantly. Nothing runs in the background.
+- This is the first network feature, so the launcher gets the `INTERNET` permission.
+- Details: `android-tv-launcher` skill, `references/weather.md`. Mockup: `design/mockups/weather-panel.html`.
 
 ## Open questions for the owner
 

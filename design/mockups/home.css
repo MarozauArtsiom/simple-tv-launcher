@@ -14,6 +14,7 @@
   display: flex; justify-content: space-between; align-items: center;
   padding: var(--safe-v) var(--safe-h) 0; height: 71px;
 }
+.left { display: flex; align-items: center; gap: 24px; }
 .clock { display: flex; align-items: baseline; gap: 16px; }
 .date { color: var(--on-surface-variant); }
 
@@ -24,6 +25,7 @@
 }
 .chip svg { width: 18px; height: 18px; fill: currentColor; }
 .chip.icon-only { width: 36px; padding: 0; justify-content: center; }
+.chip .meta { color: var(--on-surface-variant); font-weight: 400; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--signal); }
 
 .section-title { padding: 0 var(--safe-h); margin-bottom: 12px; display: flex; gap: 8px; align-items: baseline; }

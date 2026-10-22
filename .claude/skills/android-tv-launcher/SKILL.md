@@ -1,6 +1,6 @@
 ---
 name: android-tv-launcher
-description: How to build a custom HOME launcher for Google TV / Android TV in Kotlin + Compose. Covers the manifest (HOME + LEANBACK_LAUNCHER, package visibility), listing installed TV apps with banners, launching them, reacting to installs/removals, HDMI inputs and the event-driven "signal on HDMI" prompt, launcher backgrounds, launcher-specific Back/Home behaviour, making it the default Home on Google TV, and build/install over adb. Use for any non-visual code in this repo.
+description: How to build a custom HOME launcher for Google TV / Android TV in Kotlin + Compose. Covers the manifest (HOME + LEANBACK_LAUNCHER, package visibility), listing installed TV apps with banners, launching them, reacting to installs/removals, HDMI inputs and the event-driven "signal on HDMI" prompt, launcher backgrounds, the weather widget (Open-Meteo, on-demand only), launcher-specific Back/Home behaviour, making it the default Home on Google TV, and build/install over adb. Use for any non-visual code in this repo.
 ---
 
 # Android TV launcher: engineering guide
@@ -250,6 +250,12 @@ class HdmiWatcher(context: Context, private val onSignal: (TvInputInfo) -> Unit)
 
 Built-in gradients, or images from USB:
 [references/backgrounds.md](references/backgrounds.md).
+
+## Weather
+
+A top-bar chip and side panel. Open-Meteo plus IP geolocation, with a manual city choice.
+It fetches only while the home screen is visible:
+[references/weather.md](references/weather.md).
 
 ## Not the launcher's job
 
