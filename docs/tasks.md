@@ -198,7 +198,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   the sub-pages from T15–T23. Focus and Back follow the spec.
   **Done:** screenshot in 3 themes; tests for the intent fallbacks with a fake resolver.
 
-- [ ] **T15 Theme picker + schedule.** Read: the theme-picker mockup and the T06 schedule
+- [x] **T15 Theme picker + schedule.** Read: the theme-picker mockup and the T06 schedule
   mockup.
   The 3×3 thumbnails do a live preview on focus, OK saves, Back reverts. The schedule page
   sets a day and a night theme, switched at sunrise/sunset from the weather data or at

@@ -79,6 +79,10 @@ One line per finished task: date, task id, what was done, anything notable.
   with `resolveActivity`, `<queries>` added), gear chip opens it, Home gets focus back on the gear on close.
   Rows for pages that do not exist yet do nothing (`SettingsPage.hasUi`), so there are no invisible dead ends.
   11 intent-chain tests, 7 panel tests, 3-theme screenshots viewed.
+- 2026-10-22 — T15 theme picker and schedule: 3×3 thumbnails (live preview of the whole launcher on focus, OK saves with
+  a check badge, leaving the page clears the preview), "Change by time of day" page (switch, day and night rows
+  that open the picker in choose mode, sunset/sunrise note), `themeAt` schedule logic (07:00/20:00 until the weather
+  data supplies sun times in T18), clock-minute re-check while Home is visible. Back chain: pick → schedule → picker → panel.
 
 ## Decisions to review
 
@@ -103,6 +107,8 @@ Defaults taken during unattended runs that the owner should look at.
 - T14: vendor intents for **Picture** and **Sleep timer** are unknown until the TV is probed (`VendorIntents` in
   `system/SystemSettings.kt` is empty). Until then Picture opens the generic display settings and the Sleep timer
   tile is hidden. After the probe on the TV, add the intents there and to the manifest `<queries>`.
+- T15: while "Change by time of day" is on, the schedule decides the theme and the saved theme is used again only when
+  it is switched off. The Theme row in Settings shows the theme in force.
 - Gboard's keyboard height (~168 dp) is an estimate in the city-search mockup; check on the TV.
 
 ## Blockers

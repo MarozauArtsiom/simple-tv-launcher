@@ -146,8 +146,8 @@ private fun SectionLabel(text: String, theme: ThemeSpec, first: Boolean) {
 
 /** The right-hand values of the launcher rows, from the saved settings (needs resources, so a composable). */
 @Composable
-fun settingsValues(settings: SettingsData): SettingsValues {
-    val theme = Themes.byId(settings.theme)
+fun settingsValues(settings: SettingsData, themeId: io.github.marozauartsiom.tvlauncher.ui.theme.ThemeId = settings.theme): SettingsValues {
+    val theme = Themes.byId(themeId)
     val language = when (val choice = settings.language) {
         LanguageChoice.Follow -> stringResource(R.string.language_follow_tv)
         is LanguageChoice.Fixed -> languageName(choice.tag)

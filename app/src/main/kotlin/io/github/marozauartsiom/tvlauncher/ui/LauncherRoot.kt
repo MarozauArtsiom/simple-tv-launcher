@@ -10,6 +10,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -22,11 +24,15 @@ import io.github.marozauartsiom.tvlauncher.data.prefs.ItemKey
 import io.github.marozauartsiom.tvlauncher.data.prefs.SettingsData
 import io.github.marozauartsiom.tvlauncher.i18n.LocaleController
 import io.github.marozauartsiom.tvlauncher.data.prefs.ShortcutsEditor
+import io.github.marozauartsiom.tvlauncher.data.prefs.SunTimes
+import io.github.marozauartsiom.tvlauncher.data.prefs.themeAt
 import io.github.marozauartsiom.tvlauncher.system.PackageActions
 import io.github.marozauartsiom.tvlauncher.system.SystemSettings
 import io.github.marozauartsiom.tvlauncher.system.WebLauncher
 import io.github.marozauartsiom.tvlauncher.ui.components.FocusMemory
+import io.github.marozauartsiom.tvlauncher.ui.settings.SchedulePage
 import io.github.marozauartsiom.tvlauncher.ui.settings.SettingsPanel
+import io.github.marozauartsiom.tvlauncher.ui.settings.ThemePickerPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.settingsValues
 import io.github.marozauartsiom.tvlauncher.ui.shortcuts.ShortcutsPage
 import io.github.marozauartsiom.tvlauncher.ui.home.AppMenu
@@ -42,7 +48,9 @@ import io.github.marozauartsiom.tvlauncher.ui.home.TopBarState
 import io.github.marozauartsiom.tvlauncher.ui.home.rememberClock
 import io.github.marozauartsiom.tvlauncher.ui.theme.LauncherTheme
 import io.github.marozauartsiom.tvlauncher.ui.theme.ThemedBackground
+import io.github.marozauartsiom.tvlauncher.ui.theme.ThemeId
 import io.github.marozauartsiom.tvlauncher.ui.theme.Themes
+import java.time.LocalDateTime
 import java.util.Locale
 import kotlinx.coroutines.launch
 
@@ -50,8 +58,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolean) {
     val settings by graph.settings.data.collectAsStateWithLifecycle(initialValue = SettingsData())
-    // Safe mode always uses the default theme: the saved one could be what keeps crashing.
-    val theme = if (safeMode) Themes.default else Themes.byId(settings.theme)
     val overlay by viewModel.overlay.collectAsStateWithLifecycle()
 
     val source = remember(graph, viewModel) { HomeContentSource(graph.apps.apps, graph.settings.data, viewModel.resets) }
@@ -61,6 +67,14 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
 
     val languageTag = LocaleController.effectiveTag(settings.language, Locale.getDefault())
     val clock by rememberClock(languageTag)
+
+    // The theme: a preview from the theme picker wins, then the time-of-day schedule, then the saved theme.
+    // The schedule is re-checked whenever the clock state changes (each minute while Home is visible, and on resume).
+    var preview by remember { mutableStateOf<ThemeId?>(null) }
+    val sun: SunTimes? = null // T18 supplies today's sunrise and sunset from the weather data
+    val scheduled = settings.themeSchedule.themeAt((clock.at ?: LocalDateTime.now()).toLocalTime(), sun)
+    // Safe mode always uses the default theme: the saved one could be what keeps crashing.
+    val theme = if (safeMode) Themes.default else Themes.byId(preview ?: scheduled ?: settings.theme)
 
     val context = LocalContext.current
     val editor = remember(graph) { FavouritesEditor(graph.settings) }
@@ -74,6 +88,11 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
         )
     }
     val settingsFocus = remember { FocusMemory() }
+    val themeFocus = remember { FocusMemory() }
+    val scheduleFocus = remember { FocusMemory() }
+    val pickDayFocus = remember { FocusMemory() }
+    val pickNightFocus = remember { FocusMemory() }
+    val pageScope = rememberCoroutineScope()
     var moveOrigin by remember { mutableStateOf<List<ItemKey>?>(null) }
 
     val actions = remember(graph, viewModel, context, webLauncher) {
@@ -126,7 +145,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                 SettingsPage.Root -> SettingsPanel(
                     theme = theme,
                     tiles = remember(systemSettings) { systemSettings.available() },
-                    values = settingsValues(settings),
+                    values = settingsValues(settings, scheduled ?: settings.theme),
                     memory = settingsFocus,
                     onTile = { tile ->
                         if (!systemSettings.open(tile)) unavailable(context)
@@ -139,6 +158,42 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                     onSave = shortcutsEditor::save,
                     onDelete = shortcutsEditor::delete,
                 )
+                SettingsPage.Theme -> ThemePickerPage(
+                    theme = theme,
+                    title = stringResource(R.string.item_theme),
+                    chosen = settings.theme,
+                    onPreview = { preview = it },
+                    onChoose = { id -> pageScope.launch { graph.settings.setTheme(id) } },
+                    memory = themeFocus,
+                    scheduleValue = stringResource(if (settings.themeSchedule.enabled) R.string.on else R.string.off),
+                    onOpenSchedule = { viewModel.open(Overlay.Settings(SettingsPage.Schedule)) },
+                )
+                SettingsPage.Schedule -> SchedulePage(
+                    theme = theme,
+                    schedule = settings.themeSchedule,
+                    sun = sun,
+                    memory = scheduleFocus,
+                    onToggle = { on -> pageScope.launch { graph.settings.setThemeSchedule(settings.themeSchedule.copy(enabled = on)) } },
+                    onPickDay = { viewModel.open(Overlay.Settings(SettingsPage.SchedulePickDay)) },
+                    onPickNight = { viewModel.open(Overlay.Settings(SettingsPage.SchedulePickNight)) },
+                )
+                SettingsPage.SchedulePickDay, SettingsPage.SchedulePickNight -> {
+                    val day = settingsOverlay.page == SettingsPage.SchedulePickDay
+                    ThemePickerPage(
+                        theme = theme,
+                        title = stringResource(if (day) R.string.schedule_day else R.string.schedule_night),
+                        chosen = if (day) settings.themeSchedule.dayTheme else settings.themeSchedule.nightTheme,
+                        onPreview = { preview = it },
+                        onChoose = { id ->
+                            pageScope.launch {
+                                val current = settings.themeSchedule
+                                graph.settings.setThemeSchedule(if (day) current.copy(dayTheme = id) else current.copy(nightTheme = id))
+                            }
+                            viewModel.open(Overlay.Settings(SettingsPage.Schedule))
+                        },
+                        memory = if (day) pickDayFocus else pickNightFocus,
+                    )
+                }
                 else -> Unit // other pages: their own tasks
             }
             if (menu != null) {

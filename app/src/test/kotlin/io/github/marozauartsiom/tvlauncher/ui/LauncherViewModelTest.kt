@@ -21,6 +21,13 @@ class LauncherViewModelTest {
         assertTrue(vm.onBack()); assertEquals(Overlay.None, vm.overlay.value)
     }
 
+    @Test fun scheduleBacksIntoTheThemePickerAndThePickersBackIntoTheSchedule() {
+        vm.open(Overlay.Settings(SettingsPage.SchedulePickNight))
+        vm.onBack(); assertEquals(Overlay.Settings(SettingsPage.Schedule), vm.overlay.value)
+        vm.onBack(); assertEquals(Overlay.Settings(SettingsPage.Theme), vm.overlay.value)
+        vm.onBack(); assertEquals(Overlay.Settings(SettingsPage.Root), vm.overlay.value)
+    }
+
     @Test fun citySearchBacksIntoTheWeatherPanel() {
         vm.open(Overlay.WeatherSearch)
         vm.onBack(); assertEquals(Overlay.Weather, vm.overlay.value)

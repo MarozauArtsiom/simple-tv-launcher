@@ -4,10 +4,14 @@ import androidx.compose.ui.geometry.Rect
 import io.github.marozauartsiom.tvlauncher.data.prefs.ItemKey
 
 enum class SettingsPage {
-    Root, Theme, Schedule, Background, Language, Weather, Hdmi, Hidden, Usb, About, Shortcuts;
+    Root, Theme, Schedule, SchedulePickDay, SchedulePickNight, Background, Language, Weather, Hdmi, Hidden, Usb, About, Shortcuts;
 
     /** Pages that are built so far. Opening one that is not does nothing, so there are no invisible dead ends. */
-    val hasUi: Boolean get() = this == Root || this == Shortcuts
+    val hasUi: Boolean get() = this in built
+
+    private companion object {
+        val built = setOf(Root, Theme, Schedule, SchedulePickDay, SchedulePickNight, Shortcuts)
+    }
 }
 
 /** What is shown over Home. There is no navigation library: Home never goes away, panels open over it. */
@@ -25,7 +29,12 @@ sealed interface Overlay {
     /** The overlay that Back leads to. [None] means the next Back is handled by Home itself. */
     fun back(): Overlay = when (this) {
         None -> None
-        is Settings -> if (page == SettingsPage.Root) None else Settings(SettingsPage.Root)
+        is Settings -> when (page) {
+            SettingsPage.Root -> None
+            SettingsPage.Schedule -> Settings(SettingsPage.Theme) // the schedule is opened from the theme picker
+            SettingsPage.SchedulePickDay, SettingsPage.SchedulePickNight -> Settings(SettingsPage.Schedule)
+            else -> Settings(SettingsPage.Root)
+        }
         WeatherSearch -> Weather
         else -> None
     }

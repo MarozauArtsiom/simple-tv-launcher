@@ -17,12 +17,12 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Immutable
-data class ClockText(val time: String, val date: String)
+data class ClockText(val time: String, val date: String, val at: LocalDateTime? = null)
 
 private val TimeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
 fun clockText(now: LocalDateTime, languageTag: String) =
-    ClockText(TimeFormat.format(now), DateText.format(now.toLocalDate(), languageTag))
+    ClockText(TimeFormat.format(now), DateText.format(now.toLocalDate(), languageTag), now)
 
 /**
  * The time and date for the top bar. It is refreshed by the system's once-a-minute `ACTION_TIME_TICK`

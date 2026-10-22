@@ -1,6 +1,7 @@
 package io.github.marozauartsiom.tvlauncher.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -153,5 +154,23 @@ fun PanelItem(
             modifier = Modifier.weight(1f),
         )
         if (value != null) Text(value, style = MaterialTheme.typography.bodyMedium, color = c.panelMuted, maxLines = 1)
+    }
+}
+
+/** An on/off switch drawn like the mockup (44×24 pill). It shows state only; the row it sits in handles OK. */
+@Composable
+fun PanelSwitch(checked: Boolean, theme: ThemeSpec, modifier: Modifier = Modifier) {
+    val c = theme.colors
+    androidx.compose.foundation.layout.Box(
+        modifier
+            .size(44.dp, 24.dp)
+            .background(if (checked) c.signal else c.panelMuted.copy(alpha = 0.45f), RoundedCornerShape(12.dp)),
+    ) {
+        androidx.compose.foundation.layout.Box(
+            Modifier
+                .padding(start = if (checked) 23.dp else 3.dp, top = 3.dp)
+                .size(18.dp)
+                .background(c.panelBg, androidx.compose.foundation.shape.CircleShape),
+        )
     }
 }
