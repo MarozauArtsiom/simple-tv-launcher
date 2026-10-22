@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import io.github.marozauartsiom.tvlauncher.data.apps.TvApp
 import io.github.marozauartsiom.tvlauncher.data.prefs.ItemKey
 import io.github.marozauartsiom.tvlauncher.data.prefs.Shortcut
+import io.github.marozauartsiom.tvlauncher.data.weather.Condition
 
 /** One tile on Home: an installed app or a website shortcut. */
 @Immutable
@@ -25,7 +26,13 @@ data class HomeContent(
 
 /** Weather chip data, supplied by the weather feature once it lands. */
 @Immutable
-data class WeatherChip(val temperature: String, val place: String?, val description: String)
+data class WeatherChip(
+    val temperature: String,
+    val place: String?,
+    val description: String,
+    val condition: Condition = Condition.PartlyCloudy,
+    val isDay: Boolean = true,
+)
 
 /** One HDMI input chip. [hasSignal] draws the green dot. */
 @Immutable

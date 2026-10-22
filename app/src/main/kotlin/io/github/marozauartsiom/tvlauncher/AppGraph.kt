@@ -1,6 +1,7 @@
 package io.github.marozauartsiom.tvlauncher
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Environment
 import android.os.storage.StorageManager
 import io.github.marozauartsiom.tvlauncher.data.apps.AppLauncher
@@ -9,6 +10,10 @@ import io.github.marozauartsiom.tvlauncher.data.apps.BannerLoader
 import io.github.marozauartsiom.tvlauncher.data.apps.PackageManagerSource
 import io.github.marozauartsiom.tvlauncher.data.background.BackgroundImages
 import io.github.marozauartsiom.tvlauncher.data.prefs.Settings
+import io.github.marozauartsiom.tvlauncher.data.weather.GeoIp
+import io.github.marozauartsiom.tvlauncher.data.weather.OpenMeteoClient
+import io.github.marozauartsiom.tvlauncher.data.weather.UrlConnectionFetcher
+import io.github.marozauartsiom.tvlauncher.data.weather.WeatherRepository
 import io.github.marozauartsiom.tvlauncher.i18n.LocaleController
 import io.github.marozauartsiom.tvlauncher.system.CrashGuard
 import io.github.marozauartsiom.tvlauncher.system.ScreenOnWatcher
@@ -44,6 +49,16 @@ class AppGraph(private val context: Context) {
                     .mapNotNull { it.directory }
             },
             storeDir = File(context.filesDir, "backgrounds"),
+        )
+    }
+    /** The only network code: Open-Meteo (forecast, city search) and the IP location services. Idle until the UI asks. */
+    val openMeteo by lazy { OpenMeteoClient(UrlConnectionFetcher()) }
+    val weather by lazy {
+        WeatherRepository(
+            settings = settings,
+            client = openMeteo,
+            geoIp = GeoIp(UrlConnectionFetcher(), openMeteo),
+            languageTag = { LocaleController.effectiveTag(locale.savedChoice(), Resources.getSystem().configuration.locales[0]) },
         )
     }
     val launcher by lazy { AppLauncher(packageSource) { intent -> context.startActivity(intent) } }

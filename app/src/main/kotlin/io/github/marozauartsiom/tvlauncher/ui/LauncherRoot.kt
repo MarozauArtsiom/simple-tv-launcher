@@ -6,6 +6,9 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -30,6 +33,10 @@ import io.github.marozauartsiom.tvlauncher.data.prefs.LanguageChoice
 import io.github.marozauartsiom.tvlauncher.data.prefs.SettingsData
 import io.github.marozauartsiom.tvlauncher.i18n.LocaleController
 import io.github.marozauartsiom.tvlauncher.data.prefs.ShortcutsEditor
+import io.github.marozauartsiom.tvlauncher.data.prefs.WeatherLocation
+import io.github.marozauartsiom.tvlauncher.data.weather.WeatherCodes
+import io.github.marozauartsiom.tvlauncher.data.weather.WeatherRepository
+import io.github.marozauartsiom.tvlauncher.data.weather.WeatherView
 import io.github.marozauartsiom.tvlauncher.data.prefs.SunTimes
 import io.github.marozauartsiom.tvlauncher.data.prefs.themeAt
 import io.github.marozauartsiom.tvlauncher.system.PackageActions
@@ -54,18 +61,25 @@ import io.github.marozauartsiom.tvlauncher.ui.home.HomeScreen
 import io.github.marozauartsiom.tvlauncher.ui.home.HomeTile
 import io.github.marozauartsiom.tvlauncher.ui.home.MenuAction
 import io.github.marozauartsiom.tvlauncher.ui.home.TopBarState
+import io.github.marozauartsiom.tvlauncher.ui.home.WeatherChip
+import io.github.marozauartsiom.tvlauncher.ui.weather.CitySearchPage
+import io.github.marozauartsiom.tvlauncher.ui.weather.WeatherPanel
+import io.github.marozauartsiom.tvlauncher.ui.weather.WeatherText
 import io.github.marozauartsiom.tvlauncher.ui.home.rememberClock
 import io.github.marozauartsiom.tvlauncher.ui.theme.BackgroundChoices
 import io.github.marozauartsiom.tvlauncher.ui.theme.BackgroundPick
 import io.github.marozauartsiom.tvlauncher.ui.theme.LauncherTheme
 import io.github.marozauartsiom.tvlauncher.ui.theme.ThemedBackground
 import io.github.marozauartsiom.tvlauncher.ui.theme.ThemeId
+import io.github.marozauartsiom.tvlauncher.ui.theme.ThemeSpec
 import io.github.marozauartsiom.tvlauncher.ui.theme.Themes
 import android.os.Environment
 import java.io.File
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -83,10 +97,28 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     val languageTag = LocaleController.effectiveTag(settings.language, Locale.getDefault())
     val clock by rememberClock(languageTag)
 
+    // Fetch the weather only while Home is on screen (STARTED), at most every 30 minutes. Nothing runs otherwise.
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(lifecycle, graph) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            while (true) {
+                graph.weather.refresh()
+                delay(WeatherRepository.FRESH_MS)
+            }
+        }
+    }
+
     // The theme: a preview from the theme picker wins, then the time-of-day schedule, then the saved theme.
     // The schedule is re-checked whenever the clock state changes (each minute while Home is visible, and on resume).
+    // Weather: parsed once per fetch; the view (city, stale or not) is cheap and follows the clock.
+    val parsedWeather = remember(settings.weatherCache) { settings.weatherCache?.let { graph.openMeteo.parseForecast(it.json) } }
+    val weatherView = remember(parsedWeather, settings.weatherLocation, settings.autoPlace, clock) {
+        WeatherView.of(settings, System.currentTimeMillis(), parsedWeather)
+    }
+    // Today's sunrise and sunset, only if the forecast is from today; otherwise the schedule uses 07:00 and 20:00.
+    val sun: SunTimes? = weatherView.data?.takeIf { it.days.firstOrNull()?.date == LocalDate.now() }?.sunTimes()
+
     var preview by remember { mutableStateOf<ThemeId?>(null) }
-    val sun: SunTimes? = null // T18 supplies today's sunrise and sunset from the weather data
     val scheduled = settings.themeSchedule.themeAt((clock.at ?: LocalDateTime.now()).toLocalTime(), sun)
     // Safe mode always uses the default theme: the saved one could be what keeps crashing.
     val theme = if (safeMode) Themes.default else Themes.byId(preview ?: scheduled ?: settings.theme)
@@ -128,7 +160,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
             onOpen = { tile -> openTile(graph, webLauncher, context, tile) },
             onMenu = { tile, anchor -> viewModel.open(Overlay.AppMenu(tile.key, anchor)) },
             // The panels below are opened by their own tasks; until then these do nothing.
-            onWeather = { },
+            onWeather = { viewModel.open(Overlay.Weather) },
             onHdmi = { },
             onIphone = { },
             onSettings = { viewModel.open(Overlay.Settings()) },
@@ -160,15 +192,20 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
             HomeScreen(
                 content = content,
                 theme = theme,
-                topBar = TopBarState(),
+                topBar = TopBarState(weather = weatherChip(weatherView, context)),
                 clock = { clock },
                 art = graph.banners,
                 resets = viewModel.resets,
                 actions = actions,
                 safeMode = safeMode,
-                overlayOpen = menu != null || settingsOverlay != null,
+                overlayOpen = menu != null || settingsOverlay != null || overlay is Overlay.Weather || overlay is Overlay.WeatherSearch,
                 moveKey = moveKey,
             )
+            when (overlay) {
+                Overlay.Weather -> WeatherPanel(theme, weatherView, languageTag, onChangeCity = { viewModel.open(Overlay.WeatherSearch) })
+                Overlay.WeatherSearch -> CitySearch(theme, graph, languageTag, viewModel)
+                else -> Unit
+            }
             when (settingsOverlay?.page) {
                 SettingsPage.Root -> SettingsPanel(
                     theme = theme,
@@ -255,6 +292,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                         onCheckAccess = { accessChecks++ },
                     )
                 }
+                SettingsPage.Weather -> CitySearch(theme, graph, languageTag, viewModel)
                 SettingsPage.Language -> LanguagePickerPage(
                     theme = theme,
                     selected = settings.language,
@@ -339,4 +377,35 @@ private tailrec fun Context.findActivity(): android.app.Activity? = when (this) 
     is android.app.Activity -> this
     is android.content.ContextWrapper -> baseContext.findActivity()
     else -> null
+}
+
+/** The city search with its effects: a pick or "detect automatically" is saved, the forecast is fetched at once, and the page closes. */
+@Composable
+private fun CitySearch(theme: ThemeSpec, graph: AppGraph, languageTag: String, viewModel: LauncherViewModel) {
+    fun choose(location: WeatherLocation) {
+        graph.appScope.launch {
+            graph.settings.setWeatherLocation(location)
+            graph.weather.refresh(force = true)
+        }
+        viewModel.onBack()
+    }
+    CitySearchPage(
+        theme = theme,
+        search = { query -> graph.openMeteo.search(query, languageTag) },
+        onAuto = { choose(WeatherLocation.Auto) },
+        onPick = { place -> choose(WeatherLocation.Manual(place)) },
+    )
+}
+
+/** The top-bar chip: temperature (or "—°" when the data is more than six hours old), the city, and a wording for TalkBack. */
+private fun weatherChip(view: WeatherView, context: Context): WeatherChip? {
+    val data = view.data ?: return null
+    val condition = WeatherCodes.condition(data.current.code)
+    return WeatherChip(
+        temperature = if (view.stale) WeatherText.UNKNOWN_TEMPERATURE else WeatherText.temperature(data.current.temperature),
+        place = view.place,
+        description = context.getString(WeatherText.conditionRes(condition)),
+        condition = condition,
+        isDay = data.current.isDay,
+    )
 }

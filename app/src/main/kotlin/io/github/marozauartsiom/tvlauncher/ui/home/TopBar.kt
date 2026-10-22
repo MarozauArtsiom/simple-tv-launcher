@@ -40,7 +40,9 @@ import io.github.marozauartsiom.tvlauncher.ui.components.FocusMemory
 import io.github.marozauartsiom.tvlauncher.ui.components.FocusProgress
 import io.github.marozauartsiom.tvlauncher.ui.components.Icons
 import io.github.marozauartsiom.tvlauncher.ui.components.rememberFocusProgress
+import io.github.marozauartsiom.tvlauncher.data.weather.Condition
 import io.github.marozauartsiom.tvlauncher.ui.theme.ThemeSpec
+import io.github.marozauartsiom.tvlauncher.ui.weather.WeatherIcons
 import io.github.marozauartsiom.tvlauncher.ui.theme.themeShadow
 
 val SafeHorizontal = 48.dp
@@ -73,7 +75,7 @@ fun TopBar(
             state.weather?.let { w ->
                 val description = stringResource(R.string.cd_weather, w.description)
                 TopChip(theme, onWeather, focus.track("chip:weather").semantics { contentDescription = description }) {
-                    WeatherIcon(theme)
+                    WeatherIcon(theme, w.condition, w.isDay)
                     val meta = theme.colors.chipMeta
                     Text(
                         text = remember(w, meta) {
@@ -137,13 +139,20 @@ private fun ChipIcon(icon: ImageVector, theme: ThemeSpec) {
     Icon(icon, contentDescription = null, tint = theme.colors.chipFg, modifier = Modifier.size(18.dp))
 }
 
+/** The condition's picture. Partly cloudy keeps the two-colour sun and cloud of the mockup; the others are one colour. */
 @Composable
-private fun WeatherIcon(theme: ThemeSpec) {
+private fun WeatherIcon(theme: ThemeSpec, condition: Condition, isDay: Boolean) {
     val sun = theme.colors.weatherSun.takeIf { it != Color.Unspecified } ?: theme.colors.chipFg
     val cloud = theme.colors.weatherCloud.takeIf { it != Color.Unspecified } ?: theme.colors.chipFg
-    Box(Modifier.size(18.dp)) {
-        Icon(Icons.WeatherSun, null, tint = sun.copy(alpha = sun.alpha * 0.7f), modifier = Modifier.size(18.dp))
-        Icon(Icons.WeatherCloud, null, tint = cloud, modifier = Modifier.size(18.dp))
+    val twoColour = isDay && (condition == Condition.PartlyCloudy || condition == Condition.MainlyClear)
+    if (twoColour) {
+        Box(Modifier.size(18.dp)) {
+            Icon(Icons.WeatherSun, null, tint = sun.copy(alpha = sun.alpha * 0.7f), modifier = Modifier.size(18.dp))
+            Icon(Icons.WeatherCloud, null, tint = cloud, modifier = Modifier.size(18.dp))
+        }
+    } else {
+        val tint = if (condition == Condition.Clear && isDay) sun else cloud
+        Icon(WeatherIcons.of(condition, isDay), null, tint = tint, modifier = Modifier.size(18.dp))
     }
 }
 
