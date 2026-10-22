@@ -20,12 +20,18 @@ object HomeFixtures {
         "Plex" to 0xFF5C4A1F, "VLC" to 0xFF6B3F1C, "Disney+" to 0xFF203C5C, "Google Play" to 0xFF2F4A3A,
         "Kodi" to 0xFF25485A, "Netflix" to 0xFF6B1F24, "Prime Video" to 0xFF1F4A5C, "Telegram" to 0xFF3A3358,
         "Twitch" to 0xFF43305E, "Файлы" to 0xFF3B3F4A,
+        "Google Play Фильмы" to 0xFF5C2A3A, "Xiaomi Mi Home" to 0xFF2A4A5C,
     )
     fun colourOf(name: String): Long? = colours[name]
     val generated = setOf("Kodi", "Telegram")
     val favouriteNames = listOf("YouTube", "Кинопоиск", "TV Bro", "Spotify", "Plex", "VLC")
 
-    val apps: List<TvApp> = colours.keys.map { name -> app(pkg(name), label = name) }
+    /** The two apps the Hidden apps mockup lists. */
+    val hiddenNames = setOf("Google Play Фильмы", "Xiaomi Mi Home")
+    val hiddenApps: List<TvApp> = hiddenNames.map { name -> app(pkg(name), label = name) }
+
+    /** The apps on Home in the mockup. */
+    val apps: List<TvApp> = colours.keys.filterNot { it in hiddenNames }.map { name -> app(pkg(name), label = name) }
     fun pkg(name: String) = "com.example." + name.lowercase().filter { it.isLetterOrDigit() }.ifEmpty { "app${name.hashCode()}" }
     fun key(name: String) = ItemKey.app(pkg(name))
 

@@ -146,7 +146,12 @@ private fun SectionLabel(text: String, theme: ThemeSpec, first: Boolean) {
 
 /** The right-hand values of the launcher rows, from the saved settings (needs resources, so a composable). */
 @Composable
-fun settingsValues(settings: SettingsData, themeId: io.github.marozauartsiom.tvlauncher.ui.theme.ThemeId = settings.theme): SettingsValues {
+fun settingsValues(
+    settings: SettingsData,
+    themeId: io.github.marozauartsiom.tvlauncher.ui.theme.ThemeId = settings.theme,
+    /** Hidden apps that are installed; the stored set may also hold packages that were uninstalled. */
+    hiddenCount: Int = settings.hidden.size,
+): SettingsValues {
     val theme = Themes.byId(themeId)
     val language = when (val choice = settings.language) {
         LanguageChoice.Follow -> stringResource(R.string.language_follow_tv)
@@ -167,7 +172,7 @@ fun settingsValues(settings: SettingsData, themeId: io.github.marozauartsiom.tvl
         language = language,
         weather = place,
         hdmi = stringResource(if (settings.hdmi.promptEnabled) R.string.on else R.string.off),
-        hiddenCount = settings.hidden.size,
+        hiddenCount = hiddenCount,
         shortcutsCount = settings.shortcuts.size,
     )
 }

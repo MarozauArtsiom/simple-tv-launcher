@@ -109,6 +109,11 @@ One line per finished task: date, task id, what was done, anything notable.
   switch per input). Registered 2 s after process start, nothing polls. 41 tests; screenshots viewed against the mockups.
   Process note: when several Gradle tasks are given with `--tests` filters, tests of the first task may be skipped; the full
   gate is what counts.
+- 2026-10-22 — T20 iPhone button: `Airplay.open` starts `io.github.jqssun.airplay` if it is installed, otherwise the how-to card
+  (`IphoneHintDialog`: what to put on a USB drive, how to mirror from the iPhone; "Install from USB" has focus and opens the USB
+  installer page once T22 exists). 4 + 2 tests, screenshots in 3 themes and `be`/`fr`.
+- 2026-10-22 — T21 hidden apps page: rows with a mini banner, name and "Show"; OK unhides, the row goes and focus moves to the row
+  in its place (or above); empty state; the Settings row counts only installed hidden apps. 6 tests, screenshots viewed.
 
 ## Decisions to review
 

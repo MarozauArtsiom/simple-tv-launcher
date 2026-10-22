@@ -233,10 +233,10 @@ string lives in resources in all six languages from the start (`values/` = Engli
   `Settings.canDrawOverlays` (add `SYSTEM_ALERT_WINDOW`). Plus the settings page.
   **Done:** watcher unit tests with fake states; screenshot of the prompt.
 
-- [ ] **T20 iPhone button.** If `io.github.jqssun.airplay` is installed, launch it; otherwise
+- [x] **T20 iPhone button.** If `io.github.jqssun.airplay` is installed, launch it; otherwise
   show the hint from T06 (how to install). **Done:** test for both branches.
 
-- [ ] **T21 Hidden apps page.** Lists hidden apps with "show again". **Done:** test +
+- [x] **T21 Hidden apps page.** Lists hidden apps with "show again". **Done:** test +
   screenshot.
 
 - [ ] **T22 USB APK installer.** Read: the T06 mockup.

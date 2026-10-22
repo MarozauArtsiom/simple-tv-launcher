@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.marozauartsiom.tvlauncher.AppGraph
 import io.github.marozauartsiom.tvlauncher.R
+import io.github.marozauartsiom.tvlauncher.data.apps.Airplay
 import io.github.marozauartsiom.tvlauncher.data.apps.LaunchResult
 import io.github.marozauartsiom.tvlauncher.data.background.BackgroundDecoder
 import io.github.marozauartsiom.tvlauncher.data.prefs.BackgroundChoice
@@ -69,7 +70,9 @@ import io.github.marozauartsiom.tvlauncher.ui.home.MenuAction
 import io.github.marozauartsiom.tvlauncher.ui.home.HdmiChip
 import io.github.marozauartsiom.tvlauncher.ui.home.TopBarState
 import io.github.marozauartsiom.tvlauncher.ui.hdmi.HdmiPrompt
+import io.github.marozauartsiom.tvlauncher.ui.iphone.IphoneHintDialog
 import io.github.marozauartsiom.tvlauncher.ui.settings.HdmiSettingsPage
+import io.github.marozauartsiom.tvlauncher.ui.settings.HiddenAppsPage
 import io.github.marozauartsiom.tvlauncher.ui.home.WeatherChip
 import io.github.marozauartsiom.tvlauncher.ui.weather.CitySearchPage
 import io.github.marozauartsiom.tvlauncher.ui.weather.WeatherPanel
@@ -142,6 +145,8 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     }
 
     val context = LocalContext.current
+    val installedApps by graph.apps.apps.collectAsStateWithLifecycle()
+    val hiddenApps = remember(installedApps, settings.hidden) { installedApps.filter { it.packageName in settings.hidden } }
     val hdmiStatus by graph.hdmi.status.collectAsStateWithLifecycle()
     val pendingHdmi by graph.hdmi.pending.collectAsStateWithLifecycle()
     val editor = remember(graph) { FavouritesEditor(graph.settings) }
@@ -158,6 +163,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     val themeFocus = remember { FocusMemory() }
     val languageFocus = remember { FocusMemory() }
     val hdmiSettingsFocus = remember { FocusMemory() }
+    val hiddenFocus = remember { FocusMemory() }
     val backgroundFocus = remember { FocusMemory() }
     val thumbnailDispatcher = remember { Dispatchers.Default.limitedParallelism(2) }
     val systemLocale = remember { android.content.res.Resources.getSystem().configuration.locales[0] }
@@ -174,7 +180,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
             // The panels below are opened by their own tasks; until then these do nothing.
             onWeather = { viewModel.open(Overlay.Weather) },
             onHdmi = { id -> if (!graph.inputLauncher.open(id)) unavailable(context) },
-            onIphone = { },
+            onIphone = { if (!Airplay.open(graph.launcher)) viewModel.open(Overlay.IphoneHint) },
             onSettings = { viewModel.open(Overlay.Settings()) },
             onMoveStep = { key, delta ->
                 graph.appScope.launch { editor.step(key, delta, currentContent.favourites.map { it.key }) }
@@ -219,7 +225,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                 resets = viewModel.resets,
                 actions = actions,
                 safeMode = safeMode,
-                overlayOpen = menu != null || settingsOverlay != null || overlay is Overlay.Weather || overlay is Overlay.WeatherSearch || overlay is Overlay.Hdmi,
+                overlayOpen = menu != null || settingsOverlay != null || overlay is Overlay.Weather || overlay is Overlay.WeatherSearch || overlay is Overlay.Hdmi || overlay is Overlay.IphoneHint,
                 moveKey = moveKey,
             )
             when (overlay) {
@@ -239,6 +245,14 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                         )
                     }
                 } ?: LaunchedEffect(Unit) { viewModel.onBack() } // the input vanished
+                Overlay.IphoneHint -> IphoneHintDialog(
+                    theme = theme,
+                    onInstallFromUsb = {
+                        // The USB installer page lands in T22; until then the card just closes.
+                        viewModel.open(if (SettingsPage.Usb.hasUi) Overlay.Settings(SettingsPage.Usb) else Overlay.None)
+                    },
+                    onClose = { viewModel.onBack() },
+                )
                 Overlay.Weather -> WeatherPanel(theme, weatherView, languageTag, onChangeCity = { viewModel.open(Overlay.WeatherSearch) })
                 Overlay.WeatherSearch -> CitySearch(theme, graph, languageTag, viewModel)
                 else -> Unit
@@ -247,7 +261,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                 SettingsPage.Root -> SettingsPanel(
                     theme = theme,
                     tiles = remember(systemSettings) { systemSettings.available() },
-                    values = settingsValues(settings, scheduled ?: settings.theme),
+                    values = settingsValues(settings, scheduled ?: settings.theme, hiddenCount = hiddenApps.size),
                     memory = settingsFocus,
                     onTile = { tile ->
                         if (!systemSettings.open(tile)) unavailable(context)
@@ -329,6 +343,13 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                         onCheckAccess = { accessChecks++ },
                     )
                 }
+                SettingsPage.Hidden -> HiddenAppsPage(
+                    theme = theme,
+                    apps = hiddenApps,
+                    art = graph.banners,
+                    memory = hiddenFocus,
+                    onShow = { app -> graph.appScope.launch { graph.settings.setHidden(app.packageName, false) } },
+                )
                 SettingsPage.Hdmi -> {
                     var permissionChecks by remember { mutableIntStateOf(0) }
                     val canDraw = remember(permissionChecks) { android.provider.Settings.canDrawOverlays(context) }
