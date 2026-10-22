@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>USB installer</title>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="themes.css">
+  <link rel="stylesheet" href="settings.css">
+  <script src="panel.js"></script>
+  <style></style>
+</head>
+<body>
+  <script src="icons.js"></script>
+  <iframe class="behind" data-src="home.html?nofocus" title="home"></iframe>
+
+  <div class="dim"></div>
+  <aside class="sheet">
+    <h1>Установить с флешки</h1>
+    <div data-state="list">
+      <div class="section label-large" style="margin-top: 0">USB · 3 файла .apk</div>
+      <div class="list"><div class="item item2 focused"><span class="banner" style="background:#2C4A6B"><svg><use href="#apk"/></svg></span><span class="col"><span class="title-medium">TV Bro</span><span class="body-medium muted">2.1.6 · 38 МБ</span></span><span class="value body-medium">Установить</span></div>
+<div class="item item2"><span class="banner" style="background:#43305E"><svg><use href="#apk"/></svg></span><span class="col"><span class="title-medium">AirPlay Server</span><span class="body-medium muted">0.0.30 · 14 МБ</span></span><span class="value body-medium">Установить</span></div>
+<div class="item item2"><span class="banner" style="background:#3B3F4A"><svg><use href="#apk"/></svg></span><span class="col"><span class="title-medium">Simple TV</span><span class="body-medium muted">1.1.0 · 9 МБ</span></span><span class="value body-medium">Обновить</span></div></div>
+    </div>
+    <div data-state="nopermission" hidden>
+      <div class="note"><svg><use href="#warning"/></svg><div class="body-medium">Нужен доступ ко всем файлам. Один раз выполните на компьютере:
+        <code>adb shell appops set --uid io.github.marozauartsiom.tvlauncher MANAGE_EXTERNAL_STORAGE allow</code></div></div>
+      <div class="buttons" style="margin-top: 16px"><span class="btn label-large focused">Проверить снова</span></div>
+    </div>
+    <div data-state="installing" hidden>
+      <div class="item item2 focused"><span class="banner" style="background:#2C4A6B"><svg><use href="#apk"/></svg></span>
+        <span class="col"><span class="title-medium">TV Bro</span><span class="body-medium muted">Устанавливается…</span></span></div>
+      <p class="body-medium muted" style="margin-top: 14px">Подтвердите установку в системном окне.</p>
+    </div>
+    <div data-state="done" hidden>
+      <div class="item item2"><span class="banner" style="background:#2C4A6B"><svg><use href="#apk"/></svg></span>
+        <span class="col"><span class="title-medium">TV Bro</span><span class="body-medium muted">Установлено</span></span><svg class=check><use href="#check"/></svg></div>
+      <div class="buttons" style="margin-top: 16px"><span class="btn label-large focused">Открыть</span><span class="btn label-large">Готово</span></div>
+    </div>
+  </aside>
+  <script>
+const state = new URLSearchParams(location.search).get('state') || 'list';
+document.querySelectorAll('[data-state]').forEach((el) => { el.hidden = el.dataset.state !== state; });
+</script>
+</body>
+</html>

@@ -31,7 +31,7 @@ svg { width: 20px; height: 20px; fill: currentColor; flex: none; }
   height: 44px; padding: 0 12px; border-radius: 10px; background: var(--item-bg);
   display: flex; align-items: center; gap: 12px;
 }
-.item .title { flex: 1; white-space: nowrap; }
+.item .title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .item .value { color: var(--panel-muted); white-space: nowrap; }
 /* Focus = ring in the theme's focus colour + a slightly lighter fill, like the app cards. */
 .item.focused, .tile.focused {
@@ -46,3 +46,64 @@ svg { width: 20px; height: 20px; fill: currentColor; flex: none; }
   background: linear-gradient(to bottom, transparent, var(--panel-bg));
   border-radius: 0 0 0 var(--panel-radius);
 }
+
+
+/* ---- Components added for the second batch of screens ---- */
+.btn {
+  height: 40px; padding: 0 20px; border-radius: 20px; display: inline-grid; place-items: center;
+  grid-auto-flow: column; gap: 8px; white-space: nowrap;
+  background: var(--item-bg); color: var(--panel-fg);
+}
+.btn.focused { background: var(--item-focus-ring); color: var(--btn-fg); transform: scale(1.05); }
+.buttons { display: flex; gap: 12px; margin-top: auto; }
+
+.switch { width: 44px; height: 24px; border-radius: 12px; background: var(--panel-muted); opacity: .45; position: relative; flex: none; }
+.switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--panel-bg); }
+.switch.on { background: var(--signal); opacity: 1; }
+.switch.on::after { left: 23px; }
+
+.field {
+  height: 52px; border-radius: 12px; padding: 0 14px; display: flex; align-items: center; gap: 12px;
+  background: var(--item-bg); box-shadow: 0 0 0 3px var(--item-focus-ring);
+}
+.field .text { flex: 1; }
+.caret { display: inline-block; width: 2px; height: 22px; background: var(--panel-fg); vertical-align: middle; margin-left: 1px; }
+
+.item2 { height: 56px; }
+.item2 .col { flex: 1; display: grid; }
+.thumb { width: 72px; height: 40px; border-radius: 8px; flex: none; background: var(--item-bg); }
+.item .banner { width: 72px; height: 40px; border-radius: 8px; display: grid; place-items: center; color: #F4F5F8; flex: none; }
+
+.note {
+  margin-top: 12px; padding: 12px 14px; border-radius: 12px; background: var(--item-bg);
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.note code { display: block; margin-top: 6px; padding: 6px 8px; border-radius: 8px; background: rgba(0, 0, 0, .18); word-break: break-all; font-family: ui-monospace, monospace; font-size: 12px; line-height: 16px; }
+.note svg { margin-top: 2px; color: var(--panel-muted); }
+
+.keyboard {
+  position: fixed; left: 0; right: 0; bottom: 0; height: 168px; background: #1B1D22; color: #8E939E;
+  display: grid; place-items: center; border-top: 1px solid rgba(255, 255, 255, .08);
+}
+
+.menu {
+  position: fixed; width: 290px; padding: 8px; border-radius: 16px; background: var(--panel-bg); color: var(--panel-fg);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .45);
+}
+.menu .item { background: transparent; }
+
+.dialog {
+  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 520px; padding: 24px 28px;
+  border-radius: var(--dialog-radius, 20px); background: var(--panel-bg); color: var(--panel-fg);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .5); display: flex; flex-direction: column; gap: 14px;
+}
+.dialog ol { padding-left: 22px; display: grid; gap: 6px; }
+.dialog .buttons { margin-top: 8px; }
+
+.swatches { display: flex; gap: 12px; padding: 4px 4px 4px 4px; }
+.swatch { width: 40px; height: 40px; border-radius: 50%; }
+.swatch.focused { box-shadow: 0 0 0 3px var(--item-focus-ring); transform: scale(1.12); }
+.grid3 { display: grid; grid-template-columns: repeat(3, 148px); gap: 12px; }
+.grid3 .pic { height: 83px; border-radius: 10px; background-size: cover; background-position: center; }
+.grid3 .pic.focused { box-shadow: 0 0 0 3px var(--item-focus-ring); transform: scale(1.06); }
+.cartoon .sheet { --dialog-radius: 24px; }

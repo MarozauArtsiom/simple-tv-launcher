@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>HDMI prompt settings</title>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="themes.css">
+  <link rel="stylesheet" href="settings.css">
+  <script src="panel.js"></script>
+  <style></style>
+</head>
+<body>
+  <script src="icons.js"></script>
+  <iframe class="behind" data-src="home.html?nofocus" title="home"></iframe>
+
+  <div class="dim"></div>
+  <aside class="sheet">
+    <h1>Сигнал на HDMI</h1>
+    <div class="item focused"><svg><use href="#input"/></svg><span class="title title-medium">Спрашивать о сигнале</span><span class="switch on"></span></div>
+    <div class="item"><svg><use href="#input"/></svg><span class="title title-medium">Поверх приложений</span><span class="switch"></span></div>
+    <div class="note"><svg><use href="#warning"/></svg><div class="body-medium">Для окна поверх приложений нужно разрешение. Выполните на компьютере:
+      <code>adb shell appops set io.github.marozauartsiom.tvlauncher SYSTEM_ALERT_WINDOW allow</code></div></div>
+    <div class="section label-large">Спрашивать для входов</div>
+    <div class="list">
+      <div class="item"><svg><use href="#input"/></svg><span class="title title-medium">HDMI 1</span><span class="switch on"></span></div>
+      <div class="item"><svg><use href="#input"/></svg><span class="title title-medium">HDMI 2</span><span class="switch on"></span></div>
+      <div class="item"><svg><use href="#input"/></svg><span class="title title-medium">HDMI 3</span><span class="switch"></span></div>
+    </div>
+  </aside>
+  <script></script>
+</body>
+</html>

@@ -25,12 +25,18 @@ One line per finished task: date, task id, what was done, anything notable.
   `--add-opens` flags (set in `app/build.gradle.kts`), and its android-all jar download dies on
   Maven Central HTTP 429, so use `scripts/prefetch-robolectric.sh <version>` once per session.
   M0 complete.
+- 2026-10-22 — T06 ten new screens designed and rendered in midnight/sky/valley (all viewed):
+  empty-favourites hint, app menu + move mode, city search, background picker, hidden apps, USB
+  installer (4 states), About, theme schedule, HDMI settings, iPhone hint. `ui-spec.md` §5 and §9
+  updated. M1 complete.
 
 ## Decisions to review
 
 Defaults taken during unattended runs that the owner should look at.
 
-_(none yet)_
+- T06: new screens were designed by Claude without prior owner review (as agreed for this run).
+  Look at `design/mockups/screens/*.png`, especially the app menu and the USB installer.
+- Gboard's keyboard height (~168 dp) is an estimate in the city-search mockup; check on the TV.
 
 ## Blockers
 

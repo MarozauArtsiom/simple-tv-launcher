@@ -79,7 +79,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
 
 ## M1 — Design the remaining screens
 
-- [ ] **T06 Mockups for screens not yet designed.** Read: the `tv-ui-design` skill, and
+- [x] **T06 Mockups for screens not yet designed.** Read: the `tv-ui-design` skill, and
   `docs/ui-spec.md` §4–§5 ("Not yet designed").
   Following the existing mockups and `settings.css`, create HTML mockups for:
   1. the empty-favourites hint card;

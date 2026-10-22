@@ -12,6 +12,23 @@
     const theme = params.get('t');
     if (theme) document.documentElement.dataset.theme = theme;
 
+    // Extra variants for design review: ?emptyfavs (no favourites yet), ?move (reordering mode).
+    addEventListener('DOMContentLoaded', () => {
+      const row = document.querySelector('.fav-row');
+      if (params.has('emptyfavs')) {
+        row.innerHTML = `<div class="hint-card"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          <div><div class="title-medium">Здесь пока пусто</div>
+          <div class="body-medium hint-muted">Выделите приложение ниже, нажмите и удерживайте ОК, затем выберите «В избранное»</div></div></div>`;
+        document.querySelectorAll('.focused').forEach((el) => el.classList.remove('focused'));
+        if (!params.has('nofocus')) document.querySelector('.grid .card').classList.add('focused');
+      }
+      if (params.has('move')) {
+        const item = row.querySelector('.fav-item');
+        item.classList.add('moving');
+        item.querySelector('.fav-label').outerHTML = '<span class="move-pill label-large">◀ ▶ Переместить · ОК — готово</span>';
+      }
+    });
+
     // home.html?lang=<code> shows the UI strings in one of the six launcher languages.
     const STRINGS = {
       ru: { favorites: 'Избранное', all: 'Все приложения', city: '· Минск', date: 'Среда, 21 октября' },

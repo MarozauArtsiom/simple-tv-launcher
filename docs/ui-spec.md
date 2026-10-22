@@ -123,10 +123,59 @@ For each screen: initial focus, Back, Home, and the mockup.
 - Initial focus: the saved choice (check mark). OK applies at once (the UI re-renders in
   the new language). Back closes.
 
-### Not yet designed (mockup first)
-City search (text field + results), app menu, empty-favourites hint, hidden apps, background
-picker (colour or USB image), USB APK installer, About, theme schedule sub-page, and the
-settings page for the HDMI prompt.
+### Empty favourites — `design/mockups/home-empty-favs.html`
+- When there are no favourites, the Favourites row shows one hint card (star icon, "Здесь пока
+  пусто", how to add: long-press OK, then "В избранное"). The card isn't focusable. Initial focus
+  goes to the first app in the grid.
+
+### App menu — `design/mockups/app-menu.html`, move mode `favourites-move.html`
+- Long-press OK on any tile opens a 290 dp popup under the tile (flipped above it when there
+  is no room). Items: В избранное / Убрать из избранного, Переместить (only for favourites),
+  Скрыть, О приложении, Удалить. Initial focus is the first item. Back closes it, and focus
+  returns to the tile.
+- Move mode: the tile gets a dashed ring and a pill "◀ ▶ Переместить · ОК — готово". Left/Right
+  swap the tile with its neighbour, OK drops it, and Back cancels (restores the old order).
+
+### City search — `design/mockups/weather-search.html`
+- A 400 dp panel: title "Город", a search field (focus ring, caret), and up to three results
+  above the on-screen keyboard (Gboard takes the bottom ~168 dp). The first row is always
+  "Определять автоматически" (clears the manual city). Each result: city (16 sp) plus region and
+  country (14 sp muted). OK on a result saves it and returns to the weather panel.
+- The field intercepts Back and Escape: the first press leaves the field (focus goes to the
+  list), and the second closes the panel.
+
+### Background picker — `design/mockups/settings-background.html`
+- A 560 dp panel: "Из темы" (check when selected), six colour swatches, and a 3-column grid of
+  images found on USB (title shows the count). Focus on a swatch or picture previews it on the
+  screen behind, OK saves, and Back reverts. Without USB access, the grid is replaced by the
+  adb hint note (as on the USB installer screen).
+
+### Hidden apps — `design/mockups/settings-hidden.html`
+- A list with a mini banner (72×40), the app name and "Показать". OK unhides and removes the row.
+  An empty list shows "Нет скрытых приложений" in muted text.
+
+### USB installer — `design/mockups/settings-usb.html?state=list|nopermission|installing|done`
+- List: `.apk` files from USB volumes (mini icon, name, "version · size", action "Установить", or
+  "Обновить" when the package is installed with a lower version). Empty: "На флешке нет файлов .apk".
+- No permission: a warning note with the exact adb command and a "Проверить снова" button.
+- Installing: one row "Устанавливается…" plus a hint to confirm in the system dialog.
+- Done: a row with a check, then buttons "Открыть" and "Готово".
+
+### About — `design/mockups/settings-about.html`
+- App icon, name, version and build, one sentence on privacy, and the licence list as two-line
+  rows (Open-Meteo CC BY 4.0, Nunito SIL OFL 1.1, Android components Apache 2.0).
+
+### Theme schedule — `design/mockups/settings-schedule.html`
+- A switch "Менять автоматически", and two theme rows (day, evening/night) that open the theme
+  picker. A note shows today's sunset and sunrise, or says it uses 07:00 and 20:00 when no weather.
+
+### HDMI prompt settings — `design/mockups/settings-hdmi.html`
+- Switches: ask about a new signal, show it over other apps (with the adb hint while the
+  permission is missing), and one switch per HDMI input.
+
+### iPhone hint — `design/mockups/iphone-hint.html`
+- A centred dialog (520 dp) shown when AirPlay Server isn't installed: what to install and how
+  to mirror from the iPhone; buttons "Установить с флешки" (focused) and "Закрыть".
 
 ## 6. Motion
 
@@ -163,3 +212,9 @@ Theme and background crossfade 300 ms. Only scale, alpha, translation and rotati
 | Settings | `settings.html?t=<id>` | `settings/settings-{midnight,sky,valley}.png` |
 | Theme picker | `settings-theme.html?t=space` | `settings/theme-picker.png` |
 | Language picker | `settings-language.html` | `settings/language-picker.png` |
+| Empty favourites, app menu, move mode | `home-empty-favs.html`, `app-menu.html`, `favourites-move.html` | `screens/<name>-<theme>.png` |
+| City search, background picker, hidden apps | `weather-search.html`, `settings-background.html`, `settings-hidden.html` | `screens/` |
+| USB installer (4 states), About, theme schedule | `settings-usb.html?state=…`, `settings-about.html`, `settings-schedule.html` | `screens/` |
+| HDMI settings, iPhone hint | `settings-hdmi.html`, `iphone-hint.html` | `screens/` |
+
+`screens/` holds midnight, sky and valley renders of the batch above (`render-screens.sh`).

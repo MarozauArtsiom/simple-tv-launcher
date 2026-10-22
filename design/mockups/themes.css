@@ -9,6 +9,7 @@
 
 /* ---------- 1. Midnight (dark, default) ---------- */
 :root, [data-theme="midnight"] {
+  --btn-fg: #0B0D12;
   --font: Roboto, system-ui, sans-serif;
   --bg: url(assets/landscape-placeholder.svg) center / cover;
   --scrim: linear-gradient(to bottom, rgba(11, 13, 18, .15) 0%, rgba(11, 13, 18, .60) 38%, rgba(11, 13, 18, .90) 72%);
@@ -52,6 +53,7 @@
 
 /* ---------- 2. Graphite (dark, minimal) ---------- */
 [data-theme="graphite"] {
+  --btn-fg: #141416;
   --bg: radial-gradient(900px 520px at 18% -12%, #222226 0%, #0D0D0F 70%);
   --scrim: none;
   --on-surface: #EDEDED;
@@ -76,6 +78,7 @@
 
 /* ---------- 3. Aurora (dark, colourful) ---------- */
 [data-theme="aurora"] {
+  --btn-fg: #0B0D12;
   --bg: url(assets/bg/aurora.svg) center / cover;
   --scrim: linear-gradient(to bottom, transparent 40%, rgba(9, 12, 26, .55) 100%);
   --on-surface: #EEF0FF;
@@ -92,6 +95,7 @@
 
 /* ---------- 4. Paper (light, warm) ---------- */
 [data-theme="paper"] {
+  --btn-fg: #FBF9F4;
   --bg: radial-gradient(800px 500px at 10% 0%, #FBF9F4 0%, #F1ECE2 70%);
   --scrim: none;
   --on-surface: #1F1D1A;
@@ -112,6 +116,7 @@
 
 /* ---------- 5. Sky (light, airy) ---------- */
 [data-theme="sky"] {
+  --btn-fg: #FFFFFF;
   --bg: url(assets/bg/sky.svg) center / cover;
   --scrim: none;
   --on-surface: #0E2742;
@@ -133,6 +138,7 @@
 
 /* ---------- 6. Sage (light, natural) ---------- */
 [data-theme="sage"] {
+  --btn-fg: #FFFFFF;
   --bg: url(assets/bg/sage.svg) center / cover;
   --scrim: none;
   --on-surface: #1D2A21;
@@ -154,6 +160,7 @@
 
 /* ---------- Cartoon family: rounded font, sticker cards, playful focus ---------- */
 [data-theme="valley"], [data-theme="ocean"], [data-theme="space"] {
+  --btn-fg: #2B1A63;
   --font: 'Nunito', system-ui, sans-serif;
   --scrim: none;
   --clock-weight: 800;
@@ -194,6 +201,7 @@
 
 /* ---------- 7. Sunny valley (cartoon) ---------- */
 [data-theme="valley"] {
+  --btn-fg: #23324A;
   --bg: url(assets/bg/valley.svg) center / cover;
   --on-surface: #0E3354;
   --on-surface-variant: #1F5A86;
@@ -205,6 +213,7 @@
 
 /* ---------- 8. Underwater (cartoon) ---------- */
 [data-theme="ocean"] {
+  --btn-fg: #23324A;
   --bg: url(assets/bg/ocean.svg) center / cover;
   --on-surface: #06324D;
   --on-surface-variant: #0B5577;
