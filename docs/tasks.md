@@ -284,20 +284,28 @@ string lives in resources in all six languages from the start (`values/` = Engli
 
 Found by the owner on the real TV after the first install. Recorded first, fixed in a later run.
 
-- [ ] **T28 Bug: Home jerks when focus moves between tiles.** Read: `tv-ui-design`,
+- [ ] **T28 Bug: Home jerks when focus moves between All apps tiles.** Read: `tv-ui-design`,
   `jetpack-compose-performance`, `leanback-to-compose-tv-migration`.
-  Owner: "when I move between apps the whole UI jerks, as if the growing item pushes all the
-  others". Not reproduced yet (screenshots are static). Suspects, check in this order:
-  1. Focus scrolling: `LazyRow`/`LazyColumn` scroll on every focus change (the default
-     `BringIntoViewSpec`, which may be a pivot spec on TV), so the whole row slides each step.
-     Fix with a calm spec: scroll only when the focused tile would leave the safe area.
-  2. Something in the focused card changes layout size instead of drawing only (scale, ring,
-     glow and tilt must stay in `graphicsLayer`/draw), e.g. the name pill under a favourite or
-     the grid row height.
-  3. Frame drops on the Mali-G52 during the focus animation (glow shadow, tilt).
-  **Done:** a Compose test asserts that tile bounds (`boundsInRoot`) of the neighbours don't
-  change while focus moves inside the visible area; the scroll rule is written into
-  `ui-spec.md`; checked on the TV (ideally a short video before/after).
+  Owner: only in **All apps**, Favourites are fine. The tile grows, and during the growth the whole
+  screen scrolls a little down; when the animation ends it comes back.
+  Likely cause (found in the Compose foundation 1.12 bytecode, not yet confirmed on the TV): on a
+  device with `android.software.leanback`, `LocalBringIntoViewSpec` defaults to
+  `PivotBringIntoViewSpec`, which keeps the focused item at a fixed fraction of the viewport and
+  recomputes the target from the item's bounds. Those bounds include our `graphicsLayer` (scale
+  1.0→1.08, tilt in some themes, see `cardFrame` in `TileCard.kt`), and the layer sits outside the tv
+  `Surface`'s focusable node, so the target moves on every animation frame and the Home `LazyColumn`
+  follows it, then settles back. Favourites don't show it because the column is at scroll 0 there
+  and all favourites fit in the row, so the pivot is clamped. Not a main-thread stall: nothing
+  changes layout size, everything else is drawn in layers.
+  Why the tests missed it: Robolectric has no leanback feature, so it uses the default (non-pivot)
+  spec.
+  Fix options: (a) provide our own `LocalBringIntoViewSpec` for Home that scrolls only when a tile's
+  untransformed bounds leave the safe area (and scrolls by whole rows); (b) move the scale/tilt layer
+  inside the focusable so bring-into-view sees the unscaled rect. Prefer (a), maybe both.
+  **Done:** a Robolectric test that turns on `android.software.leanback`
+  (`shadowOf(packageManager).setSystemFeature(...)`), moves focus inside All apps and asserts that
+  `LazyListState` scroll does not change during the focus animation (fails before the fix); the
+  scroll rule is written into `ui-spec.md`; checked on the TV.
 
 - [ ] **T29 Bug: Settings are hard to find.** Owner: "it's not clear how to open settings to
   change the theme, language and the rest". Today the only way is Up from the first row to the
