@@ -19,22 +19,22 @@ style values live in `design/mockups/themes.css`, and approved mockups in `desig
 
 Fourteen themes ship. The family decides font and card style, and the theme decides colours and art.
 
-| # | id | Name (ru) | Family | Background | Focus colour | Card radius | Focus on cards |
+| # | id | Name | Family | Background | Focus colour | Card radius | Focus on cards |
 |---|---|---|---|---|---|---|---|
-| 1 | midnight | Полночь | dark | nature photo/art + dark scrim | #FFFFFF | 12 | ×1.1, 3 dp ring |
-| 2 | graphite | Графит | dark | near-black radial gradient | #FFC46B | 6 | ×1.1, 3 dp ring; titles uppercase, tracked 0.12em, 14 sp |
-| 3 | aurora | Сияние | dark | blurred aurora fields | #FFFFFF | 16 | ×1.1, 3 dp ring + violet glow |
-| 4 | paper | Бумага | light | warm off-white | #1F1D1A | 10 | ×1.1, 3 dp ring + soft shadow |
-| 5 | sky | Небо | light | sky + clouds | #1A6BFF | 16 | ×1.1, 3 dp ring + blue shadow |
-| 6 | sage | Шалфей | light | sage hills | #2F6B45 | 14 | ×1.1, 3 dp ring + green shadow |
-| 7 | valley | Солнечная долина | cartoon | hills, house, smiling sun | #FFD400 | 20 | ×1.12, 5 dp ring, −2° tilt, hard shadow |
-| 8 | ocean | Подводный мир | cartoon | fish, bubbles, seaweed | #FF7A59 | 20 | ×1.12, 5 dp ring, −2° tilt, hard shadow |
-| 9 | space | Космос | cartoon | rocket, moon, ringed planet | #FFE14D | 20 | ×1.12, 5 dp ring, −2° tilt, yellow glow |
-| 10 | gloom | Мрачный холм | dark cartoon | huge moon striped by clouds, ravens, spiral hill, twisted trees, iron fence | #EDE3C4 | 20 | ×1.12, 5 dp ring, −2° tilt, pale glow |
-| 11 | haunted | Привидения | dark cartoon | sickly moon with bats, crooked house, graveyard, ghost, spider | #8CFF5A | 20 | ×1.12, 5 dp ring, −2° tilt, green glow |
-| 12 | monsters | Монстрики | dark cartoon | violet night, party lights, moon in a party hat, monsters peeking over the apps | #FF4FA3 | 20 | ×1.12, 5 dp ring, −2° tilt, pink glow |
-| 13 | halloween-night | Хеллоуин | halloween (dark) | orange moon with a witch, glowing pumpkins, cat on a fence, bunting | #FF8A1F | 20 | ×1.12, 5 dp ring, −2° tilt, orange glow |
-| 14 | halloween-day | Хеллоуин днём | halloween (light) | autumn sky, leaves, friendly ghost, smiling pumpkins, witch hat | #7A3CE0 | 20 | ×1.12, 5 dp ring, −2° tilt, violet shadow |
+| 1 | midnight | Midnight | dark | nature photo/art + dark scrim | #FFFFFF | 12 | ×1.1, 3 dp ring |
+| 2 | graphite | Graphite | dark | near-black radial gradient | #FFC46B | 6 | ×1.1, 3 dp ring; titles uppercase, tracked 0.12em, 14 sp |
+| 3 | aurora | Aurora | dark | blurred aurora fields | #FFFFFF | 16 | ×1.1, 3 dp ring + violet glow |
+| 4 | paper | Paper | light | warm off-white | #1F1D1A | 10 | ×1.1, 3 dp ring + soft shadow |
+| 5 | sky | Sky | light | sky + clouds | #1A6BFF | 16 | ×1.1, 3 dp ring + blue shadow |
+| 6 | sage | Sage | light | sage hills | #2F6B45 | 14 | ×1.1, 3 dp ring + green shadow |
+| 7 | valley | Sunny valley | cartoon | hills, house, smiling sun | #FFD400 | 20 | ×1.12, 5 dp ring, −2° tilt, hard shadow |
+| 8 | ocean | Underwater | cartoon | fish, bubbles, seaweed | #FF7A59 | 20 | ×1.12, 5 dp ring, −2° tilt, hard shadow |
+| 9 | space | Space | cartoon | rocket, moon, ringed planet | #FFE14D | 20 | ×1.12, 5 dp ring, −2° tilt, yellow glow |
+| 10 | gloom | Gloomy hill | dark cartoon | huge moon striped by clouds, ravens, spiral hill, twisted trees, iron fence | #EDE3C4 | 20 | ×1.12, 5 dp ring, −2° tilt, pale glow |
+| 11 | haunted | Haunted house | dark cartoon | sickly moon with bats, crooked house, graveyard, ghost, spider | #8CFF5A | 20 | ×1.12, 5 dp ring, −2° tilt, green glow |
+| 12 | monsters | Monster party | dark cartoon | violet night, party lights, moon in a party hat, monsters peeking over the apps | #FF4FA3 | 20 | ×1.12, 5 dp ring, −2° tilt, pink glow |
+| 13 | halloween-night | Halloween night | halloween (dark) | orange moon with a witch, glowing pumpkins, cat on a fence, bunting | #FF8A1F | 20 | ×1.12, 5 dp ring, −2° tilt, orange glow |
+| 14 | halloween-day | Halloween day | halloween (light) | autumn sky, leaves, friendly ghost, smiling pumpkins, witch hat | #7A3CE0 | 20 | ×1.12, 5 dp ring, −2° tilt, violet shadow |
 
 - **Token groups** (names as in `themes.css`):
   - text: `on-surface`, `on-surface-variant`
@@ -51,12 +51,12 @@ Fourteen themes ship. The family decides font and card style, and the theme deci
   Section titles and the focused-card label sit in white pills (yellow pills in Space). Chips
   are white with dark text and a coloured weather icon.
 - **Dark cartoon and Halloween:** the same shapes, font and focus style as cartoon. The dark ones
-  (Мрачный холм, Привидения, Монстрики, Хеллоуин) use dark chips, dark panels and a tinted outline
-  (`card-outline` colour) instead of white; pills take the theme accent. Хеллоуин днём is a light
-  cartoon theme like Солнечная долина. The two Halloween themes are meant as a day/night pair for
+  (Gloomy hill, Haunted house, Monster party, Halloween night) use dark chips, dark panels and a tinted
+  outline (`card-outline` colour) instead of white; pills take the theme accent. Halloween day is a light
+  cartoon theme like Sunny valley. The two Halloween themes are meant as a day/night pair for
   the schedule.
 - **Switching:** Settings → Theme. Focusing a thumbnail previews it live (home and panel); OK
-  saves; Back restores the saved theme. Optional "Менять по времени суток" picks a day theme
+  saves; Back restores the saved theme. Optional "Change by time of day" picks a day theme
   and a night theme, switching at sunrise/sunset (07:00/20:00 without weather). It is
   checked only while Home is visible.
 - Background art is static. It is rasterised once to 960×540, and a theme change crossfades
@@ -81,9 +81,9 @@ Fourteen themes ship. The family decides font and card style, and the theme deci
 | Side panel | 400 dp wide (560 for the theme picker), full height, pad 27/48/27/32, radius 0 (24 in cartoon) | Opens from the right over a dim of 45% black (15% in the theme picker, so the preview shows) |
 | List item | height 44, radius 10, padding 12, icon 20, title 16 sp, value 14 sp muted, chevron | Focused: `item-focus-fill` + 3 dp `item-focus-ring` + ×1.03 (**never a full white fill**). Selected: check icon in `signal` colour |
 | Quick tile | 3 columns × 58 dp, radius 12, icon 20 + label 14 sp | Focus like list items |
-| Button | height 40, pill, padding 20 | Focused: fill in the theme focus colour + ×1.05 (e.g. "Сменить город", "Переключить") |
+| Button | height 40, pill, padding 20 | Focused: fill in the theme focus colour + ×1.05 (e.g. "Change city", "Switch") |
 | Theme thumbnail | 148×83 dp, radius 10, name pill | Focused: 3 dp ring + ×1.06. Saved theme: green check badge |
-| HDMI prompt | 460 dp wide, bottom-right inside the safe area, radius 16 | Default focus on "Переключить". Auto-hides after 15 s |
+| HDMI prompt | 460 dp wide, bottom-right inside the safe area, radius 16 | Default focus on "Switch". Auto-hides after 15 s |
 
 ## 5. Screens
 
@@ -124,22 +124,22 @@ For each screen: initial focus, Back, Home, and the mockup.
 
 ### Weather panel — `design/mockups/weather-panel.html`
 - Opens from the weather chip. City (24 sp); now: icon 44 dp + temperature + condition +
-  "feels like · wind"; 4 × 3-hour forecast; 5 days; "Сменить город" button.
+  "feels like · wind"; 4 × 3-hour forecast; 5 days; "Change city" button.
 - **No text about the data source or the location mode** (the owner's request; the credit is in
   Settings → About).
-- Initial focus: "Сменить город". Back closes the panel and returns focus to the chip.
+- Initial focus: "Change city". Back closes the panel and returns focus to the chip.
 
 ### HDMI prompt — `design/mockups/hdmi-prompt.html`
-- "Сигнал на HDMI 2" + the device name when known; buttons "Переключить" / "Не сейчас"; a countdown
-  in muted text. Initial focus: "Переключить". Back = "Не сейчас"; the card hides itself after 15 s.
+- "Signal on HDMI 2" + the device name when known; buttons "Switch" / "Not now"; a countdown
+  in muted text. Initial focus: "Switch". Back = "Not now"; the card hides itself after 15 s.
   Over Home it sits in the bottom-right corner of the safe area over a 40 % dim; over another app it is a
   window of its own (needs the overlay permission). While it is open Home takes no focus. Once dismissed
   for any reason, the same input is not asked about again until it disconnects.
 
 ### Settings panel — `design/mockups/settings.html`, `settings/settings-*.png`
-- Title "Настройки". Section "Телевизор": Wi-Fi, Bluetooth, Звук, Картинка, Таймер сна,
-  Android. Section "Лаунчер": Тема, Фон, Язык, Погода, Сигнал на HDMI, Скрытые приложения,
-  Установить с флешки, О лаунчере.
+- Title "Settings". Section "Television": Wi-Fi, Bluetooth, Sound, Picture, Sleep timer,
+  Android (tiles the TV can't open are hidden). Section "Launcher": Theme, Background, Profile photo,
+  Language, Weather, HDMI signal, Hidden apps, Website shortcuts, Install from USB, About.
 - Initial focus: the Wi-Fi tile. Back: out of a sub-page, then close the panel and return focus
   to the settings (avatar) button. Coming back from a sub-page, focus returns to the row that opened it.
 - A tile appears only if this TV has a screen for it. Picture falls back to the display settings;
@@ -147,77 +147,77 @@ For each screen: initial focus, Back, Home, and the mockup.
   after "Hidden apps".
 
 ### Theme picker — `design/mockups/settings-theme.html`, `settings/theme-picker.png`
-- 3 × 3 thumbnails under the family headings Тёмные / Светлые / Мультяшные, then the item
-  "Менять по времени суток".
+- One row of thumbnails per family heading (Dark / Light / Cartoon / Dark cartoon / Halloween), then
+  the item "Change by time of day". The rows scroll.
 - Initial focus: the saved theme. Focus = live preview, OK = save, Back = revert and close.
 
 ### Language picker — `design/mockups/settings-language.html`, `settings/language-picker.png`
-- Order: **Беларуская**, Русский, English, Polski, Deutsch, Français, **Как на телевизоре**
+- Order: **Беларуская**, Русский, English, Polski, Deutsch, Français, **Same as the TV**
   (shows the TV language as its value). Each language by its native name.
-- Default selection: "Как на телевизоре". If the TV language isn't one of the six, English.
+- Default selection: "Same as the TV". If the TV language isn't one of the six, English.
 - Initial focus: the saved choice (check mark). OK applies at once (the UI re-renders in
   the new language). Back closes.
 
 ### Empty favourites — `design/mockups/home-empty-favs.html`
-- When there are no favourites, the Favourites row shows one hint card (star icon, "Здесь пока
-  пусто", how to add: long-press OK, then "В избранное"). The card isn't focusable. Initial focus
+- When there are no favourites, the Favourites row shows one hint card (star icon, "Nothing here
+  yet", how to add: long-press OK, then "Add to favorites"). The card isn't focusable. Initial focus
   goes to the first app in the grid.
 
 ### App menu — `design/mockups/app-menu.html`, move mode `favourites-move.html`
 - Long-press OK on any tile opens a 290 dp popup under the tile (flipped above it when there
-  is no room). Items: В избранное / Убрать из избранного, Переместить (only for favourites),
-  Скрыть, О приложении, Удалить (the last three only for apps; a website shortcut has just the
+  is no room). Items: Add to favorites / Remove from favorites, Move (only for favourites),
+  Hide, App info, Uninstall (the last three only for apps; a website shortcut has just the
   favourites items). Initial focus is the first item. Back closes it, and focus
   returns to the tile. While the menu is open the tile keeps its focus look and Home takes no
   focus. The OK press that opened the menu (still held) cannot choose the first item.
-- Move mode: the tile gets a dashed ring and a pill "◀ ▶ Переместить · ОК — готово". Left/Right
+- Move mode: the tile gets a dashed ring and a pill "◀ ▶ Move · OK to finish". Left/Right
   swap the tile with its neighbour, OK drops it, and Back cancels (restores the old order).
 
 ### Website shortcuts — `design/mockups/shortcuts.html?state=list|edit`
-- Settings → "Ярлыки сайтов". List: a first row "Добавить ярлык", then one two-line row per shortcut
+- Settings → "Website shortcuts". List: a first row "Add shortcut", then one two-line row per shortcut
   (72×40 tile with the first letter, name, address without `https://`) and a muted hint note. OK on a row
-  edits it. Initial focus: "Добавить ярлык". Back closes the panel.
-- Editor: "Название" and "Адрес" fields (the text-input pattern: OK starts typing, Back stops it), then
-  buttons Сохранить / Удалить (existing only) / Отмена. Save with a bad name or address (anything but
+  edits it. Initial focus: "Add shortcut". Back closes the panel.
+- Editor: "Name" and "Address" fields (the text-input pattern: OK starts typing, Back stops it), then
+  buttons Save / Delete (existing only) / Cancel. Save with a bad name or address (anything but
   http/https with a host) shows one warning line and stays. Back leaves the editor first; focus returns to
   the row that was open.
 - On Home a shortcut is a normal tile (letter on a tinted colour picked from the address, name below the
   letter), in All apps and, from the app menu, in Favourites. OK opens the address with `ACTION_VIEW`.
 
 ### City search — `design/mockups/weather-search.html`
-- A 400 dp panel: title "Город", a search field (focus ring, caret), and up to three results
+- A 400 dp panel: title "City", a search field (focus ring, caret), and up to three results
   above the on-screen keyboard (Gboard takes the bottom ~168 dp). The first row is always
-  "Определять автоматически" (clears the manual city). Each result: city (16 sp) plus region and
+  "Detect automatically" (clears the manual city). Each result: city (16 sp) plus region and
   country (14 sp muted). OK on a result saves it and returns to the weather panel.
 - The field intercepts Back and Escape: the first press leaves the field (focus goes to the
   list), and the second closes the panel.
 
 ### Background picker — `design/mockups/settings-background.html`
-- A 560 dp panel: "Из темы" (check when selected), six colour swatches, and a 3-column grid of
+- A 560 dp panel: "From theme" (check when selected), six colour swatches, and a 3-column grid of
   images found on USB (title shows the count). Focus on a swatch or picture previews it on the
   screen behind, OK saves, and Back reverts. Without USB access, the grid is replaced by the
   adb hint note (as on the USB installer screen).
 - The six colours depend on the theme's text: dark colours for themes with light text, light colours for
   themes with dark text. A saved colour that the current theme's text cannot be read on is not applied.
-  A picture gets a scrim (dark under light text, light under dark text). Down from "Из темы" goes to the
+  A picture gets a scrim (dark under light text, light under dark text). Down from "From theme" goes to the
   saved colour (or the first). Pictures: up to 36, three per row, from the first two folder levels of each
   removable volume; OK stores a 960×540 copy in app storage.
 
 ### Hidden apps — `design/mockups/settings-hidden.html`
-- A list with a mini banner (72×40), the app name and "Показать". OK unhides and removes the row.
-  An empty list shows "Нет скрытых приложений" in muted text.
+- A list with a mini banner (72×40), the app name and "Show". OK unhides and removes the row.
+  An empty list shows "No hidden apps" in muted text.
 
 ### USB installer — `design/mockups/settings-usb.html?state=list|nopermission|installing|done`
-- List: `.apk` files from USB volumes (mini icon, name, "version · size", action "Установить", or
-  "Обновить" when the package is installed with a lower version). Empty: "На флешке нет файлов .apk".
-- No permission: a warning note with the exact adb command and a "Проверить снова" button.
-- Installing: one row "Устанавливается…" plus a hint to confirm in the system dialog.
-- Done: a row with a check, then buttons "Открыть" and "Готово".
+- List: `.apk` files from USB volumes (mini icon, name, "version · size", action "Install", or
+  "Update" when the package is installed with a lower version). Empty: "No .apk files on the USB drive".
+- No permission: a warning note with the exact adb command and a "Check again" button.
+- Installing: one row "Installing…" plus a hint to confirm in the system dialog.
+- Done: a row with a check, then buttons "Open" and "Done".
 - Built beyond the mockup (same components, screenshot-tested in `app/src/test/snapshots/settings-usb-*`):
-  "unknown apps not allowed" (a note with its own adb command and "Проверить снова"), and "failed" / "cancelled"
-  (the archive row with the message and "Проверить снова"). An archive that is already installed (same or newer
-  version) reads "Установлено" and does nothing on OK. The drive is scanned only when the page opens or on
-  "Проверить снова" / "Готово".
+  "unknown apps not allowed" (a note with its own adb command and "Check again"), and "failed" / "cancelled"
+  (the archive row with the message and "Check again"). An archive that is already installed (same or newer
+  version) reads "Installed" and does nothing on OK. The drive is scanned only when the page opens or on
+  "Check again" / "Done".
 
 ### Profile photo — no separate mockup (same parts as the background picker)
 - "No photo" (person icon, check mark when chosen), then "Images from USB" as the background picker's
@@ -228,7 +228,7 @@ For each screen: initial focus, Back, Home, and the mockup.
   rows (Open-Meteo CC BY 4.0, Nunito SIL OFL 1.1, Android components Apache 2.0).
 
 ### Theme schedule — `design/mockups/settings-schedule.html`
-- A switch "Менять автоматически", and two theme rows (day, evening/night) that open the theme
+- A switch "Change automatically", and two theme rows (day, evening/night) that open the theme
   picker. A note shows today's sunset and sunrise, or says it uses 07:00 and 20:00 when no weather.
 
 ### HDMI prompt settings — `design/mockups/settings-hdmi.html`
@@ -237,7 +237,7 @@ For each screen: initial focus, Back, Home, and the mockup.
 
 ### iPhone hint — `design/mockups/iphone-hint.html`
 - A centred dialog (520 dp) shown when AirPlay Server isn't installed: what to install and how
-  to mirror from the iPhone; buttons "Установить с флешки" (focused) and "Закрыть".
+  to mirror from the iPhone; buttons "Install from USB" (focused) and "Close".
 
 ## 6. Motion
 

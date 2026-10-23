@@ -20,7 +20,8 @@ Persist everything in one Preferences DataStore. Keys: `theme`, `theme_schedule`
 
 ## Themes
 
-All nine themes ship: midnight, graphite, aurora, paper, sky, sage, valley, ocean and space.
+All fourteen themes ship: midnight, graphite, aurora, paper, sky, sage, valley, ocean, space, gloom, haunted,
+monsters, halloween-night and halloween-day.
 The tokens are in `design/mockups/themes.css`, which is the source of truth for the Kotlin
 values.
 
@@ -56,7 +57,7 @@ data class ThemeSpec(
 
 The launcher's own language, independent of the TV's. The list order is the owner's:
 **Беларуская** (always first), Русский, English, Polski, Deutsch, Français, then
-"Как на телевизоре" (follow the TV) last. Show each language by its native name.
+"Same as the TV" (follow the TV) last. Show each language by its native name.
 
 **Default: follow the TV.** Android always knows the system language
 (`Resources.getSystem().configuration.locales`). If it is one of the six, use it. Otherwise use

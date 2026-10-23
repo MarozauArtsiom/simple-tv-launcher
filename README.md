@@ -1,183 +1,365 @@
 # Simple TV Launcher
 
-Домашний экран для одного телевизора: **Xiaomi TV A Pro 2025 55"** (Google TV). Без рекламы,
-без рекомендаций сервисов, без аналитики и без фоновых служб. Показывает только ваши приложения
-и то, что вы сами попросили: часы, погоду, входы HDMI, ярлыки сайтов.
+A calm home screen for Android TV and Google TV. No ads, no "recommended for you" rows, no
+tracking and no background services. It shows your apps and the few things you ask for: a clock,
+the weather, HDMI inputs and website shortcuts, in one of fourteen themes.
 
-Не ставится из Google Play: устанавливается по `adb` или с флешки.
+![Home screen in the Space theme](docs/images/home.jpg)
 
-## Что умеет
+It is not on Google Play. You install it with `adb` (or from a USB drive once it is running).
 
-- **Главный экран:** часы и дата, ряд **«Избранное»** (порядок задаёте вы) и сетка **«Все приложения»**
-  (5 в ряд, чаще запускаемые выше). Для приложений без баннера рисуется свой.
-- **Долгое нажатие OK** на плитке — меню: в избранное / убрать, переместить, скрыть, о приложении, удалить.
-- **Верхняя панель:** погода, входы HDMI (точка — есть сигнал), кнопка «iPhone» (открывает AirPlay Server),
-  круглая кнопка настроек с вашим фото (или значком человека).
-- **Ярлыки сайтов** (Настройки → Ярлыки сайтов): плитки, которые открывают адрес в браузере (рекомендуется TV Bro).
-- **HDMI:** когда на входе появляется сигнал, показывается карточка «Переключить?». Поверх других приложений
-  она работает после выдачи разрешения (ниже).
-- **Погода:** город определяется по IP или выбирается вручную; обновляется только пока главный экран на виду.
-- **Настройки:** Wi-Fi, Bluetooth, звук, картинка, таймер сна, настройки Android; а также тема, фон, язык,
-  погода, сигнал на HDMI, скрытые приложения, установка с флешки, «О лаунчере».
-- **9 тем** (3 тёмные, 3 светлые, 3 мультяшные) с предпросмотром и расписанием «день / ночь».
-- **Языки:** беларуская, русский, English, polski, Deutsch, français и «как на телевизоре».
-- **Фон:** картинка темы, один цвет или изображение с флешки.
-- **Установить с флешки:** находит `.apk` на флешке и ставит их через системный установщик (в том числе обновление самого лаунчера).
+- Built for and tested on a **Xiaomi TV A Pro 2025 55"** (Google TV, Android 11).
+- Should work on other **Android TV / Google TV devices with Android 11 (API 30) or newer**, but
+  only the Xiaomi TV has been tested. Making it the default Home on Google TV needs `adb` (see below).
 
-**Как открыть настройки:** кнопка «Меню» на пульте с главного экрана, или «Вверх» с первого ряда и «Вправо» до
-круглой кнопки с фото справа вверху. Фото выбирается в Настройки → Фото профиля (картинка с флешки).
+## Contents
 
-Кнопки Назад, Домой и включение телевизора возвращают на первый элемент «Избранного».
+- [Features](#features)
+- [Themes](#themes)
+- [Requirements](#requirements)
+- [Install: quick start](#install-quick-start)
+- [1. Get the APK](#1-get-the-apk)
+- [2. Prepare the TV](#2-prepare-the-tv)
+- [3. Install the launcher](#3-install-the-launcher)
+- [4. Grant permissions](#4-grant-permissions)
+- [5. Make it the default Home screen](#5-make-it-the-default-home-screen)
+- [6. Optional extras](#6-optional-extras)
+- [7. Update](#7-update)
+- [Troubleshooting](#troubleshooting)
+- [Development](#development)
+- [Privacy](#privacy)
+- [License](#license)
 
-## 1. Как получить APK
+## Features
 
-Сборка идёт в GitHub Actions при каждом коммите. Скачайте артефакт **`debug-apk`** со страницы запуска
-workflow «Android» (вкладка *Actions* репозитория) и распакуйте `app-debug.apk`.
+**Home screen**
+- Clock and date, a weather chip, and a top bar with **Inputs**, **Timer**, **iPhone** and a round
+  profile button that opens Settings.
+- **Favorites** row in your own order, and an **All apps** grid (5 per row) sorted by how often you
+  open each app. Apps without a TV banner get a generated one (icon + name).
+- **Long-press OK** on a tile: Add to / Remove from favorites, Move, Hide, App info, Uninstall.
+- **Hidden** section at the bottom of Home (collapsed), and a Hidden apps page in Settings.
+- **Website shortcuts:** tiles that open a web address in a browser (TV Bro is recommended).
+- The section without focus fades, so you always see where you are. Back, Home and turning the TV
+  on bring focus back to the first favorite.
 
-Пакет этой сборки: `io.github.marozauartsiom.tvlauncher.debug`. Все сборки подписаны одним и тем же ключом
-(`app/debug.keystore`), поэтому новая версия ставится поверх старой с сохранением настроек.
+**TV controls**
+- **Inputs:** one button with a popup that lists every HDMI input and whether something is
+  connected; OK switches to it. A green dot shows when any input has a device.
+- **HDMI signal prompt:** when a device on an HDMI input turns on, a small card asks
+  "Signal on HDMI 2 — Switch / Not now" (also over other apps, with a permission).
+- **Turn off TV** (Settings) and a **sleep timer** (Timer chip), through a small accessibility helper
+  you enable once over `adb`.
+- **Settings tiles** for Wi-Fi, Bluetooth, Sound, Picture, Sleep timer and the Android settings
+  (tiles the TV can't open are hidden).
 
-> Релизная сборка (`./gradlew :app:assembleRelease`) занимает около 3 МБ, но без вашего ключа остаётся
-> неподписанной, и поставить её нельзя. Ключ в репозиторий не кладётся.
+**Weather**
+- Current weather in the top bar and a panel with "feels like", wind, the next hours and 5 days.
+- City detected by IP or chosen by hand. Data from [Open-Meteo](https://open-meteo.com). It is
+  fetched only while the home screen is visible.
 
-## 2. Подготовка телевизора и установка
+**Personalisation**
+- **14 themes** in five families with live preview, plus an optional **day / night schedule**
+  (one theme by day, another after sunset).
+- **Background:** the theme's art, one of six colours, or a picture from a USB drive.
+- **Profile photo** for the Settings button (a picture from USB).
+- **Languages:** Belarusian, Russian, English, Polish, German, French, or "Same as the TV".
 
-1. Настройки → Система → О системе → **Сборка Android TV OS**: нажмите OK 7 раз — включатся «Параметры разработчика».
-2. Настройки → Система → Параметры разработчика → включите **Отладку по USB** (на Google TV 12+ есть ещё *Беспроводная отладка*).
-3. С компьютера в той же сети:
+**Other**
+- **Install from USB:** finds `.apk` files on a USB drive and installs or updates them (including the
+  launcher itself) through the system installer.
+- **iPhone button:** opens [AirPlay Server](https://github.com/jqssun/android-airplay-server) for
+  iPhone screen mirroring, and explains how to install it if it is missing.
+- **Safe mode:** if the launcher crashes twice within 10 minutes, it starts with the default theme and
+  only your apps and Settings, so the TV never ends up on a black screen.
 
-   ```bash
-   adb connect <ip-телевизора>:5555
-   # или, с беспроводной отладкой:
-   adb pair <ip-телевизора>:<порт-сопряжения> <код>  &&  adb connect <ip-телевизора>:<порт>
-   ```
+## Themes
 
-   Разрешите отладку на экране телевизора и отметьте «Всегда разрешать».
-4. Установка:
+![All fourteen themes](docs/images/themes.jpg)
 
-   ```bash
-   adb install -r app-debug.apk
-   ```
+| # | Theme | Family | Look | Focus colour |
+|---|---|---|---|---|
+| 1 | Midnight (default) | Dark | Nature art under a dark scrim | white |
+| 2 | Graphite | Dark | Near-black gradient, minimal, uppercase titles | amber |
+| 3 | Aurora | Dark | Soft northern lights, glowing focus | white + violet glow |
+| 4 | Paper | Light | Warm off-white, soft shadows | dark ink |
+| 5 | Sky | Light | Blue sky with clouds | blue |
+| 6 | Sage | Light | Calm green hills | green |
+| 7 | Sunny valley | Cartoon | Hills, a little house, a smiling sun | yellow |
+| 8 | Underwater | Cartoon | Fish, bubbles, seaweed | coral |
+| 9 | Space | Cartoon | Rocket, smiling moon, ringed planet | yellow glow |
+| 10 | Gloomy hill | Dark cartoon | Huge moon striped by clouds, ravens, spiral hill, twisted trees | pale moonlight |
+| 11 | Haunted house | Dark cartoon | Sickly moon with bats, crooked house, graveyard, ghost, spider | toxic green |
+| 12 | Monster party | Dark cartoon | Violet night, party lights, a moon in a party hat, monsters peeking over the apps | pink |
+| 13 | Halloween night | Halloween | Orange moon with a witch, glowing pumpkins, a black cat on a fence | orange |
+| 14 | Halloween day | Halloween | Autumn sky, falling leaves, a friendly ghost, smiling pumpkins | violet |
 
-После установки лаунчер уже виден в списке приложений телевизора (как обычное приложение). Откройте его оттуда,
-чтобы убедиться, что он работает.
+Cartoon themes use the rounded [Nunito](https://fonts.google.com/specimen/Nunito) font, "sticker"
+cards and a playful tilted focus. Change the theme in **Settings → Theme**: focusing a thumbnail
+previews it, OK saves it, Back cancels. **Change by time of day** picks a daytime theme and an
+evening theme (for example Halloween day and Halloween night) and switches at sunset and sunrise.
 
-## 3. Сделать лаунчер домашним экраном
+## Requirements
 
-На Google TV обычно нет выбора «приложение по умолчанию для Домой», кнопка «Домой» всегда ведёт в стандартный
-лаунчер. Способы идут от самого мягкого к самому грубому: берите первый, после которого кнопка «Домой» ведёт на
-наш лаунчер **и после перезагрузки**. Ниже `<pkg>` = `io.github.marozauartsiom.tvlauncher.debug`.
+- An **Android TV or Google TV with Android 11+**, on the same network as your computer.
+- A computer with **`adb`** (Android platform-tools).
+- To build from source: **JDK 17+** (21 recommended) and the **Android SDK** (platform 37,
+  build-tools 36). The Gradle wrapper downloads Gradle itself.
 
-Сначала запишите, что есть сейчас (чтобы вернуть как было):
+## Install: quick start
+
+The whole path from a fresh clone to the launcher on your TV. `TV_IP` is your TV's address
+(Settings → Network & Internet on the TV). Each step is explained in the sections below.
+
+```bash
+git clone https://github.com/MarozauArtsiom/simple-tv-launcher.git
+cd simple-tv-launcher
+./gradlew :app:assembleDebug                      # needs JDK + Android SDK, see "1. Get the APK"
+
+adb connect TV_IP:5555                            # accept the prompt on the TV ("Always allow")
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+
+PKG=io.github.marozauartsiom.tvlauncher.debug
+adb shell appops set $PKG SYSTEM_ALERT_WINDOW allow
+adb shell appops set --uid $PKG MANAGE_EXTERNAL_STORAGE allow
+adb shell appops set --uid $PKG REQUEST_INSTALL_PACKAGES allow
+adb shell appops set $PKG SCHEDULE_EXACT_ALARM allow
+
+# Make it the Home screen (method 2 below; read its side effects first)
+adb shell pm disable-user --user 0 com.google.android.apps.tv.launcherx
+adb shell pm disable-user --user 0 com.google.android.tungsten.setupwraith
+adb shell input keyevent KEYCODE_HOME
+```
+
+## 1. Get the APK
+
+### Option A: download a ready APK
+
+Every push builds the app in GitHub Actions. Open the repository's **Actions** tab, pick the latest
+green **Android** run and download the **`debug-apk`** artifact (needs a GitHub account), then unzip
+`app-debug.apk`.
+
+### Option B: build it yourself
+
+**macOS (Homebrew):**
+
+```bash
+brew install openjdk@21
+brew install --cask android-commandlinetools android-platform-tools
+export JAVA_HOME="$(brew --prefix openjdk@21)"
+export ANDROID_SDK_ROOT="$HOME/android-sdk"
+yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --licenses
+sdkmanager --sdk_root="$ANDROID_SDK_ROOT" "platforms;android-37.0" "build-tools;36.0.0" "platform-tools"
+
+git clone https://github.com/MarozauArtsiom/simple-tv-launcher.git
+cd simple-tv-launcher
+echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
+./gradlew :app:assembleDebug
+```
+
+**Linux (Debian / Ubuntu):**
+
+```bash
+sudo apt install openjdk-21-jdk adb unzip curl git
+git clone https://github.com/MarozauArtsiom/simple-tv-launcher.git
+cd simple-tv-launcher
+scripts/setup-android-sdk.sh      # SDK into ~/android-sdk and writes local.properties
+./gradlew :app:assembleDebug
+```
+
+The APK is `app/build/outputs/apk/debug/app-debug.apk`. Its package is
+`io.github.marozauartsiom.tvlauncher.debug`. Every debug build (local and CI) is signed with the
+same throwaway key (`app/debug.keystore`, password `android`), so a newer APK installs over an older
+one and keeps your settings.
+
+> A release build (`./gradlew :app:assembleRelease`, about 3 MB, minified with R8) needs your own
+> signing key; none is kept in the repository.
+
+## 2. Prepare the TV
+
+1. **Settings → System → About → Android TV OS build:** press OK seven times until it says you are
+   a developer.
+2. **Settings → System → Developer options:** turn on **USB debugging**. If the TV has
+   **Wireless debugging** or **Network debugging**, turn it on too.
+3. Find the TV's IP address in **Settings → Network & Internet**.
+
+## 3. Install the launcher
+
+```bash
+adb connect TV_IP:5555
+# With "Wireless debugging" (pairing code on the TV screen) use instead:
+#   adb pair TV_IP:PAIRING_PORT PAIRING_CODE && adb connect TV_IP:PORT
+adb devices                        # the TV must be listed as "device", not "unauthorized"
+adb install -r app-debug.apk       # or app/build/outputs/apk/debug/app-debug.apk
+```
+
+Accept the debugging prompt on the TV and tick **Always allow**. The launcher now appears in the TV's
+app list like any other app; open it from there to try it before making it the Home screen.
+
+## 4. Grant permissions
+
+The launcher asks only for what its features need. These are granted once over `adb`; if one is
+missing, the feature's page shows the exact command and a **Check again** button.
+
+```bash
+PKG=io.github.marozauartsiom.tvlauncher.debug
+adb shell appops set $PKG SYSTEM_ALERT_WINDOW allow                 # HDMI prompt over other apps
+adb shell appops set --uid $PKG MANAGE_EXTERNAL_STORAGE allow       # read USB drives (pictures, .apk)
+adb shell appops set --uid $PKG REQUEST_INSTALL_PACKAGES allow      # install apps from USB
+adb shell appops set $PKG SCHEDULE_EXACT_ALARM allow                # sleep timer fires on time
+```
+
+**Turn off TV and sleep timer.** An ordinary app can't power the TV off, so the launcher ships a tiny
+accessibility helper. It reads nothing, receives no events and acts only when you press "Turn off TV"
+or the timer ends: it opens the system power menu and presses "Power off". Enable it once (this adds
+it to the services already enabled and turns none off):
+
+```bash
+adb shell 'svc=io.github.marozauartsiom.tvlauncher.debug/io.github.marozauartsiom.tvlauncher.system.power.PowerService; cur=$(settings get secure enabled_accessibility_services); case "$cur" in null|"") new=$svc;; *"$svc"*) new=$cur;; *) new="$cur:$svc";; esac; settings put secure enabled_accessibility_services "$new"; settings put secure accessibility_enabled 1'
+adb shell settings get secure enabled_accessibility_services      # must list ...PowerService
+```
+
+If your TV names the power-off item differently, the menu just stays open; please open an issue with
+the item's name. Turn the helper off in Settings → Accessibility, or with
+`adb shell settings put secure enabled_accessibility_services null` (this clears all services).
+
+## 5. Make it the default Home screen
+
+Google TV usually hides the "default Home app" choice, so the Home button keeps opening the stock
+launcher. Try the methods in order and keep the first one that still works **after a reboot**.
+
+Write down the current state first:
 
 ```bash
 adb shell cmd package query-activities --brief -a android.intent.action.MAIN -c android.intent.category.HOME
-adb shell cmd role get-role-holders android.app.role.HOME
+adb shell dumpsys role | grep -A1 'name=android.app.role.HOME'
 ```
 
-**Способ 1. Роль «Домой» по adb (ничего не ломает):**
+**Method 1: give it the HOME role (harmless).**
 
 ```bash
-adb shell cmd role add-role-holder --user 0 android.app.role.HOME <pkg>
-adb shell cmd role get-role-holders android.app.role.HOME      # проверка
+adb shell cmd role add-role-holder --user 0 android.app.role.HOME io.github.marozauartsiom.tvlauncher.debug
+adb shell input keyevent KEYCODE_HOME
 ```
 
-Нажмите «Домой», перезагрузите телевизор и нажмите «Домой» ещё раз. На некоторых сборках роль сбрасывается — тогда способ 2.
+Press Home, reboot, press Home again. Many Google TV builds ignore the role (the Xiaomi TV A Pro 2025
+does); then use method 2. Undo:
+`adb shell cmd role add-role-holder --user 0 android.app.role.HOME com.google.android.apps.tv.launcherx`
 
-Вернуть: `adb shell cmd role add-role-holder --user 0 android.app.role.HOME com.google.android.apps.tv.launcherx`
-
-**Способ 2. Отключить стандартный лаунчер (работает почти везде, есть побочные эффекты):**
+**Method 2: disable the stock launcher (works almost everywhere, has side effects).**
 
 ```bash
 adb shell pm disable-user --user 0 com.google.android.apps.tv.launcherx
-adb shell pm disable-user --user 0 com.google.android.tungsten.setupwraith
+adb shell pm disable-user --user 0 com.google.android.tungsten.setupwraith   # setup fallback that re-enables it
+adb shell input keyevent KEYCODE_HOME
 ```
 
-Побочные эффекты: пропадают вкладки «Для вас» и «Прямой эфир», профили и рекомендации; могут перестать работать
-некоторые кнопки пульта (например, YouTube); после обновления системы пакеты могут включиться снова.
-
-Вернуть:
+Side effects: Google TV's own tabs, profiles and recommendations are gone; some remote buttons that
+go through the stock launcher (for example YouTube) may stop working; a system update may turn the
+stock launcher back on. Undo:
 
 ```bash
 adb shell pm enable com.google.android.apps.tv.launcherx
 adb shell pm enable com.google.android.tungsten.setupwraith
 ```
 
-> **Чёрный экран.** Если лаунчер вылетает при запуске, а стандартный отключён, телевизор покажет чёрный экран.
-> Подключитесь по `adb` и выполните команды «Вернуть» выше. После двух падений за 10 минут лаунчер сам
-> переходит в безопасный режим (тема по умолчанию, минимум интерфейса: сетка приложений и настройки).
+> **Black screen?** If the launcher crashes while the stock one is disabled, the TV shows a black
+> screen. Connect with `adb` and run the undo commands above. After two crashes within 10 minutes the
+> launcher starts in safe mode by itself.
 
-Способ через службу доступности (как у Projectivy) в лаунчер не встроен: он держит фоновую службу, а это против
-правил проекта.
+## 6. Optional extras
 
-## 4. Разрешения (один раз по adb)
+- **TV Bro** (web browser for TVs, [github.com/truefedex/tv-bro](https://github.com/truefedex/tv-bro),
+  Releases): website shortcuts open in it. `adb install tv-bro.apk`
+- **AirPlay Server** (`io.github.jqssun.airplay`,
+  [github.com/jqssun/android-airplay-server](https://github.com/jqssun/android-airplay-server), Releases):
+  iPhone screen mirroring; the **iPhone** button opens it. Download `app-release.apk`, then:
 
-Лаунчер просит только то, что нужно его функциям. Эти три выдаются командами. Если разрешения нет, страница
-функции сама показывает нужную команду с кнопкой «Проверить снова».
+  ```bash
+  adb install -r app-release.apk
+  adb shell appops set io.github.jqssun.airplay SYSTEM_ALERT_WINDOW allow   # lets mirroring pop up over Home
+  ```
 
-| Для чего | Команда |
+  Open it once on the TV; it keeps running in the background and starts at boot. On the iPhone:
+  Control Center → Screen Mirroring → "Android AirPlay".
+- Keyboard: the system one (Gboard). Screensaver: Google's Ambient mode. Neither is built into the
+  launcher.
+
+Both apps can also be put on a USB drive and installed with **Settings → Install from USB**.
+
+## 7. Update
+
+Get a newer `app-debug.apk` and run `adb install -r app-debug.apk`, or put it on a USB drive and use
+**Settings → Install from USB** (the file shows **Update**). Settings, favorites and permissions stay.
+
+## Troubleshooting
+
+| Problem | Fix |
 |---|---|
-| Карточка HDMI поверх других приложений | `adb shell appops set <pkg> SYSTEM_ALERT_WINDOW allow` |
-| Чтение флешки (картинки фона, `.apk`) | `adb shell appops set --uid <pkg> MANAGE_EXTERNAL_STORAGE allow` |
-| Установка приложений с флешки | `adb shell appops set --uid <pkg> REQUEST_INSTALL_PACKAGES allow` |
-| Таймер сна точно в срок (без этого может опоздать на пару минут) | `adb shell appops set <pkg> SCHEDULE_EXACT_ALARM allow` |
+| `adb devices` shows `unauthorized` | Accept the prompt on the TV screen (tick "Always allow"), then `adb connect` again |
+| `adb connect` times out | Debugging is off or the TV changed its IP; check steps in "2. Prepare the TV" |
+| Home still opens the stock launcher | Use method 2 in "5. Make it the default Home screen" |
+| Black screen after Home | Run the method 2 undo commands |
+| A page asks you to run a command | Run it on your computer (section 4) and press **Check again** |
+| No weather | It needs internet; pick the city by hand in **Settings → Weather** |
+| The HDMI card doesn't appear over apps | Grant `SYSTEM_ALERT_WINDOW` (section 4) |
+| "Turn off TV" asks for a helper | Enable the accessibility helper (section 4) |
+| Safe mode note on Home | The launcher crashed twice in a row; it clears itself after 10 minutes. Please open an issue |
 
-**Выключение телевизора** (кнопка «Выключить телевизор» в настройках и «Таймер» вверху). Обычное приложение
-не может выключить ТВ, поэтому это делает служба доступности лаунчера: она ничего не читает и включается только
-по вашей команде. Один раз включите её (команда добавляет службу к уже включённым, ничего не отключая):
+How to open Settings: the **Menu** key on the remote, or Up from the first row and Right to the round
+profile button in the top-right corner.
+
+## Development
+
+**Stack:** Kotlin, Jetpack Compose with `androidx.tv:tv-material`, one activity, DataStore, manual
+DI. No ad, analytics or tracking SDKs. Versions and architecture: [`docs/tech-stack.md`](docs/tech-stack.md).
 
 ```bash
-adb shell 'svc=io.github.marozauartsiom.tvlauncher.debug/io.github.marozauartsiom.tvlauncher.system.power.PowerService; cur=$(settings get secure enabled_accessibility_services); case "$cur" in null|"") new=$svc;; *"$svc"*) new=$cur;; *) new="$cur:$svc";; esac; settings put secure enabled_accessibility_services "$new"; settings put secure accessibility_enabled 1'
+./gradlew :app:assembleDebug                 # build
+./gradlew :app:testDebugUnitTest             # unit + Robolectric UI tests
+./gradlew :app:verifyRoborazziDebug          # screenshot tests against app/src/test/snapshots
+./gradlew :app:recordRoborazziDebug          # re-record screenshots after an intended UI change
+./gradlew :app:assembleRelease               # R8 release build (needs your signing key)
+adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-Проверка: `adb shell settings get secure enabled_accessibility_services` — в списке должна быть `…PowerService`.
+CI (GitHub Actions, `.github/workflows/android.yml`) runs the build, all tests and the screenshot
+check on every push and uploads the debug APK.
 
-По «Да» служба открывает системное меню питания и сама нажимает «Выключить». Если на вашем ТВ пункт называется
-иначе, меню просто останется открытым — нажмите сами и сообщите название.
-
-Интернет нужен только погоде и поиску города и только пока открыт главный экран. Остальное работает без сети.
-
-## 5. Что ещё поставить
-
-- **TV Bro** — браузер для телевизора (github.com/truefedex/tv-bro, раздел Releases): `adb install tv-bro.apk`.
-  В него открываются ярлыки сайтов.
-- **AirPlay Server** (`io.github.jqssun.airplay`, github.com/jqssun/android-airplay-server) — показ экрана iPhone.
-  Кнопка «iPhone» в верхней панели открывает это приложение; если оно не установлено, лаунчер подскажет, что делать.
-- Клавиатура — Gboard, заставка — стандартный режим Ambient от Google: в лаунчер они не встроены.
-
-Обе программы можно положить на флешку и поставить через **Настройки → Установить с флешки**.
-
-## 6. Обновление
-
-Скачайте новый `app-debug.apk`, положите на флешку и откройте **Настройки → Установить с флешки** (рядом с
-файлом будет надпись «Обновить»). Или с компьютера: `adb install -r app-debug.apk`.
-
-## 7. Если что-то не так
-
-| Симптом | Что делать |
+| Path | What it holds |
 |---|---|
-| «Домой» открывает стандартный лаунчер | Способ 2 из раздела 3 |
-| Чёрный экран после «Домой» | Команды «Вернуть» из раздела 3 |
-| Страница «Установить с флешки» просит команду | Выполните её на компьютере (раздел 4) и нажмите «Проверить снова» |
-| Нет погоды | Нужен интернет; город можно выбрать вручную: Настройки → Погода |
-| Карточка HDMI не появляется поверх приложений | Выдайте `SYSTEM_ALERT_WINDOW` (раздел 4) |
-| Лаунчер в безопасном режиме | Он падал дважды подряд. Режим снимается сам, когда с последнего падения прошло 10 минут (или после 30 секунд нормальной работы) |
+| `app/src/main/kotlin/…/tvlauncher/` | The app: `ui/` (home, settings, theme, weather…), `data/`, `system/` |
+| `app/src/main/res/values*/strings.xml` | UI strings in six languages (English is the fallback) |
+| `app/src/test/` | Unit, Robolectric and Roborazzi screenshot tests; goldens in `snapshots/` |
+| `design/mockups/` | HTML mockups (Russian UI), theme tokens in `themes.css`, background art in `assets/bg/` |
+| `docs/requirements.md` | Requirements and decisions |
+| `docs/ui-spec.md` | Every screen and component, the theme table and tokens |
+| `docs/tech-stack.md` | Versions, libraries, architecture, testing, CI |
+| `docs/sow.md`, `docs/tasks.md`, `docs/progress.md` | Scope, ordered tasks with the on-TV checklist, and the work log |
+| `CLAUDE.md`, `.claude/skills/` | Instructions and skills for AI coding agents working on this repo |
 
-## Что проверить на телевизоре после установки
+**Adding a theme:** draw the background as an SVG in `design/mockups/assets/bg/`, add the tokens to
+`design/mockups/themes.css`, preview it with
+`node .claude/skills/tv-ui-design/scripts/render-mockup.cjs "design/mockups/home.html?t=<id>"`
+(needs Playwright), then port it to `ui/theme/Themes.kt` (`ThemeCssSyncTest` checks they match),
+add `bg_<id>.webp` and `thumb_<id>.webp` to `res/drawable-nodpi`, the name in all six
+`strings.xml`, and record the screenshots.
 
-Это нельзя проверить из облака; список лежит в `docs/tasks.md`, раздел «On the TV»:
+## Privacy
 
-1. `docs/device/` — результаты `probe-device.sh`; уточнить minSdk.
-2. Какой способ из раздела 3 работает, записать в `docs/device/default-home.md`.
-3. Первый кадр (`adb shell am start -W …`) быстрее 1 с; `dumpsys meminfo` не больше 120 МБ.
-4. HDMI: карточка при включении приставки; настоящие баннеры; белорусские даты; погода с городом «Авто».
-5. Записать Baseline Profile (`./gradlew :app:generateBaselineProfile` при подключённом телевизоре), закоммитить, пересобрать release.
-6. Коды кнопок пульта и диагностика голоса (`docs/requirements.md`, §7).
+- No ads, no analytics, no tracking, no accounts.
+- Network access is used only for the weather: [Open-Meteo](https://open-meteo.com) for the forecast
+  and city search, and an IP geolocation lookup ([ipinfo.io](https://ipinfo.io), falling back to
+  [ipapi.co](https://ipapi.co)) when the city is set to automatic. It runs only while the home screen
+  is visible.
+- Nothing runs in the background. The exceptions are ones you turn on yourself: the power-off helper
+  (receives no events) and a single alarm while a sleep timer is set.
 
-## Для разработчика
+## License
 
-- Документы: `docs/requirements.md` (требования и решения), `docs/ui-spec.md` (экраны), `docs/tech-stack.md`
-  (версии и архитектура), `docs/tasks.md` и `docs/progress.md` (ход работ, «Decisions to review»).
-- Макеты: `design/mockups/`; скриншотные тесты (Roborazzi): `app/src/test/snapshots/`.
-- Проверка перед коммитом: `scripts/gradlew-retry.sh :app:assembleDebug :app:testDebugUnitTest :app:verifyRoborazziDebug`.
-- Стек: Kotlin, Jetpack Compose + `androidx.tv:tv-material`, одна активность, DataStore, без сторонних SDK рекламы и аналитики.
+[MIT](LICENSE) © Artsiom Marozau.
+
+Third-party parts keep their own licenses: the Nunito font is under the
+[SIL Open Font License 1.1](app/src/main/assets/licenses/OFL-Nunito.txt); weather data is provided by
+[Open-Meteo.com](https://open-meteo.com) under CC BY 4.0; the Google skills in `.claude/skills/` are
+under Apache 2.0 (see each `LICENSE.txt`). This project is not affiliated with Google or Xiaomi.

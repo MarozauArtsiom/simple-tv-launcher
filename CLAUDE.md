@@ -4,8 +4,8 @@ A custom home-screen launcher for one specific TV: **Xiaomi TV A Pro 2025 55"**
 (Google TV, 4K QLED, HDMI 2.1).
 
 ## Language
-The owner writes in Russian, so reply in Russian. Code, identifiers, commit messages and
-skill files stay in English.
+Reply in the language the user writes in. Code, identifiers, commit messages, docs and skill
+files stay in English. UI strings ship in six languages (`app/src/main/res/values*/strings.xml`).
 
 ## Documents: the source of truth
 | File | Holds |
@@ -17,7 +17,7 @@ skill files stay in English.
 | `docs/sow.md` | Scope, deliverables, acceptance criteria and milestones of v1 |
 | `docs/tasks.md` | Ordered tasks T01–T27 with verification gates, plus the on-TV checklist |
 | `docs/progress.md` | Log of finished tasks, "Decisions to review", blockers. Resume from the first unchecked task |
-| `docs/run-prompt.md` | The single prompt (in Russian) the owner pastes to run all of v1 |
+| `docs/run-prompt.md` | The single prompt that runs all of v1 (T01–T27) in one session |
 
 Workflow: requirement → mockup → owner approves → code that matches `ui-spec.md` and the
 mockup → Roborazzi screenshot test. Before scaffolding or upgrading, re-check versions with

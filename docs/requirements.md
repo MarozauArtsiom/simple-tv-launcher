@@ -153,7 +153,7 @@ help with mirroring an iPhone screen.
   of a VPN), pick it once by hand: a search by name in Russian. "Automatic" stays one press away.
 - Data from Open-Meteo: free, no API key, no ads. The panel shows only the weather: no text
   about the source or the location mode (the owner's request). The licence credit lives in
-  launcher Settings → «О лаунчере».
+  launcher Settings → About.
 - Network use: only while the home screen is on screen, at most every 30 minutes, a few KB per
   update. The last result is cached and shown instantly. Nothing runs in the background.
 - This is the first network feature, so the launcher gets the `INTERNET` permission.
@@ -164,7 +164,7 @@ help with mirroring an iPhone screen.
 - The owner liked all nine, so all of them ship: dark (Midnight, Graphite, Aurora), light (Paper,
   Sky, Sage), and cartoon (Sunny valley, Underwater, Space).
 - 2026-10-23: the owner asked for three dark cartoon themes (gloomy, horror, dark but cheerful) and a
-  Halloween pair (dark and light): Мрачный холм, Привидения, Монстрики, Хеллоуин, Хеллоуин днём.
+  Halloween pair (dark and light): Gloomy hill, Haunted house, Monster party, Halloween night and Halloween day.
   The first "gloomy" draft read as sad (rain, a crying cloud), so it became a Burton-like hill; the
   first monster party had white chips and too little colour, so it became darker with a three-colour
   palette. Each new theme is a separate family row in the picker.
@@ -188,9 +188,9 @@ help with mirroring an iPhone screen.
 ## 13. Languages ✅
 
 - The launcher's own language, in this order (the owner's request): **Беларуская** first, then
-  Русский, English, Polski, Deutsch, Français, and "Как на телевизоре" last. Each language is shown
+  Русский, English, Polski, Deutsch, Français, and "Same as the TV" last. Each language is shown
   by its native name.
-- **Default: the TV's language** ("Как на телевизоре"). If the TV's language is not one of the six,
+- **Default: the TV's language** ("Same as the TV"). If the TV's language is not one of the six,
   the launcher uses **English**. Android always reports the system language, so no extra
   permission is needed.
 - Everything the launcher shows switches: titles, dates, weather texts and city names. App names

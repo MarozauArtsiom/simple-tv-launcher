@@ -84,7 +84,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   Following the existing mockups and `settings.css`, create HTML mockups for:
   1. the empty-favourites hint card;
   2. the app menu (long press) and the "move" mode in Favourites;
-  3. city search (text field, results, "Автоматически" entry);
+  3. city search (text field, results, "Detect automatically" entry);
   4. the background picker (from theme / colours / USB images grid);
   5. hidden apps (list with "show again");
   6. the USB installer (APK list, permission-missing state, installing state);
@@ -182,7 +182,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
 
 - [x] **T13b Shortcut tiles.** (Added during the run: approved in `requirements.md` §8 item 4, but missing from the first task list.)
   A shortcut is a tile that opens a web address (in TV Bro, or the default browser through `ACTION_VIEW`). Settings gets
-  "Ярлыки сайтов": a list with "Добавить" (a title field and an address field, using the text-input pattern),
+  "Website shortcuts": a list with "Add" (a title field and an address field, using the text-input pattern),
   edit and delete. Shortcuts appear in "All apps" with a generated banner (first letter + colour from the
   address) and can be added to Favourites from the app menu like apps. Keys in storage: `url:<id>` next to `pkg:<package>`.
   Mockup first (`design/mockups/shortcuts.html`, midnight/sky/valley), and add it to `docs/ui-spec.md`.
@@ -247,7 +247,7 @@ string lives in resources in all six languages from the start (`values/` = Engli
   states. A newer version of the launcher itself installs as an update.
   **Done:** tests with fakes; screenshot of each state.
 
-- [x] **T23 About page.** Version, build, licences (Nunito OFL; "Данные о погоде: Open-Meteo.com,
+- [x] **T23 About page.** Version, build, licences (Nunito OFL; "Weather data: Open-Meteo.com,
   CC BY 4.0"), and a short "no ads, no tracking" line. **Done:** screenshot.
 
 ## M5 — Hardening and handover

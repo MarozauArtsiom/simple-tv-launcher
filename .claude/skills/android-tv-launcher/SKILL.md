@@ -19,7 +19,7 @@ app/src/main/
     data/inputs/    InputRepository, HdmiWatcher
     data/weather/   WeatherClient (Open-Meteo), GeoIp, WeatherRepository (cache)
     data/prefs/     Settings (single DataStore: favourites, hidden, theme, language, weather…)
-    ui/theme/       ThemeSpec ×9, fonts, backgrounds (ported 1:1 from design/mockups/themes.css)
+    ui/theme/       ThemeSpec ×14, fonts, backgrounds (ported 1:1 from design/mockups/themes.css)
     ui/home/        HomeScreen, HomeViewModel, TopBar, FavouritesRow, AppGrid
     ui/settings/    SettingsPanel, ThemePicker, LanguagePicker, … , SettingsViewModel
     ui/weather/  ui/hdmi/  ui/components/
@@ -258,7 +258,7 @@ Built-in gradients, or images from USB:
 
 ## Settings, themes and languages
 
-The settings panel, nine switchable themes with live preview, and six UI languages (per-app
+The settings panel, fourteen switchable themes with live preview, and six UI languages (per-app
 locale): [references/settings-themes-i18n.md](references/settings-themes-i18n.md).
 
 ## Weather

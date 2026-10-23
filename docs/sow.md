@@ -36,8 +36,7 @@ and it spends as little of the TV's 2 GB RAM and weak GPU as possible.
    Android settings) and launcher pages: Theme, Background, Language, Weather, HDMI
    prompt, Hidden apps, Install from USB, About.
 6. **Themes:** all 9 (3 dark, 3 light, 3 cartoon), live preview, optional day/night schedule.
-7. **Languages:** Беларуская, Русский, English, Polski, Deutsch, Français, and "Как на
-   телевизоре" (the default, falling back to English).
+7. **Languages:** Беларуская, Русский, English, Polski, Deutsch, Français, and "Same as the TV" (the default, falling back to English).
 8. **Background:** the theme's art, a solid colour, or an image from USB.
 9. **USB APK installer**, which also handles updates of the launcher itself.
 10. **Quality:** unit tests, Compose behaviour tests, Roborazzi screenshots of key screens in

@@ -169,11 +169,15 @@ One line per finished task: date, task id, what was done, anything notable.
 - 2026-10-22 — Turn off TV + sleep timer: `PowerService` (accessibility service, no event types, enabled once over adb) opens the
   system power menu and clicks its "Power off" item; Settings row + Yes/No dialog; top-bar Timer chip with a popup; one alarm
   (`SleepTimer`, non-exported receiver) while a timer is set. Owner chose the accessibility route.
-- 2026-10-23 — Five more themes (owner request): dark cartoon Мрачный холм (`gloom`), Привидения (`haunted`), Монстрики
-  (`monsters`), and the Halloween pair Хеллоуин (`halloween-night`) / Хеллоуин днём (`halloween-day`). Art in
+- 2026-10-23 — Five more themes (owner request): dark cartoon Gloomy hill (`gloom`), Haunted house (`haunted`), Monster party
+  (`monsters`), and the Halloween pair Halloween night (`halloween-night`) / Halloween day (`halloween-day`). Art in
   `design/mockups/assets/bg/`, tokens in `themes.css`, previews in `design/mockups/themes/`. New `card-outline` colour token
   (`LauncherColors.cardOutline`): the sticker outline was hard-coded white, the dark ones need a tinted one. Two new picker
   families (`DarkCartoon`, `Halloween`); the picker rows scroll. Russian names shortened so they fit the 148 dp thumbnail.
+- 2026-10-23 — Ready to share: `README.md` rewritten in English for anyone (features, all 14 themes, build and install
+  commands for macOS and Linux, permissions, default Home methods with undo, troubleshooting, development, privacy),
+  with images in `docs/images/` taken from the app's own screenshot goldens. `docs/run-prompt.md` translated; UI strings
+  quoted in the docs are now the English ones. MIT `LICENSE` added. `CLAUDE.md`: reply in the user's language.
 
 ## Decisions to review
 

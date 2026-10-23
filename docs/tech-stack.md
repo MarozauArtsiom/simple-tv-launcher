@@ -93,7 +93,7 @@ Tests:
   - `data/inputs` — HDMI inputs, `HdmiWatcher`
   - `data/weather` — Open-Meteo client, IP geolocation, cache
   - `data/prefs` — the single DataStore and typed settings
-  - `ui/theme` — `ThemeSpec` for the 9 themes, fonts, backgrounds
+  - `ui/theme` — `ThemeSpec` for the 14 themes, fonts, backgrounds
   - `ui/home`, `ui/settings`, `ui/weather`, `ui/hdmi`, `ui/components`
 - **State:** one ViewModel per surface (`HomeViewModel`, `SettingsViewModel`) exposing
   `StateFlow<UiState>`. UI events go up as lambdas, and one-off effects travel through a
@@ -128,7 +128,7 @@ Tests:
 |---|---|---|
 | Logic (repositories, sorting, weather parsing, theme schedule) | JUnit 4 + fakes + coroutines-test | yes |
 | UI behaviour (focus order, focus restore, Back/Home reset) | Compose UI test on Robolectric, D-pad via `performKeyInput { pressKey(Key.DirectionRight) }` | yes |
-| Screenshots | Roborazzi on Robolectric, `@GraphicsMode(NATIVE)`, `@Config(sdk = [36], qualifiers = "w960dp-h540dp-land-television-xhdpi")`. Every key screen in all 9 themes, plus `be` and `fr` (the longest strings) | yes |
+| Screenshots | Roborazzi on Robolectric, `@GraphicsMode(NATIVE)`, `@Config(sdk = [36], qualifiers = "w960dp-h540dp-land-television-xhdpi")`. Every key screen in all 14 themes, plus `be` and `fr` (the longest strings) | yes |
 | Startup and Baseline Profile | Macrobenchmark + UiAutomator (`:baselineprofile`, compiles in the cloud) | no, needs the TV |
 
 - Goldens live in `app/src/test/snapshots/`. Turn on `roborazzi { separateOutputDirs.set(true) }`
