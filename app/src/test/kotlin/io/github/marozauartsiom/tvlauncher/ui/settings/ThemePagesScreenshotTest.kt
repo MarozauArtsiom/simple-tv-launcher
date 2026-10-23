@@ -32,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.runBlocking
 import com.github.takahirom.roborazzi.captureRoboImage
+import io.github.marozauartsiom.tvlauncher.testing.TvRoborazziOptions
 import org.junit.Test
 
 /** The theme picker (with live preview) and the schedule page, compared with `settings/theme-picker.png` and `screens/settings-schedule-*.png`. */
@@ -104,4 +105,4 @@ class ThemePagesScreenshotTest : TvScreenshotTest() {
 }
 
 private fun androidx.compose.ui.test.SemanticsNodeInteraction.captureTo(path: String) =
-    captureRoboImage("src/test/snapshots/$path")
+    captureRoboImage("src/test/snapshots/$path", TvRoborazziOptions)

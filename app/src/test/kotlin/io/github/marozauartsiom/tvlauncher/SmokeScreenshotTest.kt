@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.onRoot
 import androidx.tv.material3.Text
 import com.github.takahirom.roborazzi.captureRoboImage
+import io.github.marozauartsiom.tvlauncher.testing.TvRoborazziOptions
 import io.github.marozauartsiom.tvlauncher.testing.TvScreenshotTest
 import org.junit.Test
 
@@ -20,6 +21,6 @@ class SmokeScreenshotTest : TvScreenshotTest() {
                 Text("Simple TV", color = Color(0xFFE8EAF0))
             }
         }
-        composeRule.onRoot().captureRoboImage()
+        composeRule.onRoot().captureRoboImage(roborazziOptions = TvRoborazziOptions)
     }
 }

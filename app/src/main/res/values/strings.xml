@@ -51,6 +51,8 @@
     <string name="family_dark">Dark</string>
     <string name="family_light">Light</string>
     <string name="family_cartoon">Cartoon</string>
+    <string name="family_dark_cartoon">Dark cartoon</string>
+    <string name="family_halloween">Halloween</string>
     <string name="theme_midnight">Midnight</string>
     <string name="theme_graphite">Graphite</string>
     <string name="theme_aurora">Aurora</string>
@@ -60,6 +62,11 @@
     <string name="theme_valley">Sunny valley</string>
     <string name="theme_ocean">Underwater</string>
     <string name="theme_space">Space</string>
+    <string name="theme_gloom">Gloomy hill</string>
+    <string name="theme_haunted">Haunted house</string>
+    <string name="theme_monsters">Monster party</string>
+    <string name="theme_halloween_night">Halloween night</string>
+    <string name="theme_halloween_day">Halloween day</string>
     <string name="theme_schedule_item">Change by time of day</string>
     <string name="schedule_title">Theme by time of day</string>
     <string name="schedule_switch">Change automatically</string>

@@ -8,12 +8,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 
-enum class ThemeFamily { Dark, Light, Cartoon }
+enum class ThemeFamily { Dark, Light, Cartoon, DarkCartoon, Halloween }
 
 enum class ThemeId(val key: String) {
     Midnight("midnight"), Graphite("graphite"), Aurora("aurora"),
     Paper("paper"), Sky("sky"), Sage("sage"),
     Valley("valley"), Ocean("ocean"), Space("space"),
+    Gloom("gloom"), Haunted("haunted"), Monsters("monsters"),
+    HalloweenNight("halloween-night"), HalloweenDay("halloween-day"),
 }
 
 enum class ThemeFont { Roboto, Nunito }
@@ -42,6 +44,8 @@ data class LauncherColors(
     val titleMeta: Color,
     val labelBg: Color,
     val labelFg: Color,
+    /** Colour of the "sticker" outline drawn around every card ([ThemeSpec.cardOutline] wide). */
+    val cardOutline: Color,
     val focus: Color,
     val signal: Color,
     val weatherSun: Color,
@@ -94,7 +98,7 @@ data class ThemeSpec(
     val font: ThemeFont,
     val colors: LauncherColors,
     val cardRadius: Dp,
-    /** White "sticker" outline around every card (cartoon themes), 0 otherwise. */
+    /** Width of the "sticker" outline around every card (cartoon themes, colour [LauncherColors.cardOutline]), 0 otherwise. */
     val cardOutline: Dp,
     val cardShadow: ShadowSpec?,
     val chipRingWidth: Dp,

@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <!-- Halloween night (festive, not scary): bunting, a big orange moon with a witch on a broom, bats,
+       glowing jack-o'-lanterns, a black cat on a fence, candy and a bubbling cauldron. -->
+  <defs>
+    <radialGradient id="sky" cx=".6" cy="0" r="1.1">
+      <stop offset="0" stop-color="#3E2160"/><stop offset=".55" stop-color="#24133D"/><stop offset="1" stop-color="#150B26"/>
+    </radialGradient>
+    <path id="flag" d="M-8 0 L8 0 L0 15 Z"/>
+    <g id="bat" fill="#140A24">
+      <path d="M0 2 Q-8 -8 -16 -4 Q-22 -12 -32 -8 Q-26 -2 -28 8 Q-20 3 -13 9 Q-7 4 0 11 Q7 4 13 9 Q20 3 28 8 Q26 -2 32 -8 Q22 -12 16 -4 Q8 -8 0 2 Z"/>
+      <ellipse cy="2" rx="6" ry="8"/><path d="M-5 -3 L-4 -11 L-1 -5 Z M5 -3 L4 -11 L1 -5 Z"/>
+    </g>
+    <!-- jack-o'-lantern, 1 unit ≈ 1 dp at scale 1 (about 52×40) -->
+    <g id="jack">
+      <circle r="34" fill="#FFB347" opacity=".14"/>
+      <ellipse cx="-14" rx="14" ry="19" fill="#E8700F"/><ellipse cx="14" rx="14" ry="19" fill="#E8700F"/>
+      <ellipse rx="16" ry="20" fill="#FF8A1F"/>
+      <path d="M-1 -19 q1 -9 7 -11" stroke="#4E7A2A" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <path d="M-15 -5 l6 -7 l6 7 Z M3 -5 l6 -7 l6 7 Z" fill="#FFE066"/>
+      <path d="M-14 4 Q0 18 14 4 L9 7 L6 3 L2 8 L-2 3 L-6 8 L-9 3 Z" fill="#FFE066"/>
+    </g>
+    <g id="corn"><path d="M-6 6 L6 6 L0 -10 Z" fill="#FF8A1F"/><path d="M-6 6 L6 6 L4.5 2 L-4.5 2 Z" fill="#FFD23F"/><path d="M-2 -5 L2 -5 L0 -10 Z" fill="#FFF4E0"/></g>
+    <g id="candy"><path d="M-12 -5 L-6 0 L-12 5 Z M12 -5 L6 0 L12 5 Z"/><circle r="6.5"/></g>
+  </defs>
+  <rect width="960" height="540" fill="url(#sky)"/>
+  <g fill="#F3E8FF" opacity=".7">
+    <circle cx="300" cy="120" r="1.5"/><circle cx="420" cy="60" r="1.6"/><circle cx="760" cy="132" r="1.5"/>
+    <circle cx="20" cy="220" r="1.4"/><circle cx="940" cy="250" r="1.6"/><circle cx="600" cy="262" r="1.4"/>
+  </g>
+
+  <!-- bunting -->
+  <path d="M-10 0 Q240 40 490 2 Q730 40 970 0" stroke="#5B3A80" stroke-width="2.5" fill="none"/>
+  <use href="#flag" transform="translate(20 5) rotate(8)" fill="#FF8A1F"/>
+  <use href="#flag" transform="translate(75 11) rotate(6)" fill="#8E4FE0"/>
+  <use href="#flag" transform="translate(130 16) rotate(4)" fill="#A3E635"/>
+  <use href="#flag" transform="translate(185 19) rotate(2)" fill="#FF8A1F"/>
+  <use href="#flag" transform="translate(240 20)" fill="#8E4FE0"/>
+  <use href="#flag" transform="translate(295 20) rotate(-2)" fill="#A3E635"/>
+  <use href="#flag" transform="translate(350 17) rotate(-4)" fill="#FF8A1F"/>
+  <use href="#flag" transform="translate(405 13) rotate(-6)" fill="#8E4FE0"/>
+  <use href="#flag" transform="translate(460 6) rotate(-8)" fill="#A3E635"/>
+  <use href="#flag" transform="translate(519 6) rotate(8)" fill="#FF8A1F"/>
+  <use href="#flag" transform="translate(572 13) rotate(6)" fill="#8E4FE0"/>
+  <use href="#flag" transform="translate(624 17) rotate(4)" fill="#A3E635"/>
+  <use href="#flag" transform="translate(677 20) rotate(2)" fill="#FF8A1F"/>
+  <use href="#flag" transform="translate(730 20)" fill="#8E4FE0"/>
+  <use href="#flag" transform="translate(783 19) rotate(-2)" fill="#A3E635"/>
+  <use href="#flag" transform="translate(836 16) rotate(-4)" fill="#FF8A1F"/>
+  <use href="#flag" transform="translate(888 11) rotate(-6)" fill="#8E4FE0"/>
+  <use href="#flag" transform="translate(941 5) rotate(-8)" fill="#A3E635"/>
+
+  <!-- the orange moon with a witch flying across it -->
+  <circle cx="606" cy="100" r="58" fill="#FFB347" opacity=".08"/>
+  <circle cx="606" cy="100" r="40" fill="#FFB347"/>
+  <circle cx="592" cy="88" r="8" fill="#F5A03A"/><circle cx="622" cy="108" r="6" fill="#F5A03A"/><circle cx="600" cy="118" r="4" fill="#F5A03A"/>
+  <g transform="translate(612 100) rotate(-10)" fill="#140A24">
+    <path d="M-34 6 L28 -2" stroke="#140A24" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M-30 5 L-46 -2 L-44 8 L-48 14 Z"/>
+    <path d="M-8 3 L8 1 L4 -14 Q-2 -20 -8 -14 Z"/>
+    <path d="M-8 -6 L-22 0 L-10 2 Z"/>
+    <circle cx="2" cy="-18" r="5"/>
+    <path d="M-8 -20 L12 -22 L4 -40 Z"/><path d="M-10 -21 L14 -23" stroke="#140A24" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <use href="#bat" transform="translate(520 118) scale(.55) rotate(10)"/>
+  <use href="#bat" transform="translate(700 116) scale(.5) rotate(-12)"/>
+  <use href="#bat" transform="translate(460 82) scale(.4)"/>
+
+  <!-- candy in the sky strip -->
+  <use href="#corn" transform="translate(330 104) rotate(-20)"/>
+  <use href="#corn" transform="translate(790 120) rotate(25)"/>
+  <use href="#candy" transform="translate(880 96) rotate(-15)" fill="#8E4FE0"/>
+  <use href="#candy" transform="translate(410 128) rotate(20) scale(.8)" fill="#A3E635"/>
+
+  <!-- ground and pumpkin patch between the rows -->
+  <path d="M0 320 Q200 300 420 312 Q640 296 960 306 L960 540 L0 540 Z" fill="#1A0E2C"/>
+  <g stroke="#3E6B2A" stroke-width="3" stroke-linecap="round" fill="none">
+    <path d="M360 318 Q400 300 440 314 Q470 324 500 310 M560 312 Q600 298 640 312 Q680 324 720 306"/>
+    <path d="M440 314 q6 -10 0 -16 q-6 -2 -4 4"/><path d="M640 312 q-6 -10 0 -16 q6 -2 4 4"/>
+  </g>
+  <use href="#jack" transform="translate(372 304) scale(.6)"/>
+  <use href="#jack" transform="translate(470 296)"/>
+  <use href="#jack" transform="translate(556 306) scale(.7)"/>
+  <use href="#jack" transform="translate(660 298) scale(.85)"/>
+
+  <!-- black cat on a fence -->
+  <g fill="#120820">
+    <rect x="726" y="290" width="128" height="5" rx="2"/><rect x="726" y="306" width="128" height="5" rx="2"/>
+    <rect x="732" y="280" width="9" height="44" rx="2"/><rect x="772" y="278" width="9" height="46" rx="2"/>
+    <rect x="812" y="280" width="9" height="44" rx="2"/><rect x="842" y="282" width="9" height="42" rx="2"/>
+  </g>
+  <g transform="translate(796 268)" fill="#120820">
+    <path d="M14 18 Q34 14 30 -4 Q28 -14 22 -12 Q26 -2 22 6 Q18 12 10 12 Z"/>
+    <ellipse cy="8" rx="13" ry="15"/>
+    <circle cy="-12" r="10"/><path d="M-9 -16 L-8 -28 L-1 -20 Z M9 -16 L8 -28 L1 -20 Z"/>
+    <ellipse cx="-4" cy="-12" rx="2.6" ry="3.4" fill="#FFD23F"/><ellipse cx="4.5" cy="-12" rx="2.6" ry="3.4" fill="#FFD23F"/>
+  </g>
+
+  <!-- cauldron bubbling in the bottom-left corner -->
+  <g transform="translate(20 506)">
+    <circle cy="-26" r="30" fill="#A3E635" opacity=".12"/>
+    <ellipse cy="-22" rx="30" ry="7" fill="#A3E635"/>
+    <circle cx="-8" cy="-30" r="5" fill="#A3E635"/><circle cx="6" cy="-36" r="3.5" fill="#A3E635"/><circle cx="14" cy="-28" r="4" fill="#A3E635"/>
+    <path d="M-34 -22 Q-36 20 0 22 Q36 20 34 -22 Z" fill="#140A24"/>
+    <rect x="-36" y="-26" width="72" height="8" rx="4" fill="#24133D"/>
+  </g>
+
+  <!-- a friendly spider on a thread, left edge -->
+  <path d="M24 0 V150" stroke="#6E5A86" stroke-width="2"/>
+  <g transform="translate(24 158)">
+    <g stroke="#140A24" stroke-width="2.5" stroke-linecap="round" fill="none">
+      <path d="M-5 -2 l-9 -7 M-5 1 l-11 -1 M-5 4 l-10 6 M5 -2 l9 -7 M5 1 l11 -1 M5 4 l10 6"/>
+    </g>
+    <circle r="8" fill="#140A24"/>
+    <circle cx="-3" cy="-1" r="2.2" fill="#FFFFFF"/><circle cx="3" cy="-1" r="2.2" fill="#FFFFFF"/>
+    <circle cx="-3" cy="-0.5" r="1.1" fill="#140A24"/><circle cx="3" cy="-0.5" r="1.1" fill="#140A24"/>
+    <path d="M-3 3 q3 3 6 0" stroke="#FF8A1F" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- stacked pumpkins on the right edge -->
+  <use href="#jack" transform="translate(946 486) scale(.95)"/>
+  <use href="#jack" transform="translate(940 446) scale(.6)"/>
+</svg>

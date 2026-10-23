@@ -13,6 +13,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onRoot
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.takahirom.roborazzi.RoborazziOptions
 import com.github.takahirom.roborazzi.captureRoboImage
 import io.github.marozauartsiom.tvlauncher.ui.theme.LauncherTheme
 import io.github.marozauartsiom.tvlauncher.ui.theme.ThemeSpec
@@ -21,6 +22,13 @@ import org.junit.Rule
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+
+/**
+ * Up to 0.1 % of the pixels may differ beyond Roborazzi's per-pixel colour tolerance. Nunito's heavy weights
+ * anti-alias a little differently on macOS and Linux (about 0.02 % of a frame), so goldens recorded on a Mac
+ * also pass in CI; a real layout or colour change touches far more pixels than that.
+ */
+val TvRoborazziOptions = RoborazziOptions(compareOptions = RoborazziOptions.CompareOptions(changeThreshold = 0.001f))
 
 /**
  * Base class for TV screenshot and behaviour tests. It renders at the TV's UI size
@@ -52,7 +60,7 @@ abstract class TvScreenshotTest {
         for (theme in themes) {
             current = theme
             composeRule.waitForIdle()
-            composeRule.onRoot().captureRoboImage("src/test/snapshots/$name/${theme.id.key}.png")
+            composeRule.onRoot().captureRoboImage("src/test/snapshots/$name/${theme.id.key}.png", TvRoborazziOptions)
         }
     }
 
@@ -75,7 +83,7 @@ abstract class TvScreenshotTest {
         for (tag in tags) {
             current = tag
             composeRule.waitForIdle()
-            composeRule.onRoot().captureRoboImage("src/test/snapshots/$name/$tag.png")
+            composeRule.onRoot().captureRoboImage("src/test/snapshots/$name/$tag.png", TvRoborazziOptions)
         }
     }
 }

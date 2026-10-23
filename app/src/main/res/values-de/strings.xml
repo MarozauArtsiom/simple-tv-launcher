@@ -45,6 +45,8 @@
     <string name="family_dark">Dunkel</string>
     <string name="family_light">Hell</string>
     <string name="family_cartoon">Cartoon</string>
+    <string name="family_dark_cartoon">Dunkle Cartoons</string>
+    <string name="family_halloween">Halloween</string>
     <string name="theme_midnight">Mitternacht</string>
     <string name="theme_graphite">Graphit</string>
     <string name="theme_aurora">Polarlicht</string>
@@ -54,6 +56,11 @@
     <string name="theme_valley">Sonniges Tal</string>
     <string name="theme_ocean">Unterwasserwelt</string>
     <string name="theme_space">Weltraum</string>
+    <string name="theme_gloom">Düsterer Hügel</string>
+    <string name="theme_haunted">Spukhaus</string>
+    <string name="theme_monsters">Monsterparty</string>
+    <string name="theme_halloween_night">Halloween-Nacht</string>
+    <string name="theme_halloween_day">Halloween-Tag</string>
     <string name="theme_schedule_item">Je nach Tageszeit wechseln</string>
     <string name="schedule_title">Design nach Tageszeit</string>
     <string name="schedule_switch">Automatisch wechseln</string>

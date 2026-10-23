@@ -45,6 +45,8 @@
     <string name="family_dark">Цёмныя</string>
     <string name="family_light">Светлыя</string>
     <string name="family_cartoon">Мультяшныя</string>
+    <string name="family_dark_cartoon">Цёмныя мультяшныя</string>
+    <string name="family_halloween">Хэлоўін</string>
     <string name="theme_midnight">Поўнач</string>
     <string name="theme_graphite">Графіт</string>
     <string name="theme_aurora">Ззянне</string>
@@ -54,6 +56,11 @@
     <string name="theme_valley">Сонечная даліна</string>
     <string name="theme_ocean">Падводны свет</string>
     <string name="theme_space">Космас</string>
+    <string name="theme_gloom">Змрочны пагорак</string>
+    <string name="theme_haunted">Прывіды</string>
+    <string name="theme_monsters">Монстрыкі</string>
+    <string name="theme_halloween_night">Хэлоўін</string>
+    <string name="theme_halloween_day">Хэлоўін удзень</string>
     <string name="theme_schedule_item">Змяняць па часе сутак</string>
     <string name="schedule_title">Тэма па часе сутак</string>
     <string name="schedule_switch">Змяняць аўтаматычна</string>

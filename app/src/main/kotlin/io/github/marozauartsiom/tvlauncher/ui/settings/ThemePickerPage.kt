@@ -59,10 +59,12 @@ private val families = listOf(
     ThemeFamily.Dark to R.string.family_dark,
     ThemeFamily.Light to R.string.family_light,
     ThemeFamily.Cartoon to R.string.family_cartoon,
+    ThemeFamily.DarkCartoon to R.string.family_dark_cartoon,
+    ThemeFamily.Halloween to R.string.family_halloween,
 )
 
 /**
- * The 3×3 theme picker. Focusing a thumbnail previews that theme on the whole launcher ([onPreview]),
+ * The theme picker: one row of thumbnails per family. Focusing a thumbnail previews that theme on the whole launcher ([onPreview]),
  * OK chooses it ([onChoose]), and leaving the page (Back) clears the preview, so the saved theme returns.
  *
  * [chosen] is the theme with the check mark. When [onOpenSchedule] is set, the "change by time of day"

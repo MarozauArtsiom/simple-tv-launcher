@@ -169,6 +169,11 @@ One line per finished task: date, task id, what was done, anything notable.
 - 2026-10-22 — Turn off TV + sleep timer: `PowerService` (accessibility service, no event types, enabled once over adb) opens the
   system power menu and clicks its "Power off" item; Settings row + Yes/No dialog; top-bar Timer chip with a popup; one alarm
   (`SleepTimer`, non-exported receiver) while a timer is set. Owner chose the accessibility route.
+- 2026-10-23 — Five more themes (owner request): dark cartoon Мрачный холм (`gloom`), Привидения (`haunted`), Монстрики
+  (`monsters`), and the Halloween pair Хеллоуин (`halloween-night`) / Хеллоуин днём (`halloween-day`). Art in
+  `design/mockups/assets/bg/`, tokens in `themes.css`, previews in `design/mockups/themes/`. New `card-outline` colour token
+  (`LauncherColors.cardOutline`): the sticker outline was hard-coded white, the dark ones need a tinted one. Two new picker
+  families (`DarkCartoon`, `Halloween`); the picker rows scroll. Russian names shortened so they fit the 148 dp thumbnail.
 
 ## Decisions to review
 

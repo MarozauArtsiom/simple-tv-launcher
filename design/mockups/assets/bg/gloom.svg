@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <!-- Gloomy hill (Burton-like): a huge pale moon striped by dark clouds, ravens, a spiral hill,
+       twisted trees with curled branches, a crooked iron fence and a leaning house with one ember window. -->
+  <defs>
+    <radialGradient id="sky" cx=".62" cy="0" r="1.1">
+      <stop offset="0" stop-color="#2C3A44"/><stop offset=".55" stop-color="#1A242C"/><stop offset="1" stop-color="#0E1418"/>
+    </radialGradient>
+    <path id="raven" d="M0 0 Q-7 -7 -15 -5 Q-9 -3 -6 2 Q-3 0 0 3 Q3 0 6 2 Q9 -3 15 -5 Q7 -7 0 0 Z" fill="#0A0F13"/>
+    <g id="spear"><rect x="-2" y="-26" width="4" height="30"/><path d="M0 -34 L4 -26 L-4 -26 Z"/></g>
+  </defs>
+  <rect width="960" height="540" fill="url(#sky)"/>
+
+  <!-- the moon and the cloud stripes across it -->
+  <circle cx="602" cy="100" r="66" fill="#E9E1C8" opacity=".05"/>
+  <circle cx="602" cy="100" r="54" fill="#E9E1C8" opacity=".08"/>
+  <circle cx="602" cy="100" r="42" fill="#E9E1C8"/>
+  <circle cx="588" cy="88" r="9" fill="#D9D0B4"/><circle cx="618" cy="110" r="7" fill="#D9D0B4"/><circle cx="596" cy="122" r="4" fill="#D9D0B4"/>
+  <g stroke="#141C22" stroke-width="7" stroke-linecap="round" fill="none">
+    <path d="M520 104 Q560 96 600 104 T680 102 Q700 100 704 92 Q706 84 698 84"/>
+    <path d="M548 124 Q590 118 630 124 T700 124"/>
+    <path d="M500 84 Q520 80 540 84 Q552 86 552 78 Q551 72 545 74"/>
+  </g>
+  <g stroke="#24313A" stroke-width="5" stroke-linecap="round" fill="none">
+    <path d="M250 112 Q290 104 330 112 Q350 116 352 108 Q353 100 345 101"/>
+    <path d="M760 128 Q800 122 840 128"/>
+  </g>
+  <use href="#raven" transform="translate(586 98) scale(1.2)"/>
+  <use href="#raven" transform="translate(640 82) scale(.8) rotate(8)"/>
+  <use href="#raven" transform="translate(470 126) scale(.7) rotate(-6)"/>
+  <use href="#raven" transform="translate(720 110) scale(.6)"/>
+
+  <!-- a twisted branch from the right edge, a raven perched on it -->
+  <g stroke="#0A0F13" stroke-linecap="round" fill="none">
+    <path d="M972 70 Q930 96 900 124 Q880 140 852 132 Q836 126 840 116 Q844 108 852 112" stroke-width="8"/>
+    <path d="M918 108 Q912 90 924 82 Q932 80 930 88" stroke-width="5"/>
+  </g>
+  <g transform="translate(900 112)" fill="#0A0F13">
+    <ellipse rx="12" ry="9"/><circle cx="-10" cy="-8" r="6.5"/><path d="M-16 -9 L-24 -6 L-16 -4 Z"/><path d="M8 4 L22 14 L14 2 Z"/>
+  </g>
+
+  <!-- far ridge and a faint mist -->
+  <path d="M0 312 Q120 296 240 306 Q380 290 520 304 Q680 288 820 300 Q900 294 960 302 L960 540 L0 540 Z" fill="#151E25"/>
+  <ellipse cx="520" cy="306" rx="440" ry="14" fill="#C9D2D6" opacity=".05"/>
+
+  <!-- spiral hill -->
+  <path d="M560 336 C610 326 646 300 664 276 C676 260 688 252 700 254 C712 258 720 280 742 302 C764 322 800 332 830 336 Z" fill="#0A0F13"/>
+  <path d="M700 256 C698 236 724 228 732 244 C738 258 718 266 712 254 C708 246 716 242 720 248" stroke="#0A0F13" stroke-width="8" stroke-linecap="round" fill="none"/>
+
+  <!-- crooked iron fence -->
+  <g fill="#0A0F13">
+    <rect x="352" y="300" width="190" height="4" transform="rotate(-2 446 302)"/>
+    <rect x="352" y="318" width="190" height="4" transform="rotate(-2 446 320)"/>
+    <use href="#spear" transform="translate(358 330) rotate(-6)"/><use href="#spear" transform="translate(378 330) rotate(-3)"/>
+    <use href="#spear" transform="translate(398 329)"/><use href="#spear" transform="translate(418 328) rotate(4)"/>
+    <use href="#spear" transform="translate(438 328) rotate(2)"/><use href="#spear" transform="translate(458 327) rotate(-5)"/>
+    <use href="#spear" transform="translate(478 326) rotate(-2)"/><use href="#spear" transform="translate(498 326) rotate(6)"/>
+    <use href="#spear" transform="translate(518 325) rotate(3)"/><use href="#spear" transform="translate(538 325) rotate(-4)"/>
+  </g>
+
+  <!-- twisted tree beside the fence -->
+  <g stroke="#0A0F13" stroke-linecap="round" fill="none">
+    <path d="M318 340 Q312 300 322 276 Q330 258 318 244" stroke-width="9"/>
+    <path d="M320 284 Q300 270 296 256 Q294 246 302 246 Q308 248 304 254" stroke-width="5"/>
+    <path d="M322 270 Q342 260 348 246 Q350 238 343 238 Q338 240 342 245" stroke-width="5"/>
+    <path d="M318 246 Q312 236 316 228 Q320 224 323 229" stroke-width="4"/>
+  </g>
+
+  <!-- leaning narrow house on the right, one ember window -->
+  <g fill="#0A0F13" transform="rotate(4 930 330)">
+    <path d="M904 340 L906 256 L948 254 L950 340 Z"/>
+    <path d="M898 262 L926 214 L956 258 Z"/>
+    <path d="M934 238 L936 220 L944 220 L944 240 Z"/>
+  </g>
+  <rect x="922" y="276" width="9" height="12" rx="2" fill="#B9583C" transform="rotate(4 930 330)"/>
+
+  <!-- twisted tree on the left edge -->
+  <g stroke="#0A0F13" stroke-linecap="round" fill="none">
+    <path d="M-6 540 Q30 460 20 380 Q14 320 30 270" stroke-width="18"/>
+    <path d="M26 300 Q44 284 42 266 Q40 254 32 258 Q28 262 34 266" stroke-width="6"/>
+    <path d="M22 350 Q4 334 6 318 Q8 308 15 312" stroke-width="6"/>
+    <path d="M30 272 Q26 252 34 244 Q40 240 41 247" stroke-width="5"/>
+  </g>
+
+  <rect y="338" width="960" height="202" fill="#0D1317"/>
+  <ellipse cx="480" cy="528" rx="560" ry="30" fill="#C9D2D6" opacity=".04"/>
+</svg>

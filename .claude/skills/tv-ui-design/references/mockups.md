@@ -18,7 +18,7 @@ focus states, text under 14 px, and anything outside the safe area.
 ## Conventions
 
 - Themes: `home.html?t=<id>` picks a theme from `themes.css` (midnight, graphite, aurora, paper,
-  sky, sage, valley, ocean, space). The renderer passes the query string through, e.g.
+  sky, sage, valley, ocean, space, gloom, haunted, monsters, halloween-night, halloween-day). The renderer passes the query string through, e.g.
   `render-mockup.cjs "design/mockups/home.html?t=space" out.png`. Layout code in `home.css` must
   read colours, background, font and focus style only from theme variables.
 - Background art is static SVG in `assets/bg/`. In the app it becomes one 960×540 bitmap, so a
@@ -28,7 +28,7 @@ focus states, text under 14 px, and anything outside the safe area.
   exactly one `.focused` element per file. To compare focus positions, make variants such
   as `home.focus-row2.html`.
 - Use only the token variables. Layout and sizes live in `tokens.css`, and per-theme colours
-  and styles live in `themes.css`. A new value is added to all nine themes in `themes.css`, to
+  and styles live in `themes.css`. A new value is added to all fourteen themes in `themes.css`, to
   the `ThemeSpec` port in `ui/theme/`, and to the token list in `docs/ui-spec.md` §2, all in
   the same change.
 - Fonts: `var(--font)` from the theme (Roboto, or the bundled Nunito for the cartoon themes).

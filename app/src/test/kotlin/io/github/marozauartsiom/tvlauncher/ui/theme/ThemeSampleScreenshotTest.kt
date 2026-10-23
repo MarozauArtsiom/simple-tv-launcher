@@ -63,7 +63,7 @@ private fun ThemeSample(theme: ThemeSpec, cache: BackgroundCache) {
                             .themeShadow(if (focused) theme.focus.glow ?: theme.cardShadow else theme.cardShadow, theme.cardRadius)
                             .clip(shape)
                             .background(Color(rgb))
-                            .let { if (theme.cardOutline.value > 0f) it.border(theme.cardOutline, Color.White, shape) else it }
+                            .let { if (theme.cardOutline.value > 0f) it.border(theme.cardOutline, c.cardOutline, shape) else it }
                             .let { if (focused) it.border(theme.focus.ring, c.focus, shape) else it },
                         contentAlignment = Alignment.Center,
                     ) { Text("App ${i + 1}", color = Color(0xFFF4F5F8), fontWeight = if (theme.font == ThemeFont.Nunito) FontWeight.ExtraBold else FontWeight.Medium) }

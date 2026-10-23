@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <!-- Haunted hill: a sickly moon with bats, a crooked house with green windows, a graveyard,
+       a peeking ghost, a dangling spider, a jack-o'-lantern and eyes glowing in a tree hollow. -->
+  <defs>
+    <radialGradient id="sky" cx=".6" cy="0" r="1.1">
+      <stop offset="0" stop-color="#3D1E55"/><stop offset=".55" stop-color="#1F102F"/><stop offset="1" stop-color="#0F0919"/>
+    </radialGradient>
+    <g id="bat" fill="#0A0612">
+      <path d="M0 2 Q-8 -8 -16 -4 Q-22 -12 -32 -8 Q-26 -2 -28 8 Q-20 3 -13 9 Q-7 4 0 11 Q7 4 13 9 Q20 3 28 8 Q26 -2 32 -8 Q22 -12 16 -4 Q8 -8 0 2 Z"/>
+      <ellipse cy="2" rx="6" ry="8"/><path d="M-5 -3 L-4 -11 L-1 -5 Z M5 -3 L4 -11 L1 -5 Z"/>
+    </g>
+    <g id="stone"><path d="M-14 22 L-14 -6 Q-14 -20 0 -20 Q14 -20 14 -6 L14 22 Z" fill="#2E1F42"/>
+      <path d="M-14 22 L-14 -6 Q-14 -20 0 -20" fill="none" stroke="#45325E" stroke-width="3"/>
+      <path d="M0 -10 v14 M-5 -4 h10" stroke="#1A1027" stroke-width="3" stroke-linecap="round"/></g>
+  </defs>
+  <rect width="960" height="540" fill="url(#sky)"/>
+  <g fill="#E8DDF5" opacity=".7">
+    <circle cx="380" cy="40" r="1.6"/><circle cx="260" cy="120" r="1.4"/><circle cx="730" cy="130" r="1.6"/>
+    <circle cx="470" cy="270" r="1.4"/><circle cx="940" cy="20" r="1.6"/><circle cx="200" cy="20" r="1.4"/>
+  </g>
+
+  <!-- moon and bats -->
+  <circle cx="606" cy="98" r="62" fill="#D9F27A" opacity=".06"/>
+  <circle cx="606" cy="98" r="48" fill="#D9F27A" opacity=".10"/>
+  <circle cx="606" cy="98" r="36" fill="#E6F2A2"/>
+  <circle cx="594" cy="86" r="8" fill="#CCDD86"/><circle cx="620" cy="104" r="6" fill="#CCDD86"/><circle cx="598" cy="114" r="4" fill="#CCDD86"/>
+  <use href="#bat" transform="translate(616 92) scale(.9) rotate(-8)"/>
+  <use href="#bat" transform="translate(528 120) scale(.6) rotate(10)"/>
+  <use href="#bat" transform="translate(700 118) scale(.55) rotate(-14)"/>
+  <use href="#bat" transform="translate(470 84) scale(.45) rotate(6)"/>
+
+  <!-- spider web in the top-left corner, a spider dangling on its thread -->
+  <g stroke="#5B4A70" stroke-width="2" fill="none" stroke-linecap="round">
+    <path d="M0 0 L50 6 M0 0 L42 30 M0 0 L24 46 M0 0 L4 50"/>
+    <path d="M17 2 L14 10 L8 15 L1 17"/><path d="M33 4 L28 20 L16 31 L3 33"/><path d="M48 6 L40 29 L23 44 L4 48"/>
+  </g>
+  <path d="M26 40 V146" stroke="#6E5A86" stroke-width="2"/>
+  <g transform="translate(26 154)">
+    <g stroke="#0A0612" stroke-width="2.5" stroke-linecap="round" fill="none">
+      <path d="M-5 -2 l-9 -7 M-5 1 l-11 -1 M-5 4 l-10 6 M-4 6 l-6 10 M5 -2 l9 -7 M5 1 l11 -1 M5 4 l10 6 M4 6 l6 10"/>
+    </g>
+    <circle r="8" fill="#0A0612"/><circle cy="-9" r="5" fill="#0A0612"/>
+    <circle cx="-2" cy="-10" r="1.6" fill="#FF4D5E"/><circle cx="2" cy="-10" r="1.6" fill="#FF4D5E"/>
+  </g>
+
+  <!-- hill and ground -->
+  <path d="M0 330 Q220 312 430 322 Q640 290 960 270 L960 540 L0 540 Z" fill="#150B22"/>
+  <ellipse cx="480" cy="528" rx="560" ry="40" fill="#8CFF5A" opacity=".05"/>
+  <ellipse cx="300" cy="330" rx="260" ry="14" fill="#8CFF5A" opacity=".05"/>
+
+  <!-- graveyard -->
+  <use href="#stone" transform="translate(452 302) rotate(-8) scale(.8)"/>
+  <use href="#stone" transform="translate(508 296) rotate(5)"/>
+  <use href="#stone" transform="translate(566 300) rotate(-4) scale(.85)"/>
+  <g transform="translate(624 290) rotate(9)" stroke="#2E1F42" stroke-width="7" stroke-linecap="round">
+    <path d="M0 -18 V26 M-12 -6 H12"/>
+  </g>
+  <use href="#stone" transform="translate(676 290) rotate(-10) scale(.75)"/>
+
+  <!-- crooked haunted house -->
+  <g fill="#0B0612">
+    <path d="M818 330 L822 284 L882 278 L886 330 Z"/>
+    <path d="M808 290 L848 252 L894 282 Z"/>
+    <path d="M836 268 L838 248 L848 247 L848 262 Z"/>
+    <path d="M884 330 L886 262 L908 258 L912 330 Z"/>
+    <path d="M878 266 L898 228 L918 262 Z"/>
+  </g>
+  <g fill="#8CFF5A">
+    <circle cx="845" cy="298" r="11" opacity=".22"/><circle cx="866" cy="296" r="11" opacity=".22"/><circle cx="897" cy="282" r="9" opacity=".22"/>
+    <rect x="839" y="292" width="11" height="13" rx="2"/><rect x="861" y="290" width="11" height="13" rx="2"/>
+    <rect x="893" y="276" width="8" height="11" rx="2"/>
+  </g>
+  <path d="M844 292 v13 M839 298 h11 M866 290 v13 M861 296 h11" stroke="#0B0612" stroke-width="2"/>
+
+  <!-- dead tree on the right edge with eyes glowing in its hollow -->
+  <path d="M972 540 Q944 450 950 360 Q954 300 938 250" stroke="#0B0612" stroke-width="26" stroke-linecap="round" fill="none"/>
+  <path d="M942 262 l-22 -20 M948 300 l-24 6" stroke="#0B0612" stroke-width="7" stroke-linecap="round"/>
+  <ellipse cx="946" cy="390" rx="10" ry="15" fill="#05030A"/>
+  <ellipse cx="942" cy="386" rx="3" ry="2.2" fill="#8CFF5A" transform="rotate(20 942 386)"/>
+  <ellipse cx="951" cy="386" rx="3" ry="2.2" fill="#8CFF5A" transform="rotate(-20 951 386)"/>
+
+  <!-- ghost peeking from the left edge -->
+  <g transform="translate(14 268)">
+    <path d="M-30 40 L-30 -6 Q-30 -32 0 -32 Q30 -32 30 -6 L30 40 Q24 32 18 40 Q12 32 6 40 Q0 32 -6 40 Q-12 32 -18 40 Q-24 32 -30 40 Z" fill="#EDE6F5"/>
+    <ellipse cx="4" cy="-6" rx="4.5" ry="7" fill="#1A0E26"/><ellipse cx="18" cy="-6" rx="4.5" ry="7" fill="#1A0E26"/>
+    <ellipse cx="11" cy="12" rx="4" ry="6" fill="#1A0E26"/>
+  </g>
+
+  <!-- jack-o'-lantern in the bottom-left corner -->
+  <g transform="translate(18 516)">
+    <circle r="30" fill="#FFB347" opacity=".14"/>
+    <ellipse rx="26" ry="22" fill="#FF8A2A"/>
+    <path d="M-10 -20 Q-16 0 -10 20 M10 -20 Q16 0 10 20" stroke="#E06A12" stroke-width="3" fill="none"/>
+    <path d="M-3 -21 q2 -8 7 -10" stroke="#3E6B2A" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <path d="M-13 -6 l6 -7 l6 7 Z M3 -6 l6 -7 l6 7 Z" fill="#FFE38A"/>
+    <path d="M-14 4 Q0 18 14 4 L9 7 L6 3 L2 8 L-2 3 L-6 8 L-9 3 Z" fill="#FFE38A"/>
+  </g>
+</svg>

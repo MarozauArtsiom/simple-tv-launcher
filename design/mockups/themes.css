@@ -159,7 +159,9 @@
 }
 
 /* ---------- Cartoon family: rounded font, sticker cards, playful focus ---------- */
-[data-theme="valley"], [data-theme="ocean"], [data-theme="space"] {
+[data-theme="valley"], [data-theme="ocean"], [data-theme="space"],
+[data-theme="gloom"], [data-theme="haunted"], [data-theme="monsters"],
+[data-theme="halloween-night"], [data-theme="halloween-day"] {
   --btn-fg: #2B1A63;
   --font: 'Nunito', system-ui, sans-serif;
   --scrim: none;
@@ -197,7 +199,9 @@
   --item-bg: #F1F5FA;
   --item-focus-fill: #FFF6C2;
 }
-[data-theme="valley"] .card span, [data-theme="ocean"] .card span, [data-theme="space"] .card span { font-weight: 800; }
+[data-theme="valley"] .card span, [data-theme="ocean"] .card span, [data-theme="space"] .card span,
+[data-theme="gloom"] .card span, [data-theme="haunted"] .card span, [data-theme="monsters"] .card span,
+[data-theme="halloween-night"] .card span, [data-theme="halloween-day"] .card span { font-weight: 800; }
 
 /* ---------- 7. Sunny valley (cartoon) ---------- */
 [data-theme="valley"] {
@@ -235,4 +239,151 @@
   --focus: #FFE14D;
   --focus-glow: 0 0 26px rgba(255, 225, 77, .70);
   --signal: #4CE38B;
+}
+
+/* ---------- Dark cartoon family: same shapes and font, dark chips, pills and panels ---------- */
+
+/* ---------- 10. Gloomy hill (dark cartoon, gloomy) ---------- */
+[data-theme="gloom"] {
+  --btn-fg: #12181D;
+  --bg: url(assets/bg/gloom.svg) center / cover;
+  --on-surface: #E6E1D3;
+  --on-surface-variant: #A9AEA6;
+  --chip-bg: #1C252D;
+  --chip-fg: #E6E1D3;
+  --chip-meta: #A3A89F;
+  --chip-shadow: 0 3px 0 rgba(0, 0, 0, .45);
+  --wx-sun: #E9E1C8;
+  --wx-cloud: #8D969A;
+  --title-bg: #2A3640;
+  --title-fg: #EDE6D2;
+  --title-meta: #B5B8AE;
+  --label-bg: #2A3640;
+  --label-fg: #EDE6D2;
+  --card-outline: 0 0 0 3px #3C4A55;
+  --card-shadow: 0 5px 0 3px rgba(0, 0, 0, .45);
+  --focus: #EDE3C4;
+  --focus-glow: 0 0 22px rgba(237, 227, 196, .40);
+  --signal: #8FCB9B;
+  --panel-bg: #161E24;
+  --panel-fg: #E6E1D3;
+  --panel-muted: #A3A89F;
+  --item-bg: #1F2A32;
+  --item-focus-ring: #EDE3C4;
+  --item-focus-fill: #2A3640;
+}
+
+/* ---------- 11. Haunted house (dark cartoon, horror) ---------- */
+[data-theme="haunted"] {
+  --btn-fg: #14081F;
+  --bg: url(assets/bg/haunted.svg) center / cover;
+  --on-surface: #EDE7F5;
+  --on-surface-variant: #B9ABCF;
+  --chip-bg: #24163A;
+  --chip-fg: #EDE7F5;
+  --chip-meta: #B3A5C9;
+  --chip-shadow: 0 3px 0 rgba(0, 0, 0, .5);
+  --wx-sun: #FF8A2A;
+  --wx-cloud: #B3A5C9;
+  --title-bg: #8CFF5A;
+  --title-fg: #14081F;
+  --title-meta: #2E5C14;
+  --label-bg: #8CFF5A;
+  --label-fg: #14081F;
+  --card-outline: 0 0 0 3px #6E5A86;
+  --card-shadow: 0 5px 0 3px rgba(0, 0, 0, .5);
+  --focus: #8CFF5A;
+  --focus-glow: 0 0 26px rgba(140, 255, 90, .60);
+  --signal: #8CFF5A;
+  --panel-bg: #1A0F28;
+  --panel-fg: #EDE7F5;
+  --panel-muted: #B3A5C9;
+  --item-bg: #26173A;
+  --item-focus-ring: #8CFF5A;
+  --item-focus-fill: #321F4C;
+}
+
+/* ---------- 12. Monster party (dark cartoon, cheerful) ---------- */
+[data-theme="monsters"] {
+  --btn-fg: #1A1238;
+  --bg: url(assets/bg/monsters.svg) center / cover;
+  --on-surface: #FFFFFF;
+  --on-surface-variant: #C9C0F0;
+  --chip-bg: #2A2158;
+  --chip-fg: #FFFFFF;
+  --chip-meta: #C9C0F0;
+  --chip-shadow: 0 3px 0 rgba(0, 0, 0, .45);
+  --wx-sun: #FFD23F;
+  --wx-cloud: #C9C0F0;
+  --title-bg: #3FE0D0;
+  --title-fg: #0E0A24;
+  --title-meta: #145A63;
+  --label-bg: #3FE0D0;
+  --label-fg: #0E0A24;
+  --card-outline: 0 0 0 3px #4E418F;
+  --card-shadow: 0 5px 0 3px rgba(0, 0, 0, .45);
+  --focus: #FF4FA3;
+  --focus-glow: 0 0 24px rgba(255, 79, 163, .60);
+  --signal: #3FE0D0;
+  --panel-bg: #1A1440;
+  --panel-fg: #FFFFFF;
+  --panel-muted: #C9C0F0;
+  --item-bg: #241B52;
+  --item-focus-ring: #FF4FA3;
+  --item-focus-fill: #30256A;
+}
+
+/* ---------- Halloween pair: one dark, one light; orange, purple and a touch of lime ---------- */
+
+/* ---------- 13. Halloween night (dark cartoon, festive) ---------- */
+[data-theme="halloween-night"] {
+  --btn-fg: #1A0E2C;
+  --bg: url(assets/bg/halloween-night.svg) center / cover;
+  --on-surface: #F6ECFF;
+  --on-surface-variant: #C7B3E0;
+  --chip-bg: #2C1848;
+  --chip-fg: #F6ECFF;
+  --chip-meta: #C7B3E0;
+  --chip-shadow: 0 3px 0 rgba(0, 0, 0, .45);
+  --wx-sun: #FF8A1F;
+  --wx-cloud: #C7B3E0;
+  --title-bg: #8E4FE0;
+  --title-fg: #FFFFFF;
+  --title-meta: #F3EBFF;
+  --label-bg: #8E4FE0;
+  --label-fg: #FFFFFF;
+  --card-outline: 0 0 0 3px #5B3A80;
+  --card-shadow: 0 5px 0 3px rgba(0, 0, 0, .45);
+  --focus: #FF8A1F;
+  --focus-glow: 0 0 24px rgba(255, 138, 31, .60);
+  --signal: #A3E635;
+  --panel-bg: #1E1033;
+  --panel-fg: #F6ECFF;
+  --panel-muted: #C7B3E0;
+  --item-bg: #2A1846;
+  --item-focus-ring: #FF8A1F;
+  --item-focus-fill: #36205A;
+}
+
+/* ---------- 14. Halloween day (light cartoon, cosy) ---------- */
+[data-theme="halloween-day"] {
+  --btn-fg: #FFFFFF;
+  --bg: url(assets/bg/halloween-day.svg) center / cover;
+  --on-surface: #3A1D52;
+  --on-surface-variant: #7A4A6E;
+  --chip-fg: #3A1D52;
+  --chip-meta: #7A4A6E;
+  --wx-sun: #FFB020;
+  --wx-cloud: #B8A4C9;
+  --title-bg: #FF8A1F;
+  --title-fg: #2B1238;
+  --title-meta: #6B2E0E;
+  --label-fg: #3A1D52;
+  --focus: #7A3CE0;
+  --focus-glow: 0 8px 22px rgba(122, 60, 224, .35);
+  --signal: #2DBE4E;
+  --panel-fg: #3A1D52;
+  --panel-muted: #7A4A6E;
+  --item-focus-ring: #7A3CE0;
+  --item-focus-fill: #F1E6FF;
 }

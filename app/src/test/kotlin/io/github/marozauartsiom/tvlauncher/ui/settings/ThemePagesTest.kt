@@ -54,9 +54,9 @@ class ThemePickerPageTest : TvScreenshotTest() {
         composeRule.onNodeWithContentDescription("Midnight").assertExists()
     }
 
-    @Test fun nineThemesInThreeFamilies() {
+    @Test fun fourteenThemesInFiveFamilies() {
         show()
-        listOf("Dark", "Light", "Cartoon").forEach { composeRule.onNodeWithText(it).assertExists() }
+        listOf("Dark", "Light", "Cartoon", "Dark cartoon", "Halloween").forEach { composeRule.onNodeWithText(it).assertExists() }
         Themes.all.forEach { composeRule.onNodeWithContentDescription(composeRule.activity.getString(it.nameRes)).assertExists() }
     }
 
@@ -86,7 +86,7 @@ class ThemePickerPageTest : TvScreenshotTest() {
 
     @Test fun theScheduleRowIsBelowTheThumbnails() {
         show()
-        press(Key.DirectionDown, 3)
+        press(Key.DirectionDown, 5) // one row per family: dark, light, cartoon, dark cartoon, Halloween
         composeRule.onNodeWithText("Change by time of day").assertIsFocused()
         press(Key.Enter)
         assertEquals(1, scheduleOpened)

@@ -17,7 +17,7 @@ style values live in `design/mockups/themes.css`, and approved mockups in `desig
 
 ## 2. Themes
 
-Nine themes ship. The family decides font and card style, and the theme decides colours and art.
+Fourteen themes ship. The family decides font and card style, and the theme decides colours and art.
 
 | # | id | Name (ru) | Family | Background | Focus colour | Card radius | Focus on cards |
 |---|---|---|---|---|---|---|---|
@@ -30,6 +30,11 @@ Nine themes ship. The family decides font and card style, and the theme decides 
 | 7 | valley | Солнечная долина | cartoon | hills, house, smiling sun | #FFD400 | 20 | ×1.12, 5 dp ring, −2° tilt, hard shadow |
 | 8 | ocean | Подводный мир | cartoon | fish, bubbles, seaweed | #FF7A59 | 20 | ×1.12, 5 dp ring, −2° tilt, hard shadow |
 | 9 | space | Космос | cartoon | rocket, moon, ringed planet | #FFE14D | 20 | ×1.12, 5 dp ring, −2° tilt, yellow glow |
+| 10 | gloom | Мрачный холм | dark cartoon | huge moon striped by clouds, ravens, spiral hill, twisted trees, iron fence | #EDE3C4 | 20 | ×1.12, 5 dp ring, −2° tilt, pale glow |
+| 11 | haunted | Привидения | dark cartoon | sickly moon with bats, crooked house, graveyard, ghost, spider | #8CFF5A | 20 | ×1.12, 5 dp ring, −2° tilt, green glow |
+| 12 | monsters | Монстрики | dark cartoon | violet night, party lights, moon in a party hat, monsters peeking over the apps | #FF4FA3 | 20 | ×1.12, 5 dp ring, −2° tilt, pink glow |
+| 13 | halloween-night | Хеллоуин | halloween (dark) | orange moon with a witch, glowing pumpkins, cat on a fence, bunting | #FF8A1F | 20 | ×1.12, 5 dp ring, −2° tilt, orange glow |
+| 14 | halloween-day | Хеллоуин днём | halloween (light) | autumn sky, leaves, friendly ghost, smiling pumpkins, witch hat | #7A3CE0 | 20 | ×1.12, 5 dp ring, −2° tilt, violet shadow |
 
 - **Token groups** (names as in `themes.css`):
   - text: `on-surface`, `on-surface-variant`
@@ -45,6 +50,11 @@ Nine themes ship. The family decides font and card style, and the theme decides 
 - **Cartoon family:** cards always carry a 3 dp white "sticker" outline and a hard drop shadow.
   Section titles and the focused-card label sit in white pills (yellow pills in Space). Chips
   are white with dark text and a coloured weather icon.
+- **Dark cartoon and Halloween:** the same shapes, font and focus style as cartoon. The dark ones
+  (Мрачный холм, Привидения, Монстрики, Хеллоуин) use dark chips, dark panels and a tinted outline
+  (`card-outline` colour) instead of white; pills take the theme accent. Хеллоуин днём is a light
+  cartoon theme like Солнечная долина. The two Halloween themes are meant as a day/night pair for
+  the schedule.
 - **Switching:** Settings → Theme. Focusing a thumbnail previews it live (home and panel); OK
   saves; Back restores the saved theme. Optional "Менять по времени суток" picks a day theme
   and a night theme, switching at sunrise/sunset (07:00/20:00 without weather). It is
@@ -257,7 +267,7 @@ Theme and background crossfade 300 ms. Only scale, alpha, translation and rotati
 
 | Mockup | Source | Render |
 |---|---|---|
-| Home, 9 themes | `home.html?t=<id>` | `themes/<id>.png`, `themes/sheet-*.png` |
+| Home, 14 themes | `home.html?t=<id>` | `themes/<id>.png`, `themes/sheet-*.png` |
 | Home in 6 languages | `home.html?lang=<code>` | `settings/languages.png` |
 | HDMI prompt | `hdmi-prompt.html` | `hdmi-prompt.png` |
 | Weather panel | `weather-panel.html` | `weather-panel.png` |

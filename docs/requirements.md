@@ -159,10 +159,15 @@ help with mirroring an iPhone screen.
 - This is the first network feature, so the launcher gets the `INTERNET` permission.
 - Details: `android-tv-launcher` skill, `references/weather.md`. Mockup: `design/mockups/weather-panel.html`.
 
-## 11. Themes ✅ (all nine ship, switchable)
+## 11. Themes ✅ (all fourteen ship, switchable)
 
 - The owner liked all nine, so all of them ship: dark (Midnight, Graphite, Aurora), light (Paper,
   Sky, Sage), and cartoon (Sunny valley, Underwater, Space).
+- 2026-10-23: the owner asked for three dark cartoon themes (gloomy, horror, dark but cheerful) and a
+  Halloween pair (dark and light): Мрачный холм, Привидения, Монстрики, Хеллоуин, Хеллоуин днём.
+  The first "gloomy" draft read as sad (rain, a crying cloud), so it became a Burton-like hill; the
+  first monster party had white chips and too little colour, so it became darker with a three-colour
+  palette. Each new theme is a separate family row in the picker.
 - Settings → Theme: thumbnails grouped by family with **live preview**. The focused theme is applied
   to the screen at once, OK saves it, and Back cancels.
 - Optional "change by time of day" (off by default): a day theme and a night theme, switched at

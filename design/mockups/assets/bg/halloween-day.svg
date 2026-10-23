@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <!-- Halloween day (light, cosy): warm autumn sky, bunting, falling leaves, an autumn tree,
+       a friendly ghost, smiling pumpkins, a witch hat, a cute cat and candy. -->
+  <defs>
+    <radialGradient id="sky" cx=".5" cy="0" r="1.1">
+      <stop offset="0" stop-color="#FFF1DC"/><stop offset=".6" stop-color="#FFE2BF"/><stop offset="1" stop-color="#FBD3A8"/>
+    </radialGradient>
+    <path id="flag" d="M-8 0 L8 0 L0 15 Z"/>
+    <path id="leaf" d="M0 -9 Q7 -4 6 3 Q3 8 0 10 Q-3 8 -6 3 Q-7 -4 0 -9 Z M0 10 v4"/>
+    <g id="pumpkin">
+      <ellipse cx="-14" rx="14" ry="19" fill="#F07A1C"/><ellipse cx="14" rx="14" ry="19" fill="#F07A1C"/>
+      <ellipse rx="16" ry="20" fill="#FF9233"/>
+      <path d="M-1 -19 q1 -9 7 -11" stroke="#5E8A30" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <path d="M-13 -6 q4 -5 8 0 M5 -6 q4 -5 8 0" stroke="#6B2E0E" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M-11 4 Q0 16 11 4 Z" fill="#6B2E0E"/>
+      <circle cx="-17" cy="4" r="3.5" fill="#FF6F61" opacity=".55"/><circle cx="17" cy="4" r="3.5" fill="#FF6F61" opacity=".55"/>
+    </g>
+    <g id="corn"><path d="M-6 6 L6 6 L0 -10 Z" fill="#FF8A1F"/><path d="M-6 6 L6 6 L4.5 2 L-4.5 2 Z" fill="#FFC23C"/><path d="M-2 -5 L2 -5 L0 -10 Z" fill="#FFFFFF"/></g>
+    <g id="cloud" fill="#FFFFFF" opacity=".75"><circle cx="-16" cy="2" r="11"/><circle cx="0" cy="-4" r="14"/><circle cx="16" cy="2" r="10"/><rect x="-27" y="1" width="54" height="11" rx="5.5"/></g>
+  </defs>
+  <rect width="960" height="540" fill="url(#sky)"/>
+  <use href="#cloud" transform="translate(330 120)"/><use href="#cloud" transform="translate(760 118) scale(.8)"/>
+
+  <!-- bunting -->
+  <path d="M-10 0 Q240 40 490 2 Q730 40 970 0" stroke="#A0705A" stroke-width="2.5" fill="none"/>
+  <use href="#flag" transform="translate(20 5) rotate(8)" fill="#FF8A1F"/>
+  <use href="#flag" transform="translate(75 11) rotate(6)" fill="#8E4FE0"/>
+  <use href="#flag" transform="translate(130 16) rotate(4)" fill="#FFFFFF"/>
+  <use href="#flag" transform="translate(185 19) rotate(2)" fill="#FF8A1F"/>
+  <use href="#flag" transform="translate(240 20)" fill="#8E4FE0"/>
+  <use href="#flag" transform="translate(295 20) rotate(-2)" fill="#FFFFFF"/>
+  <use href="#flag" transform="translate(350 17) rotate(-4)" fill="#FF8A1F"/>
+  <use href="#flag" transform="translate(405 13) rotate(-6)" fill="#8E4FE0"/>
+  <use href="#flag" transform="translate(460 6) rotate(-8)" fill="#FFFFFF"/>
+  <use href="#flag" transform="translate(519 6) rotate(8)" fill="#FF8A1F"/>
+  <use href="#flag" transform="translate(572 13) rotate(6)" fill="#8E4FE0"/>
+  <use href="#flag" transform="translate(624 17) rotate(4)" fill="#FFFFFF"/>
+  <use href="#flag" transform="translate(677 20) rotate(2)" fill="#FF8A1F"/>
+  <use href="#flag" transform="translate(730 20)" fill="#8E4FE0"/>
+  <use href="#flag" transform="translate(783 19) rotate(-2)" fill="#FFFFFF"/>
+  <use href="#flag" transform="translate(836 16) rotate(-4)" fill="#FF8A1F"/>
+  <use href="#flag" transform="translate(888 11) rotate(-6)" fill="#8E4FE0"/>
+  <use href="#flag" transform="translate(941 5) rotate(-8)" fill="#FFFFFF"/>
+
+  <!-- autumn tree on the right edge -->
+  <path d="M968 540 Q944 400 952 250 Q956 180 940 120" stroke="#8A5A3B" stroke-width="20" stroke-linecap="round" fill="none"/>
+  <path d="M944 150 Q910 140 890 118" stroke="#8A5A3B" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <g>
+    <circle cx="900" cy="100" r="26" fill="#F28C28"/><circle cx="936" cy="84" r="30" fill="#F5B935"/>
+    <circle cx="960" cy="112" r="26" fill="#E9672B"/><circle cx="878" cy="124" r="16" fill="#F5B935"/>
+    <circle cx="920" cy="126" r="20" fill="#E9672B"/>
+  </g>
+
+  <!-- falling leaves -->
+  <g>
+    <use href="#leaf" transform="translate(260 96) rotate(30)" fill="#E9672B"/>
+    <use href="#leaf" transform="translate(420 70) rotate(-40)" fill="#F5B935"/>
+    <use href="#leaf" transform="translate(690 128) rotate(70)" fill="#F28C28"/>
+    <use href="#leaf" transform="translate(840 130) rotate(-20)" fill="#D9532B"/>
+    <use href="#leaf" transform="translate(380 262) rotate(50)" fill="#F28C28"/>
+    <use href="#leaf" transform="translate(620 250) rotate(-60)" fill="#D9532B"/>
+    <use href="#leaf" transform="translate(26 210) rotate(15)" fill="#F5B935"/>
+    <use href="#leaf" transform="translate(934 300) rotate(-30)" fill="#F28C28"/>
+    <use href="#leaf" transform="translate(22 420) rotate(80)" fill="#E9672B"/>
+  </g>
+
+  <!-- the friendly ghost -->
+  <g transform="translate(512 100)">
+    <ellipse cy="40" rx="22" ry="5" fill="#C9906A" opacity=".25"/>
+    <path d="M-24 28 L-24 -6 Q-24 -30 0 -30 Q24 -30 24 -6 L24 28 Q18 22 12 28 Q6 22 0 28 Q-6 22 -12 28 Q-18 22 -24 28 Z" fill="#FFFFFF"/>
+    <path d="M22 -2 Q34 -12 36 -22 Q38 -28 32 -26" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="-8" cy="-8" r="3.6" fill="#3A1D52"/><circle cx="8" cy="-8" r="3.6" fill="#3A1D52"/>
+    <path d="M-6 2 q6 6 12 0" stroke="#3A1D52" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <circle cx="-14" cy="0" r="3.5" fill="#FF9AB0" opacity=".7"/><circle cx="14" cy="0" r="3.5" fill="#FF9AB0" opacity=".7"/>
+  </g>
+  <use href="#corn" transform="translate(600 92) rotate(20)"/>
+  <use href="#corn" transform="translate(440 120) rotate(-25)"/>
+
+  <!-- hills and the pumpkin patch between the rows -->
+  <path d="M0 316 Q220 290 460 306 Q700 286 960 300 L960 540 L0 540 Z" fill="#F4BE88"/>
+  <path d="M0 336 Q260 318 520 330 Q760 316 960 328 L960 540 L0 540 Z" fill="#EDAA6E"/>
+  <g stroke="#5E8A30" stroke-width="3" stroke-linecap="round" fill="none">
+    <path d="M360 318 Q400 300 440 314 Q470 324 500 310 M560 312 Q600 298 640 312"/>
+    <path d="M440 314 q6 -10 0 -16 q-6 -2 -4 4"/>
+  </g>
+  <use href="#pumpkin" transform="translate(372 306) scale(.6)"/>
+  <use href="#pumpkin" transform="translate(470 298)"/>
+  <use href="#pumpkin" transform="translate(560 308) scale(.7)"/>
+
+  <!-- witch hat and a cute cat -->
+  <g transform="translate(660 304) rotate(-8)">
+    <ellipse cy="10" rx="34" ry="8" fill="#6A35C2"/>
+    <path d="M-18 8 L18 8 Q10 -18 22 -38 Q-2 -30 -18 8 Z" fill="#8E4FE0"/>
+    <path d="M-17 2 L17 2 L18 8 L-18 8 Z" fill="#FF8A1F"/>
+  </g>
+  <g transform="translate(790 288)">
+    <path d="M14 18 Q34 14 30 -4 Q28 -14 22 -12 Q26 -2 22 6 Q18 12 10 12 Z" fill="#3A2450"/>
+    <ellipse cy="10" rx="14" ry="16" fill="#3A2450"/>
+    <circle cy="-10" r="11" fill="#3A2450"/><path d="M-10 -14 L-9 -27 L-1 -18 Z M10 -14 L9 -27 L1 -18 Z" fill="#3A2450"/>
+    <ellipse cx="-4.5" cy="-11" rx="2.8" ry="3.6" fill="#A3E635"/><ellipse cx="4.5" cy="-11" rx="2.8" ry="3.6" fill="#A3E635"/>
+    <path d="M-3 -4 q3 3 6 0" stroke="#FFC9D6" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <!-- pumpkins in the corners -->
+  <use href="#pumpkin" transform="translate(16 500) scale(.95)"/>
+  <use href="#pumpkin" transform="translate(944 504) scale(.8)"/>
+</svg>

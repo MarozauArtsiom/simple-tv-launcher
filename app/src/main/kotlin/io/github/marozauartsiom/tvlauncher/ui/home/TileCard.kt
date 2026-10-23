@@ -183,7 +183,7 @@ fun Modifier.cardFrame(theme: ThemeSpec, shape: RoundedCornerShape, focus: Focus
         if (p < 1f) {
             val rest = 1f - p
             theme.cardShadow?.takeIf { it.blur.value == 0f }?.let { drawHardShadow(it, radius, rest) }
-            if (theme.cardOutline.value > 0f) drawRing(Color.White.copy(alpha = rest), theme.cardOutline.toPx(), radius)
+            if (theme.cardOutline.value > 0f) drawRing(theme.colors.cardOutline.copy(alpha = rest), theme.cardOutline.toPx(), radius)
         }
         if (p > 0f) {
             theme.focus.glow?.takeIf { it.blur.value == 0f }?.let { drawHardShadow(it, radius, p) }

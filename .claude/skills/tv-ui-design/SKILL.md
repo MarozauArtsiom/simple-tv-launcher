@@ -1,6 +1,6 @@
 ---
 name: tv-ui-design
-description: Design rules for the 10-foot TV UI of this launcher. Covers the 960x540 dp canvas and safe areas, layout grid, type scale, the nine themes (tokens in design/mockups/themes.css), QLED-aware colour, focus states per component, D-pad navigation model, motion budget for a weak GPU, Compose-for-TV component patterns, and how to render HTML mockups as 1920x1080 PNGs with Playwright. The concrete per-screen spec is docs/ui-spec.md. Load before designing, reviewing or coding any screen or component.
+description: Design rules for the 10-foot TV UI of this launcher. Covers the 960x540 dp canvas and safe areas, layout grid, type scale, the fourteen themes (tokens in design/mockups/themes.css), QLED-aware colour, focus states per component, D-pad navigation model, motion budget for a weak GPU, Compose-for-TV component patterns, and how to render HTML mockups as 1920x1080 PNGs with Playwright. The concrete per-screen spec is docs/ui-spec.md. Load before designing, reviewing or coding any screen or component.
 ---
 
 # TV UI design
@@ -9,7 +9,7 @@ Three sources, each with one job:
 - **This skill** holds the rules (how anything on a TV must look and behave).
 - **`docs/ui-spec.md`** holds what each screen and component is: sizes, states, initial focus,
   Back behaviour, and which screens still need a mockup.
-- **`design/mockups/themes.css`** holds the exact token values of all nine themes.
+- **`design/mockups/themes.css`** holds the exact token values of all fourteen themes.
 
 The user sits about 3 m from a 55" screen, holding a remote with a D-pad, OK, Back and
 Home. Nothing on screen can be tapped, and only one thing has focus at a time. Every
@@ -48,9 +48,10 @@ bodySmall 12/16, labelLarge 14/20 (Medium), labelMedium 12/16 (Medium), labelSma
   which use Nunito: a rounded, very legible sans with Cyrillic, under the OFL licence, bundled
   in the app at about 270 KB (`design/mockups/assets/fonts/`).
 
-## Colour (nine themes, QLED-aware)
+## Colour (fourteen themes, QLED-aware)
 
-The owner chose to ship all nine themes (3 dark, 3 light, 3 cartoon). Every colour comes from
+The owner chose to ship fourteen themes (3 dark, 3 light, 3 cartoon, 3 dark cartoon, and a Halloween
+pair: one dark, one light). Every colour comes from
 a theme token. The token list is in `docs/ui-spec.md` §2 and the values are in
 `design/mockups/themes.css`. Never hard-code a colour in a component.
 
@@ -127,8 +128,8 @@ node .claude/skills/tv-ui-design/scripts/render-mockup.cjs design/mockups/home.h
 node .claude/skills/tv-ui-design/scripts/render-mockup.cjs design/mockups/home.html --grid   # safe-area overlay
 ```
 
-Starter template and conventions: [references/mockups.md](references/mockups.md). The nine theme
-candidates live in `design/mockups/themes.css`. Render one with `home.html?t=<id>`; comparison
+Starter template and conventions: [references/mockups.md](references/mockups.md). All fourteen
+themes live in `design/mockups/themes.css`. Render one with `home.html?t=<id>`; comparison
 sheets are in `design/mockups/themes/`. Show
 the PNG to the user (it reads as the real TV frame), get agreement, then implement it in
 Compose with the same token values.
@@ -142,7 +143,7 @@ Compose with the same token values.
 - [ ] Back and Home on the root screen reset to the top; the launcher never exits.
 - [ ] Only `graphicsLayer` animations, all ≤ 250 ms, no blur.
 - [ ] Colours, radii and focus styles come from theme tokens. Nothing is hard-coded.
-- [ ] Checked in all 9 themes: dark, light and cartoon each look right, and contrast holds.
+- [ ] Checked in all 14 themes: every family looks right, and contrast holds.
 - [ ] Checked in `fr` and `be` (the longest strings and the Belarusian alphabet). Nothing is
       clipped and every title is one line.
 - [ ] The screen has an approved mockup and matches `docs/ui-spec.md`.

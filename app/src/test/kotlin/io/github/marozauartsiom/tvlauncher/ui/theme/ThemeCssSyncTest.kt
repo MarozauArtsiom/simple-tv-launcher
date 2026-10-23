@@ -13,23 +13,24 @@ class ThemeCssSyncTest {
     private val css = File("../design/mockups/themes.css").readText()
 
     private val tokens: Map<ThemeId, Map<String, String>> = run {
-        val blockRegex = Regex("""((?::root, )?(?:\[data-theme="\w+"](?:, )?)+)\s*\{(.*?)\n\}""", RegexOption.DOT_MATCHES_ALL)
+        val blockRegex = Regex("""((?::root, )?(?:\[data-theme="[\w-]+"](?:,\s*)?)+)\s*\{(.*?)\n\}""", RegexOption.DOT_MATCHES_ALL)
         val varRegex = Regex("""--([\w-]+):\s*([^;]+);""")
         var base = mapOf<String, String>()
         var family = mapOf<String, String>()
+        var familyNames = setOf<String>()
         val per = mutableMapOf<String, Map<String, String>>()
         for (m in blockRegex.findAll(css)) {
-            val names = Regex("""data-theme="(\w+)"""").findAll(m.groupValues[1]).map { it.groupValues[1] }.toList()
+            val names = Regex("""data-theme="([\w-]+)"""").findAll(m.groupValues[1]).map { it.groupValues[1] }.toList()
             val vars = varRegex.findAll(m.groupValues[2]).associate { it.groupValues[1] to it.groupValues[2].trim() }
             when {
                 m.groupValues[1].startsWith(":root") -> base = vars
-                names.size > 1 -> family = vars
+                names.size > 1 -> { family = vars; familyNames = names.toSet() }
                 else -> per[names.single()] = vars
             }
         }
         ThemeId.entries.associateWith { id ->
             val merged = base.toMutableMap()
-            if (id.key in setOf("valley", "ocean", "space")) merged.putAll(family)
+            if (id.key in familyNames) merged.putAll(family)
             merged.putAll(per[id.key].orEmpty())
             merged.keys.toList().forEach { k ->
                 Regex("""var\(--([\w-]+)\)""").matchEntire(merged.getValue(k))?.let { merged[k] = merged.getValue(it.groupValues[1]) }
@@ -49,7 +50,9 @@ class ThemeCssSyncTest {
     }
 
     private fun assertColor(theme: ThemeId, token: String, actual: Color) {
-        val expected = parseColor(tokens.getValue(theme).getValue(token))
+        val raw = tokens.getValue(theme).getValue(token)
+        // --card-outline is a box-shadow ("0 0 0 3px #FFFFFF"): its colour is the last word
+        val expected = parseColor(if (token == "card-outline") raw.substringAfterLast(' ') else raw)
         if (expected == Color.Unspecified || actual == Color.Unspecified) {
             assertEquals("$theme $token", expected, actual)
             return
@@ -64,8 +67,8 @@ class ThemeCssSyncTest {
     private fun px(theme: ThemeId, token: String) = tokens.getValue(theme).getValue(token).removeSuffix("px").toFloat()
 
     @Test
-    fun allNineThemesExist() {
-        assertEquals(9, ThemeId.entries.size)
+    fun allFourteenThemesExist() {
+        assertEquals(14, ThemeId.entries.size)
         assertEquals(ThemeId.entries, Themes.all.map { it.id })
     }
 
@@ -77,7 +80,7 @@ class ThemeCssSyncTest {
                 "on-surface" to c.onSurface, "on-surface-variant" to c.onSurfaceVariant,
                 "chip-bg" to c.chipBg, "chip-fg" to c.chipFg, "chip-meta" to c.chipMeta,
                 "title-bg" to c.titleBg, "title-fg" to c.titleFg, "title-meta" to c.titleMeta,
-                "label-bg" to c.labelBg, "label-fg" to c.labelFg,
+                "label-bg" to c.labelBg, "label-fg" to c.labelFg, "card-outline" to c.cardOutline,
                 "focus" to c.focus, "signal" to c.signal, "wx-sun" to c.weatherSun, "wx-cloud" to c.weatherCloud,
                 "panel-bg" to c.panelBg, "panel-fg" to c.panelFg, "panel-muted" to c.panelMuted,
                 "item-bg" to c.itemBg, "item-focus-fill" to c.itemFocusFill, "item-focus-ring" to c.itemFocusRing,
@@ -97,7 +100,13 @@ class ThemeCssSyncTest {
             assertEquals("${t.id} panel radius", px(t.id, "panel-radius"), t.panelRadius.value, 0.01f)
             assertEquals("${t.id} uppercase", tokens.getValue(t.id).getValue("title-case") == "uppercase", t.titleUppercase)
             assertEquals("${t.id} font", "Nunito" in tokens.getValue(t.id).getValue("font"), t.font == ThemeFont.Nunito)
-            val family = when (t.id.key) { "valley", "ocean", "space" -> ThemeFamily.Cartoon; "paper", "sky", "sage" -> ThemeFamily.Light; else -> ThemeFamily.Dark }
+            val family = when (t.id.key) {
+                "valley", "ocean", "space" -> ThemeFamily.Cartoon
+                "gloom", "haunted", "monsters" -> ThemeFamily.DarkCartoon
+                "halloween-night", "halloween-day" -> ThemeFamily.Halloween
+                "paper", "sky", "sage" -> ThemeFamily.Light
+                else -> ThemeFamily.Dark
+            }
             assertEquals("${t.id} family", family, t.family)
         }
     }
@@ -106,7 +115,7 @@ class ThemeCssSyncTest {
     fun everyBackgroundAssetIsReferencedByExactlyOneTheme() {
         val images = Themes.all.map { it.background }.filterIsInstance<ImageBackground>()
         assertEquals(images.size, images.map { it.resId }.toSet().size)
-        assertEquals(7, images.size) // Graphite and Paper draw gradients in code
+        assertEquals(12, images.size) // Graphite and Paper draw gradients in code
     }
 
     @Test

@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <!-- Monster party (dark, three accents: pink, mint, yellow): a deep violet night with soft coloured glows,
+       a string of party lights, the moon in a party hat, a little confetti and monsters peeking over the apps. -->
+  <defs>
+    <radialGradient id="sky" cx=".5" cy="0" r="1.1">
+      <stop offset="0" stop-color="#2A1F58"/><stop offset=".6" stop-color="#181239"/><stop offset="1" stop-color="#0E0A24"/>
+    </radialGradient>
+    <radialGradient id="glow-pink"><stop offset="0" stop-color="#FF4FA3" stop-opacity=".22"/><stop offset="1" stop-color="#FF4FA3" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glow-mint"><stop offset="0" stop-color="#3FE0D0" stop-opacity=".16"/><stop offset="1" stop-color="#3FE0D0" stop-opacity="0"/></radialGradient>
+    <g id="bulb"><circle r="11" opacity=".2"/><ellipse cy="6" rx="5" ry="7"/><rect x="-3.5" y="-3" width="7" height="5" rx="1.5" fill="#3A2F6E"/></g>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#120D2C" stop-opacity="0"/><stop offset=".12" stop-color="#120D2C"/></linearGradient>
+    <path id="spark" d="M0 -8 Q2 -2 8 0 Q2 2 0 8 Q-2 2 -8 0 Q-2 -2 0 -8 Z" fill="#FFD23F"/>
+  </defs>
+  <rect width="960" height="540" fill="url(#sky)"/>
+  <g fill="#FFFFFF" opacity=".8">
+    <circle cx="380" cy="60" r="1.6"/><circle cx="260" cy="128" r="1.4"/><circle cx="720" cy="72" r="1.6"/>
+    <circle cx="20" cy="210" r="1.4"/><circle cx="940" cy="300" r="1.6"/><circle cx="660" cy="262" r="1.4"/>
+  </g>
+  <use href="#spark" transform="translate(410 118) scale(.8)"/><use href="#spark" transform="translate(760 124) scale(.7)"/>
+
+  <!-- string of party lights above the top bar -->
+  <path d="M-10 2 Q240 44 490 4 Q730 44 970 2" stroke="#3A2F6E" stroke-width="2.5" fill="none"/>
+  <use href="#bulb" transform="translate(25 9) rotate(-12)" fill="#FF4FA3"/>
+  <use href="#bulb" transform="translate(86 17) rotate(-12)" fill="#FFD23F"/>
+  <use href="#bulb" transform="translate(148 22) rotate(-12)" fill="#3FE0D0"/>
+  <use href="#bulb" transform="translate(210 25)" fill="#FF4FA3"/>
+  <use href="#bulb" transform="translate(271 25)" fill="#FFD23F"/>
+  <use href="#bulb" transform="translate(332 23) rotate(12)" fill="#3FE0D0"/>
+  <use href="#bulb" transform="translate(394 18) rotate(12)" fill="#FF4FA3"/>
+  <use href="#bulb" transform="translate(456 11) rotate(12)" fill="#FFD23F"/>
+  <use href="#bulb" transform="translate(524 11) rotate(-12)" fill="#3FE0D0"/>
+  <use href="#bulb" transform="translate(583 18) rotate(-12)" fill="#FF4FA3"/>
+  <use href="#bulb" transform="translate(642 23) rotate(-12)" fill="#FFD23F"/>
+  <use href="#bulb" transform="translate(701 25)" fill="#3FE0D0"/>
+  <use href="#bulb" transform="translate(760 25)" fill="#FF4FA3"/>
+  <use href="#bulb" transform="translate(819 22) rotate(12)" fill="#FFD23F"/>
+  <use href="#bulb" transform="translate(878 17) rotate(12)" fill="#3FE0D0"/>
+  <use href="#bulb" transform="translate(937 9) rotate(12)" fill="#FF4FA3"/>
+
+  <!-- the moon in a party hat -->
+  <g transform="translate(500 104)">
+    <circle r="36" fill="#F2E3B0" opacity=".08"/>
+    <circle r="27" fill="#F2E3B0"/>
+    <circle cx="-12" cy="10" r="5" fill="#FF4FA3" opacity=".35"/><circle cx="14" cy="10" r="5" fill="#FF4FA3" opacity=".35"/>
+    <g stroke="#1E1645" stroke-width="3" stroke-linecap="round" fill="none">
+      <path d="M-13 0 q4 -6 8 0"/><path d="M5 0 q4 -6 8 0"/>
+    </g>
+    <path d="M-8 8 Q1 20 10 8 Z" fill="#1E1645"/>
+    <g transform="rotate(14)">
+      <path d="M-15 -24 L13 -24 L-1 -62 Z" fill="#FF4FA3"/>
+      <circle cx="-4" cy="-34" r="3" fill="#FFD23F"/><circle cx="4" cy="-44" r="2.6" fill="#3FE0D0"/><circle cx="-2" cy="-52" r="2" fill="#FFD23F"/>
+      <circle cx="-1" cy="-64" r="5" fill="#FFD23F"/>
+      <rect x="-17" y="-27" width="32" height="6" rx="3" fill="#FFD23F"/>
+    </g>
+  </g>
+
+  <!-- balloons on the right -->
+  <path d="M906 128 q-6 10 2 24 M936 136 q6 10 -2 22" stroke="#6E64A8" stroke-width="2" fill="none"/>
+  <ellipse cx="906" cy="104" rx="17" ry="21" fill="#FF4FA3"/><path d="M902 125 h8 l-4 5 Z" fill="#FF4FA3"/>
+  <ellipse cx="900" cy="96" rx="4" ry="7" fill="#FFFFFF" opacity=".35"/>
+  <ellipse cx="938" cy="114" rx="15" ry="19" fill="#3FE0D0"/><path d="M934 133 h8 l-4 5 Z" fill="#3FE0D0"/>
+  <ellipse cx="933" cy="107" rx="3.5" ry="6" fill="#FFFFFF" opacity=".35"/>
+
+  <!-- a little confetti -->
+  <g>
+    <rect x="300" y="90" width="9" height="5" rx="2" fill="#3FE0D0" transform="rotate(30 304 92)"/>
+    <rect x="440" y="70" width="9" height="5" rx="2" fill="#FFD23F" transform="rotate(-20 444 72)"/>
+    <rect x="660" y="96" width="9" height="5" rx="2" fill="#FF4FA3" transform="rotate(-35 664 98)"/>
+    <rect x="800" y="128" width="9" height="5" rx="2" fill="#FFD23F" transform="rotate(15 804 130)"/>
+    <rect x="360" y="246" width="9" height="5" rx="2" fill="#FF4FA3" transform="rotate(-25 364 248)"/>
+    <rect x="690" y="290" width="9" height="5" rx="2" fill="#3FE0D0" transform="rotate(-10 694 292)"/>
+    <rect x="930" y="340" width="9" height="5" rx="2" fill="#FF4FA3" transform="rotate(-40 934 342)"/>
+    <circle cx="610" cy="252" r="3" fill="#FFD23F"/><circle cx="24" cy="330" r="3" fill="#3FE0D0"/>
+  </g>
+
+  <!-- lilac horned monster peeking over the apps -->
+  <g transform="translate(560 300)">
+    <path d="M-22 -24 Q-30 -40 -20 -46 Q-16 -34 -12 -28 Z M22 -24 Q30 -40 20 -46 Q16 -34 12 -28 Z" fill="#FFD23F"/>
+    <ellipse rx="36" ry="32" cy="4" fill="#8E73F0"/>
+    <circle cx="-16" cy="16" r="4" fill="#7458D6"/><circle cx="20" cy="-14" r="3" fill="#7458D6"/>
+    <circle cx="-12" cy="-6" r="9" fill="#FFFFFF"/><circle cx="12" cy="-6" r="9" fill="#FFFFFF"/>
+    <circle cx="-8" cy="-5" r="4.5" fill="#0E0A24"/><circle cx="16" cy="-5" r="4.5" fill="#0E0A24"/>
+    <path d="M-12 8 Q0 20 12 8 Z" fill="#0E0A24"/><path d="M-3 9 h6 l-3 5 Z" fill="#FFFFFF"/>
+    <ellipse cx="-28" cy="20" rx="9" ry="6" fill="#8E73F0"/><ellipse cx="28" cy="20" rx="9" ry="6" fill="#8E73F0"/>
+  </g>
+
+  <!-- big mint one-eyed monster peeking over the apps -->
+  <g transform="translate(812 300)">
+    <path d="M-30 -36 l6 -16 l8 14 l8 -18 l8 18 l8 -14 l6 16 Z" fill="#2CC9BA" stroke="#2CC9BA" stroke-width="4" stroke-linejoin="round"/>
+    <ellipse rx="52" ry="46" cy="12" fill="#2CC9BA"/>
+    <circle cx="-30" cy="22" r="5" fill="#21A99C"/><circle cx="32" cy="-4" r="4" fill="#21A99C"/>
+    <circle cy="-6" r="18" fill="#FFFFFF"/><circle cx="3" cy="-5" r="9.5" fill="#FF4FA3"/><circle cx="4" cy="-5" r="5" fill="#0E0A24"/>
+    <circle cx="7" cy="-9" r="2.5" fill="#FFFFFF"/>
+    <path d="M-20 12 Q0 30 20 12 Z" fill="#0E0A24"/><path d="M-12 13 h7 l-3.5 6 Z M5 13 h7 l-3.5 6 Z" fill="#FFFFFF"/>
+    <ellipse cx="-44" cy="20" rx="12" ry="8" fill="#2CC9BA"/><ellipse cx="44" cy="20" rx="12" ry="8" fill="#2CC9BA"/>
+  </g>
+
+  <!-- pink three-eyed blob peeking from the left edge -->
+  <g transform="translate(6 270)">
+    <ellipse rx="34" ry="30" fill="#FF4FA3"/>
+    <circle cx="10" cy="-12" r="6" fill="#FFFFFF"/><circle cx="24" cy="-2" r="6" fill="#FFFFFF"/><circle cx="12" cy="6" r="5" fill="#FFFFFF"/>
+    <circle cx="12" cy="-11" r="3" fill="#0E0A24"/><circle cx="26" cy="-1" r="3" fill="#0E0A24"/><circle cx="14" cy="7" r="2.5" fill="#0E0A24"/>
+    <path d="M14 16 q8 6 14 -2" stroke="#0E0A24" stroke-width="3" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <!-- ground behind the app grid, then the soft coloured glows over everything -->
+  <rect y="318" width="960" height="222" fill="url(#ground)"/>
+  <ellipse cx="80" cy="430" rx="300" ry="220" fill="url(#glow-pink)"/>
+  <ellipse cx="900" cy="250" rx="280" ry="200" fill="url(#glow-mint)"/>
+</svg>
