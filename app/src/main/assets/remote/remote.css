@@ -1,0 +1,72 @@
+/* The phone page. Every colour, radius and font comes from the launcher's theme tokens (themes.css),
+   so the page looks like the TV; <html data-theme> is the TV's current theme. */
+/* touch-action: manipulation turns off double-tap zoom (iOS ignores user-scalable=no); the picture sets its own. */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+html { background: var(--panel-bg); }
+body {
+  margin: 0; min-height: 100vh; font-family: var(--font); color: var(--panel-fg); background: var(--panel-bg);
+  padding: max(12px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));
+  -webkit-font-smoothing: antialiased; user-select: none; -webkit-user-select: none;
+}
+[hidden] { display: none !important; }
+.muted { color: var(--panel-muted); }
+
+/* The theme's art behind the top of the page, fading into the panel colour. */
+.art { position: fixed; inset: 0 0 auto 0; height: 300px; z-index: -1; background: var(--bg); background-position: center top; }
+.art::before { content: ''; position: absolute; inset: 0; background: var(--scrim); }
+.art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 35%, var(--panel-bg) 100%); }
+
+.top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; min-height: 40px; }
+.pill { display: inline-flex; align-items: center; height: 34px; padding: 0 16px; border-radius: 17px;
+        background: var(--chip-bg); color: var(--chip-fg); box-shadow: var(--chip-shadow); font-weight: 700; font-size: 16px; }
+.modes { display: flex; padding: 3px; border-radius: 20px; background: var(--chip-bg); box-shadow: var(--chip-shadow); }
+.mode { border: 0; height: 32px; padding: 0 14px; border-radius: 16px; background: transparent; color: var(--chip-fg); font: inherit; font-size: 14px; font-weight: 600; }
+.mode.on { background: var(--focus); color: var(--btn-fg); }
+
+.card { margin-top: 24vh; padding: 22px; border-radius: max(var(--panel-radius), 16px); background: var(--panel-bg);
+        box-shadow: 0 0 0 1px var(--item-bg), 0 10px 30px rgba(0, 0, 0, .25); }
+.card h1 { margin: 0 0 6px; font-size: 24px; line-height: 32px; font-weight: 700; }
+.card p { margin: 0 0 16px; font-size: 15px; line-height: 21px; }
+.card input { width: 100%; height: 60px; margin-bottom: 12px; text-align: center; font: inherit; font-size: 30px; letter-spacing: .3em;
+              border-radius: 14px; border: 2px solid var(--item-bg); background: var(--item-bg); color: var(--panel-fg); }
+.card input:focus { outline: none; border-color: var(--item-focus-ring); }
+.error { color: var(--focus); font-weight: 600; margin: 10px 0 0 !important; }
+
+.screen { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; touch-action: none;
+          border-radius: calc(var(--card-radius) * .6); background: #000; box-shadow: var(--card-outline), var(--card-shadow); }
+.screen img { width: 100%; height: 100%; display: block; pointer-events: none; }
+#dot { position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; pointer-events: none; display: none;
+       background: var(--focus); opacity: .55; box-shadow: var(--focus-glow); }
+.hint { margin: 8px 2px 4px; font-size: 13px; line-height: 18px; text-align: center; }
+
+button { font: inherit; color: inherit; cursor: pointer; }
+.pad { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 8px;
+       width: min(280px, 78vw); aspect-ratio: 1; margin: 18px auto 14px; }
+.key, .btn { border: 0; background: var(--item-bg); color: var(--panel-fg); border-radius: 18px; display: grid; place-items: center;
+             box-shadow: var(--card-shadow); transition: transform .08s, background .08s; }
+.key svg, .btn svg { width: 34px; height: 34px; fill: currentColor; }
+.key.up { grid-area: 1 / 2; } .key.left { grid-area: 2 / 1; } .key.ok { grid-area: 2 / 2; } .key.right { grid-area: 2 / 3; } .key.down { grid-area: 3 / 2; }
+.key.ok { background: var(--focus); color: var(--btn-fg); font-weight: 800; font-size: 22px; border-radius: 50%; }
+.key:active, .btn:active, .mode:active, .primary:active { transform: scale(.94); background: var(--item-focus-fill); box-shadow: 0 0 0 var(--focus-border) var(--item-focus-ring); }
+.key.ok:active { background: var(--focus); }
+
+.row { display: flex; gap: 10px; margin-top: 10px; }
+.row .btn { flex: 1; height: 56px; display: flex; gap: 8px; justify-content: center; align-items: center; font-weight: 600; font-size: 16px; }
+.row.small .btn { height: 48px; font-size: 20px; }
+.row.small .btn svg { width: 24px; height: 24px; }
+
+.type { display: flex; gap: 10px; margin-top: 18px; }
+.type input { flex: 1; min-width: 0; height: 52px; padding: 0 14px; font: inherit; font-size: 17px; border-radius: 14px;
+              border: 2px solid var(--item-bg); background: var(--item-bg); color: var(--panel-fg); user-select: text; -webkit-user-select: text; }
+.type input:focus { outline: none; border-color: var(--item-focus-ring); }
+.primary { border: 0; height: 52px; padding: 0 20px; border-radius: 14px; background: var(--focus); color: var(--btn-fg); font-weight: 700; font-size: 17px; width: 100%; }
+.type .primary { width: auto; }
+.link { display: block; margin: 22px auto 0; border: 0; background: none; color: var(--panel-muted); font-size: 15px; text-decoration: underline; }
+
+/* The assistant pairing page (a computer screen). */
+body.wide { max-width: 640px; margin: 0 auto; }
+body.wide .card { margin-top: 120px; }
+.card input.name { font-size: 17px; letter-spacing: normal; text-align: left; padding: 0 14px; height: 52px; }
+pre { margin: 0 0 10px; padding: 12px; border-radius: 12px; background: var(--item-bg); color: var(--panel-fg); white-space: pre-wrap;
+      word-break: break-all; font-size: 13px; line-height: 18px; user-select: text; -webkit-user-select: text; }
+#done .primary { margin-bottom: 18px; }

@@ -72,6 +72,15 @@ data class HdmiSettings(
     val mutedInputs: Set<String> = emptySet(),
 )
 
+/** The buttons of the top bar that the owner can hide. Settings (the avatar) always stays: it is the way back. */
+enum class TopButton(val key: String) {
+    Weather("weather"), Inputs("inputs"), Timer("timer"), Remote("remote"), Iphone("iphone");
+
+    companion object {
+        fun fromKey(key: String): TopButton? = entries.firstOrNull { it.key == key }
+    }
+}
+
 /** A cached network result: the raw JSON (parsed by the weather feature) and when it was stored. */
 data class CachedJson(val json: String, val savedAtMillis: Long)
 
@@ -93,4 +102,6 @@ data class SettingsData(
     val avatar: String? = null,
     /** When the sleep timer turns the TV off (epoch millis), or null when no timer is set. */
     val sleepTimerAt: Long? = null,
+    /** Top-bar buttons the owner switched off. A hidden weather chip also stops the weather fetch. */
+    val hiddenTopButtons: Set<TopButton> = emptySet(),
 )

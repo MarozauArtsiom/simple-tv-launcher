@@ -97,6 +97,8 @@ dependencies {
     implementation(libs.profileinstaller)
     implementation(libs.coroutines.android)
     implementation(libs.serialization.json)
+    implementation(libs.dadb)
+    implementation(libs.zxing.core)
 
     // The profile recorded on the TV by :baselineprofile is merged into the release build (src/release/generated/baselineProfiles).
     baselineProfile(project(":baselineprofile"))
@@ -113,4 +115,37 @@ dependencies {
     testImplementation(libs.roborazzi)
     testImplementation(libs.roborazzi.compose)
     testImplementation(libs.roborazzi.junit.rule)
+}
+
+/**
+ * The phone page (`assets/remote/`) styles itself with the launcher's own theme tokens. They are copied from
+ * the approved mockups at build time, so there is one source of truth (`ThemeCssSyncTest` keeps the Kotlin
+ * port in step with the same file).
+ */
+abstract class CopyRemoteThemeAssets : DefaultTask() {
+    @get:InputFile abstract val themesCss: RegularFileProperty
+    @get:InputDirectory abstract val backgrounds: DirectoryProperty
+    @get:InputFile abstract val placeholder: RegularFileProperty
+    @get:OutputDirectory abstract val outputDir: DirectoryProperty
+
+    @TaskAction
+    fun copy() {
+        val out = outputDir.get().asFile.resolve("remote")
+        out.deleteRecursively()
+        out.resolve("assets/bg").mkdirs()
+        themesCss.get().asFile.copyTo(out.resolve("themes.css"), overwrite = true)
+        backgrounds.get().asFile.listFiles { f -> f.extension == "svg" }!!.forEach { it.copyTo(out.resolve("assets/bg/${it.name}"), overwrite = true) }
+        placeholder.get().asFile.copyTo(out.resolve("assets/landscape-placeholder.svg"), overwrite = true)
+    }
+}
+
+val remoteThemeAssets = tasks.register<CopyRemoteThemeAssets>("remoteThemeAssets") {
+    themesCss.set(rootProject.layout.projectDirectory.file("design/mockups/themes.css"))
+    backgrounds.set(rootProject.layout.projectDirectory.dir("design/mockups/assets/bg"))
+    placeholder.set(rootProject.layout.projectDirectory.file("design/mockups/assets/landscape-placeholder.svg"))
+    outputDir.set(layout.buildDirectory.dir("generated/remoteAssets"))
+}
+
+androidComponents {
+    onVariants { variant -> variant.sources.assets?.addGeneratedSourceDirectory(remoteThemeAssets, CopyRemoteThemeAssets::outputDir) }
 }

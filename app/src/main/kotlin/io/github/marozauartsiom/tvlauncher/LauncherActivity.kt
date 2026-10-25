@@ -34,6 +34,7 @@ class LauncherActivity : ComponentActivity() {
         // If the screen turned on while Home was not in front, reset now.
         if (graph.screenOn.attach { viewModel.onHomePressed() }) viewModel.onHomePressed()
         graph.hdmi.onHomeVisible()
+        io.github.marozauartsiom.tvlauncher.system.remote.LauncherInFront.activity = this
         handler.postDelayed({ graph.crashGuard.markStable() }, CrashGuard.STABLE_AFTER_MS)
     }
 
@@ -43,6 +44,7 @@ class LauncherActivity : ComponentActivity() {
     }
 
     override fun onPause() {
+        if (io.github.marozauartsiom.tvlauncher.system.remote.LauncherInFront.activity === this) io.github.marozauartsiom.tvlauncher.system.remote.LauncherInFront.activity = null
         graph.hdmi.onHomeHidden()
         graph.screenOn.detach()
         handler.removeCallbacksAndMessages(null)

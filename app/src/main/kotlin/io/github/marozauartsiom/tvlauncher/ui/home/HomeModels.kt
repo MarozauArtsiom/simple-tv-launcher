@@ -1,5 +1,6 @@
 package io.github.marozauartsiom.tvlauncher.ui.home
 
+import io.github.marozauartsiom.tvlauncher.data.prefs.TopButton
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.ImageBitmap
 import io.github.marozauartsiom.tvlauncher.data.apps.TvApp
@@ -51,4 +52,10 @@ data class TopBarState(
     val avatar: ImageBitmap? = null,
     /** When the sleep timer turns the TV off (epoch millis), or null. */
     val sleepTimerAt: Long? = null,
+    /** The "Remote" button (phone remote & AI access). */
+    val showRemote: Boolean = false,
+    /** The phone remote or AI access is on: the Remote button gets a dot. */
+    val remoteOn: Boolean = false,
+    /** Buttons the owner hid in Settings → Top bar. */
+    val hidden: Set<TopButton> = emptySet(),
 )

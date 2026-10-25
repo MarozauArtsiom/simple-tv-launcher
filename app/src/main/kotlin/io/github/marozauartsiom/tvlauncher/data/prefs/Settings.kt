@@ -48,6 +48,7 @@ class Settings(private val store: DataStore<Preferences>) {
         val hdmiMuted = stringSetPreferencesKey("hdmi_muted")
         val avatar = stringPreferencesKey("avatar")
         val sleepTimerAt = longPreferencesKey("sleep_timer_at")
+        val hiddenTopButtons = stringSetPreferencesKey("top_bar_hidden")
     }
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -70,6 +71,7 @@ class Settings(private val store: DataStore<Preferences>) {
             background = parseBackground(this[Keys.background]),
             avatar = this[Keys.avatar],
             sleepTimerAt = this[Keys.sleepTimerAt],
+            hiddenTopButtons = this[Keys.hiddenTopButtons]?.mapNotNull(TopButton::fromKey)?.toSet() ?: d.hiddenTopButtons,
             language = parseLanguage(this[Keys.language]),
             weatherLocation = decode(WeatherPlace.serializer(), this[Keys.weatherLocation])?.let { WeatherLocation.Manual(it) } ?: WeatherLocation.Auto,
             autoPlace = decode(WeatherPlace.serializer(), this[Keys.autoPlace]),
@@ -150,6 +152,11 @@ class Settings(private val store: DataStore<Preferences>) {
 
     suspend fun setSleepTimer(atMillis: Long?) = store.edit {
         if (atMillis == null) it.remove(Keys.sleepTimerAt) else it[Keys.sleepTimerAt] = atMillis
+    }
+
+    suspend fun setTopButtonHidden(button: TopButton, hidden: Boolean) = store.edit {
+        val now = it[Keys.hiddenTopButtons].orEmpty()
+        it[Keys.hiddenTopButtons] = if (hidden) now + button.key else now - button.key
     }
 
     suspend fun setLanguage(choice: LanguageChoice) = store.edit {

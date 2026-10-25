@@ -96,7 +96,9 @@ For each screen: initial focus, Back, Home, and the mockup.
 - Focus memory: the favourites row and each grid row restore their last item (`focusRestorer`).
   Up from the first row goes to the top bar.
 - The remote's Menu key opens Settings from anywhere on Home.
-- Top bar order: weather · Inputs · Timer · iPhone · avatar. **Timer** (moon icon, "Timer" or the minutes left)
+- Top bar order: weather · Inputs · Timer · Remote · iPhone · avatar. Every chip but the avatar can be hidden in
+  Settings → Top bar buttons; a running sleep timer shows anyway. **Remote** (remote-control icon, a signal dot while
+  the phone remote or AI access is on) opens Settings → Phone remote & AI access directly; Back closes it. **Timer** (moon icon, "Timer" or the minutes left)
   opens a popup under the bar: Off, 15, 30, 45, 60, 90, 120 min; the running choice is focused and checked.
 - Settings: under the TV tiles a full-width **Turn off TV** row → dialog "Turn the TV off completely?" Yes
   (focused) / No. Without the power helper both the dialog and the timer popup show its adb command instead.
@@ -139,7 +141,8 @@ For each screen: initial focus, Back, Home, and the mockup.
 ### Settings panel — `design/mockups/settings.html`, `settings/settings-*.png`
 - Title "Settings". Section "Television": Wi-Fi, Bluetooth, Sound, Picture, Sleep timer,
   Android (tiles the TV can't open are hidden). Section "Launcher": Theme, Background, Profile photo,
-  Language, Weather, HDMI signal, Hidden apps, Website shortcuts, Install from USB, About.
+  Top bar buttons, Language, Weather, HDMI signal, Hidden apps, Website shortcuts, Phone remote & AI access,
+  Install from USB, About.
 - Initial focus: the Wi-Fi tile. Back: out of a sub-page, then close the panel and return focus
   to the settings (avatar) button. Coming back from a sub-page, focus returns to the row that opened it.
 - A tile appears only if this TV has a screen for it. Picture falls back to the display settings;
@@ -235,6 +238,20 @@ For each screen: initial focus, Back, Home, and the mockup.
 - Switches: ask about a new signal, show it over other apps (with the adb hint while the
   permission is missing), and one switch per HDMI input.
 
+### Top bar buttons — no separate mockup (switch rows like HDMI settings), golden `top-bar-page/`
+- One switch row per chip (icon, name, switch): Weather, Inputs, Sleep timer, Remote, iPhone screen (AirPlay); a
+  muted note below. Initial focus: Weather. The settings row shows "N of 5" while something is hidden.
+
+### Phone remote & AI access — `design/mockups/settings-remote.html` (`?badge` for the badge), golden `remote-page/`
+- Switches "Phone remote" and "AI access"; while one is on, a card with the QR code (`http://<ip>:8765/?c=<code>`,
+  or `/pair` with only AI on), the code in two groups of three (32 sp) and the address; connected clients with
+  "Disconnect" ("Disconnect everyone" from two); the AI hint, the keys status and the auto-off note. Without the
+  helper: its adb command and "Check again". Initial focus: the first switch.
+- Badge over every app while someone is connected: a pill at the top centre ("Remote · AI is controlling"), not
+  focusable, not touchable.
+- Phone page (`assets/remote/`): the TV's theme tokens and art, pairing, Remote and Screen modes, the typing row;
+  no zoom (double tap or pinch).
+
 ### iPhone hint — `design/mockups/iphone-hint.html`
 - A centred dialog (520 dp) shown when AirPlay Server isn't installed: what to install and how
   to mirror from the iPhone; buttons "Install from USB" (focused) and "Close".
@@ -279,5 +296,7 @@ Theme and background crossfade 300 ms. Only scale, alpha, translation and rotati
 | USB installer (4 states), About, theme schedule | `settings-usb.html?state=…`, `settings-about.html`, `settings-schedule.html` | `screens/` |
 | HDMI settings, iPhone hint | `settings-hdmi.html`, `iphone-hint.html` | `screens/` |
 | Website shortcuts (list, editor) | `shortcuts.html?state=list|edit` | `screens/shortcuts-{list,edit}-<theme>.png` |
+| Phone remote & AI access (TV), badge | `settings-remote.html`, `settings-remote.html?badge` | goldens `remote-page/`, `remote-badge/` |
+| Phone page (pair, remote, screen, off), AI pairing | `app/src/main/assets/remote/index.html?demo=…&t=…`, `pair.html` | `screens/remote-phone-*.png`, `screens/remote-pair-ai.png` |
 
 `screens/` holds midnight, sky and valley renders of the batch above (`render-screens.sh`).

@@ -1,5 +1,11 @@
 package io.github.marozauartsiom.tvlauncher.ui
 
+import io.github.marozauartsiom.tvlauncher.ui.settings.RemoteAccessPage
+import io.github.marozauartsiom.tvlauncher.ui.settings.TopBarPage
+import io.github.marozauartsiom.tvlauncher.data.prefs.TopButton
+
+import androidx.compose.runtime.SideEffect
+
 import android.content.Context
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -101,6 +107,7 @@ import java.time.LocalDateTime
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -118,12 +125,12 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     val languageTag = LocaleController.effectiveTag(settings.language, Locale.getDefault())
     val clock by rememberClock(languageTag)
 
-    // Fetch the weather only while Home is on screen (STARTED), at most every 30 minutes. Nothing runs otherwise.
+    // Fetch the weather only while Home is on screen (STARTED), at most every 30 minutes, and only while its chip is shown.
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     LaunchedEffect(lifecycle, graph) {
         lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             while (true) {
-                graph.weather.refresh()
+                if (TopButton.Weather !in graph.settings.data.first().hiddenTopButtons) graph.weather.refresh()
                 delay(WeatherRepository.FRESH_MS)
             }
         }
@@ -143,6 +150,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     val scheduled = settings.themeSchedule.themeAt((clock.at ?: LocalDateTime.now()).toLocalTime(), sun)
     // Safe mode always uses the default theme: the saved one could be what keeps crashing.
     val theme = if (safeMode) Themes.default else Themes.byId(preview ?: scheduled ?: settings.theme)
+    SideEffect { graph.shownTheme = theme.id }
 
     // The background: a preview from the background picker, else the saved choice (theme art, a colour or a picture).
     var backgroundPreview by remember { mutableStateOf<BackgroundPick?>(null) }
@@ -181,6 +189,8 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     val hiddenFocus = remember { FocusMemory() }
     val backgroundFocus = remember { FocusMemory() }
     val usbFocus = remember { FocusMemory() }
+    val remoteFocus = remember { FocusMemory() }
+    val topBarFocus = remember { FocusMemory() }
     val avatarFocus = remember { FocusMemory() }
     val aboutFocus = remember { FocusMemory() }
     val thumbnailDispatcher = remember { Dispatchers.Default.limitedParallelism(2) }
@@ -200,6 +210,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
             onInputs = { viewModel.open(Overlay.Inputs) },
             onTimer = { viewModel.open(Overlay.SleepTimer) },
             onIphone = { if (!Airplay.open(graph.launcher)) viewModel.open(Overlay.IphoneHint) },
+            onRemote = { viewModel.open(Overlay.Settings(SettingsPage.Remote, direct = true)) },
             onSettings = { viewModel.open(Overlay.Settings()) },
             onMoveStep = { key, delta ->
                 graph.appScope.launch { editor.step(key, delta, currentContent.favourites.map { it.key }) }
@@ -238,7 +249,10 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
             HomeScreen(
                 content = content,
                 theme = theme,
-                topBar = TopBarState(weather = weatherChip(weatherView, context), hdmi = hdmiStatus.map { HdmiChip(it.input.id, it.input.label, it.connected) }, avatar = avatar, sleepTimerAt = settings.sleepTimerAt?.takeIf { it > System.currentTimeMillis() }),
+                topBar = TopBarState(weather = weatherChip(weatherView, context), hdmi = hdmiStatus.map { HdmiChip(it.input.id, it.input.label, it.connected) }, avatar = avatar, sleepTimerAt = settings.sleepTimerAt?.takeIf { it > System.currentTimeMillis() },
+                    // The remote's objects are made when it is first opened; until then nothing to observe and the dot is off.
+                    showRemote = true, remoteOn = graph.remoteIfStarted?.state?.collectAsStateWithLifecycle()?.value?.anyOn == true,
+                    hidden = settings.hiddenTopButtons),
                 clock = { clock },
                 art = graph.banners,
                 resets = viewModel.resets,
@@ -317,7 +331,8 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                 SettingsPage.Root -> SettingsPanel(
                     theme = theme,
                     tiles = remember(systemSettings) { systemSettings.available() },
-                    values = settingsValues(settings, scheduled ?: settings.theme, hiddenCount = hiddenApps.size),
+                    values = settingsValues(settings, scheduled ?: settings.theme, hiddenCount = hiddenApps.size)
+                        .copy(remote = graph.remoteIfStarted?.state?.collectAsStateWithLifecycle()?.value?.takeIf { it.anyOn }?.let { stringResource(R.string.on) }),
                     memory = settingsFocus,
                     onTile = { tile ->
                         if (!systemSettings.open(tile)) unavailable(context)
@@ -469,6 +484,27 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                         onDone = graph.usbInstaller::refresh,
                     )
                 }
+                SettingsPage.Remote -> {
+                    LaunchedEffect(Unit) { graph.remote.refresh() }
+                    val remoteState by graph.remote.state.collectAsStateWithLifecycle()
+                    RemoteAccessPage(
+                        theme = theme,
+                        state = remoteState,
+                        helperCommand = powerServiceCommand(context),
+                        memory = remoteFocus,
+                        onPhone = graph.remote::setPhone,
+                        onAi = graph.remote::setAi,
+                        onDisconnect = graph.remote::disconnect,
+                        onDisconnectAll = graph.remote::disconnectAll,
+                        onCheckHelper = graph.remote::refresh,
+                    )
+                }
+                SettingsPage.TopBar -> TopBarPage(
+                    theme = theme,
+                    hidden = settings.hiddenTopButtons,
+                    memory = topBarFocus,
+                    onToggle = { button, hide -> graph.appScope.launch { graph.settings.setTopButtonHidden(button, hide) } },
+                )
                 SettingsPage.About -> {
                     val info = remember { runCatching { context.packageManager.getPackageInfo(context.packageName, 0) }.getOrNull() }
                     AboutPage(theme, info?.versionName.orEmpty(), info?.longVersionCode ?: 0L, aboutFocus)

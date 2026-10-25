@@ -22,6 +22,7 @@ import io.github.marozauartsiom.tvlauncher.R
 import io.github.marozauartsiom.tvlauncher.data.prefs.BackgroundChoice
 import io.github.marozauartsiom.tvlauncher.data.prefs.LanguageChoice
 import io.github.marozauartsiom.tvlauncher.data.prefs.SettingsData
+import io.github.marozauartsiom.tvlauncher.data.prefs.TopButton
 import io.github.marozauartsiom.tvlauncher.data.prefs.WeatherLocation
 import io.github.marozauartsiom.tvlauncher.system.SystemTile
 import io.github.marozauartsiom.tvlauncher.ui.theme.Themes
@@ -45,6 +46,10 @@ data class SettingsValues(
     val hdmi: String,
     val hiddenCount: Int,
     val shortcutsCount: Int,
+    /** "On" while the phone remote or AI access is on. */
+    val remote: String? = null,
+    /** "4 of 5": how many top-bar buttons are shown; null while all are. */
+    val topBar: String? = null,
 )
 
 private fun SystemTile.icon(): ImageVector = when (this) {
@@ -118,11 +123,13 @@ fun SettingsPanel(
                 Entry(SettingsPage.Theme, Icons.Palette, R.string.item_theme, values.theme),
                 Entry(SettingsPage.Background, Icons.Image, R.string.item_background, values.background),
                 Entry(SettingsPage.Avatar, Icons.Person, R.string.item_avatar, null),
+                Entry(SettingsPage.TopBar, Icons.TopBar, R.string.item_top_bar, values.topBar),
                 Entry(SettingsPage.Language, Icons.Language, R.string.item_language, values.language),
                 Entry(SettingsPage.Weather, Icons.Cloud, R.string.item_weather, values.weather),
                 Entry(SettingsPage.Hdmi, Icons.Hdmi, R.string.item_hdmi, values.hdmi),
                 Entry(SettingsPage.Hidden, Icons.Hidden, R.string.item_hidden, values.hiddenCount.takeIf { it > 0 }?.toString()),
                 Entry(SettingsPage.Shortcuts, Icons.Link, R.string.item_shortcuts, values.shortcutsCount.takeIf { it > 0 }?.toString()),
+                Entry(SettingsPage.Remote, Icons.Phone, R.string.item_remote, values.remote),
                 Entry(SettingsPage.Usb, Icons.Usb, R.string.item_usb, null),
                 Entry(SettingsPage.About, Icons.Info, R.string.item_about, null),
             )
@@ -185,6 +192,9 @@ fun settingsValues(
         hdmi = stringResource(if (settings.hdmi.promptEnabled) R.string.on else R.string.off),
         hiddenCount = hiddenCount,
         shortcutsCount = settings.shortcuts.size,
+        topBar = settings.hiddenTopButtons.takeIf { it.isNotEmpty() }?.let {
+            stringResource(R.string.top_bar_shown, TopButton.entries.size - it.size, TopButton.entries.size)
+        },
     )
 }
 

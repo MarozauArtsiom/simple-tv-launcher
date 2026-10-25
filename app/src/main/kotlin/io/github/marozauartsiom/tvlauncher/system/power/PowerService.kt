@@ -8,6 +8,7 @@ import android.view.accessibility.AccessibilityNodeInfo
 
 /**
  * The only way a sideloaded app can turn the TV off: an accessibility service the owner enables once over adb.
+ * The phone remote and AI access also act through it (screen picture, taps, text), only while they are on.
  * It asks for no events and does nothing until [powerOff] is called (the Settings button or the sleep timer):
  * then it opens the system power menu and presses its "Power off" item itself. If the item is not found
  * within [SEARCH_MS] the menu just stays open for the owner.
@@ -21,6 +22,8 @@ class PowerService : AccessibilityService() {
 
     override fun onDestroy() {
         if (instance === this) instance = null
+        // The phone remote and AI access work through this helper: without it, everything turns off.
+        (application as? io.github.marozauartsiom.tvlauncher.LauncherApp)?.graph?.remoteIfStarted?.shutDown()
         handler.removeCallbacksAndMessages(null)
         super.onDestroy()
     }
@@ -65,6 +68,9 @@ class PowerService : AccessibilityService() {
 
         /** True when the owner has enabled the service (see the README). */
         val isEnabled: Boolean get() = instance != null
+
+        /** The running helper, for the phone remote and AI access (screen picture, taps, text, keys). */
+        val service: android.accessibilityservice.AccessibilityService? get() = instance
 
         /** Starts powering off; false if the service is not enabled. */
         fun powerOff(): Boolean {

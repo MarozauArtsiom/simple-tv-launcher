@@ -1,6 +1,7 @@
 package io.github.marozauartsiom.tvlauncher
 
 import android.content.Context
+import io.github.marozauartsiom.tvlauncher.R
 import android.content.res.Resources
 import android.os.Environment
 import android.os.Handler
@@ -37,7 +38,21 @@ import io.github.marozauartsiom.tvlauncher.ui.theme.Themes
 import io.github.marozauartsiom.tvlauncher.system.ScreenOnWatcher
 import io.github.marozauartsiom.tvlauncher.ui.theme.BackgroundCache
 import java.io.File
+import io.github.marozauartsiom.tvlauncher.data.prefs.themeAt
+import io.github.marozauartsiom.tvlauncher.system.power.PowerService
+import io.github.marozauartsiom.tvlauncher.system.remote.AccessGate
+import io.github.marozauartsiom.tvlauncher.system.remote.LauncherInFront
+import io.github.marozauartsiom.tvlauncher.system.remote.McpServer
+import io.github.marozauartsiom.tvlauncher.system.remote.RemoteAccess
+import io.github.marozauartsiom.tvlauncher.system.remote.RemoteApi
+import io.github.marozauartsiom.tvlauncher.system.remote.RemoteLook
+import io.github.marozauartsiom.tvlauncher.system.remote.control.AndroidTvControl
+import io.github.marozauartsiom.tvlauncher.system.remote.control.LoopbackAdb
+import io.github.marozauartsiom.tvlauncher.ui.remote.OverlayRemoteBadge
+import io.github.marozauartsiom.tvlauncher.ui.theme.ThemeId
+import java.time.LocalTime
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 
@@ -122,6 +137,67 @@ class AppGraph(private val context: Context) {
         }
     }
 
+    /** The theme on screen right now (preview, schedule or saved), published by the UI so the phone page matches it. */
+    @Volatile
+    var shownTheme: ThemeId? = null
+
+    private fun currentTheme(): ThemeId = shownTheme ?: latestSettings.themeSchedule.themeAt(LocalTime.now()) ?: latestSettings.theme
+
+    @Volatile private var remoteCreated = false
+
+    /**
+     * Phone remote and AI access. Created when its settings page first opens; nothing runs until a switch is on,
+     * and turning the TV off ends it (see [RemoteAccess]).
+     */
+    val remote: RemoteAccess by lazy {
+        remoteCreated = true
+        val gate = AccessGate(System::currentTimeMillis)
+        val control = AndroidTvControl(
+            context = context,
+            helper = { PowerService.service },
+            adb = LoopbackAdb(File(context.filesDir, "adb")),
+            packages = packageSource,
+            launcherActivity = { LauncherInFront.activity },
+            powerOffAction = { PowerService.powerOff() },
+            sleepTimerAction = { minutes ->
+                val at = if (minutes == 0) null else System.currentTimeMillis() + minutes * 60_000L
+                if (at == null) sleepTimer.cancel() else sleepTimer.schedule(at)
+                appScope.launch { settings.setSleepTimer(at) }
+            },
+        )
+        val version = runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull() ?: "1"
+        RemoteAccess(
+            context = context,
+            scope = appScope,
+            gate = gate,
+            control = control,
+            api = { host -> RemoteApi(gate, control, McpServer(control, version), host, ::remoteLook, ::remoteAsset, ::remoteFont) },
+            helperReady = { PowerService.isEnabled },
+            badge = OverlayRemoteBadge(
+                context = { LocaleController.localized(context, latestSettings.language) },
+                theme = { Themes.byId(currentTheme()) },
+                canDraw = { android.provider.Settings.canDrawOverlays(context) },
+            ),
+        )
+    }
+
+    /** [remote] if something already created it (the helper going away must not create it). */
+    val remoteIfStarted: RemoteAccess? get() = if (remoteCreated) remote else null
+
+    private fun remoteLook(): RemoteLook {
+        val tag = LocaleController.effectiveTag(latestSettings.language, Resources.getSystem().configuration.locales[0])
+        val res = LocaleController.localizedTo(context, tag).resources
+        val strings = WEB_STRINGS.associateWith { name ->
+            val id = res.getIdentifier(name, "string", context.packageName)
+            if (id == 0) "" else res.getString(id)
+        }
+        return RemoteLook(theme = currentTheme().key, lang = tag, strings = strings)
+    }
+
+    private fun remoteAsset(path: String): ByteArray? = runCatching { context.assets.open(path).use { it.readBytes() } }.getOrNull()
+
+    private fun remoteFont(): ByteArray? = runCatching { context.resources.openRawResource(R.font.nunito).use { it.readBytes() } }.getOrNull()
+
     /** Mounted removable volumes (USB drives). */
     private fun usbRoots(): List<File> = context.getSystemService(StorageManager::class.java).storageVolumes
         .filter { it.isRemovable && it.state == Environment.MEDIA_MOUNTED }
@@ -145,3 +221,11 @@ class AppGraph(private val context: Context) {
 
     val launcher by lazy { AppLauncher(packageSource) { intent -> context.startActivity(intent) } }
 }
+
+/** Strings the phone page and the assistant pairing page show, sent to them in the launcher's language. */
+private val WEB_STRINGS = listOf(
+    "web_title", "web_mode_remote", "web_mode_screen", "web_pair_title", "web_pair_hint", "web_pair_button", "web_pair_wrong",
+    "web_pair_locked", "web_off_title", "web_off_hint", "web_off_button", "web_screen_hint", "web_back", "web_home", "web_enter",
+    "web_text_placeholder", "web_text_hint", "web_disconnect", "web_ai_title", "web_ai_hint", "web_ai_name", "web_ai_done",
+    "web_ai_claude", "web_ai_other", "web_ai_note", "web_ai_off", "web_copy", "web_copied", "web_copy_manual",
+)

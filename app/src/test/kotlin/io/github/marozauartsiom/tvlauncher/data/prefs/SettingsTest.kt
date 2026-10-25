@@ -36,6 +36,14 @@ class SettingsTest {
 
     private fun read() = runBlocking { settings.data.first() }
 
+    @Test fun topBarButtonsCanBeHiddenAndShownAgain() {
+        assertEquals(emptySet<TopButton>(), read().hiddenTopButtons)
+        runBlocking { settings.setTopButtonHidden(TopButton.Inputs, true); settings.setTopButtonHidden(TopButton.Weather, true) }
+        assertEquals(setOf(TopButton.Inputs, TopButton.Weather), read().hiddenTopButtons)
+        runBlocking { settings.setTopButtonHidden(TopButton.Inputs, false) }
+        assertEquals(setOf(TopButton.Weather), read().hiddenTopButtons)
+    }
+
     @Test fun defaultsMatchTheSpec() {
         val d = read()
         assertEquals(ThemeId.Midnight, d.theme)

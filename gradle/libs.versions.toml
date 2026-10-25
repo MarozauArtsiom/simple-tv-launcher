@@ -12,6 +12,8 @@ palette = "1.1.0"
 profileinstaller = "1.4.1"
 coroutines = "1.11.0"
 serialization = "1.12.0"
+dadb = "2.0.0"
+zxing = "3.5.4"
 junit = "4.13.2"
 robolectric = "4.17"
 roborazzi = "1.77.0"
@@ -40,6 +42,9 @@ profileinstaller = { module = "androidx.profileinstaller:profileinstaller", vers
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+# Phone remote / AI access: an adb client for the TV's own adbd (real key events), and the QR code on the TV.
+dadb = { module = "dev.mobile:dadb", version.ref = "dadb" }
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
 junit = { module = "junit:junit", version.ref = "junit" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 roborazzi = { module = "io.github.takahirom.roborazzi:roborazzi", version.ref = "roborazzi" }

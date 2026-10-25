@@ -179,6 +179,17 @@ One line per finished task: date, task id, what was done, anything notable.
   with images in `docs/images/` taken from the app's own screenshot goldens. `docs/run-prompt.md` translated; UI strings
   quoted in the docs are now the English ones. MIT `LICENSE` added. `CLAUDE.md`: reply in the user's language.
 
+- 2026-10-25 — M7 Phone remote and AI access (T33–T42, T44). Own HTTP server on the LAN address, port 8765
+  (`system/remote/http/`), `AccessGate` (6-digit code → per-client keys in memory, 5 wrong codes lock 60 s, one phone,
+  15 min idle off, wiped on screen off / helper gone / switches off), `RemoteApi` (static whitelist, Host and Origin
+  checks, CSP), MCP Streamable HTTP with 16 tools (`McpServer`), `AndroidTvControl` (screenshots via the accessibility
+  helper, taps on the node under the point because this firmware cancels injected gestures, text via ACTION_SET_TEXT,
+  keys in-process / loopback adb (`dadb`) / accessibility), the phone page in `assets/remote/` with the launcher's
+  `themes.css` copied in at build time. Checked over adb on the TV with the MCP tools. 42 unit tests and Roborazzi
+  goldens (`remote-page*`, `remote-badge`, `top-bar-page*`, `home-remote-chip`, `home-top-bar-hidden`).
+  Owner feedback the same day (T44): Remote chip in the top bar, Settings → Top bar buttons, no double-tap zoom on the
+  phone page, Copy works over http, QR code passes the code as `?c=`.
+
 ## Decisions to review
 
 Defaults taken during unattended runs that the owner should look at.
@@ -239,6 +250,14 @@ Defaults taken during unattended runs that the owner should look at.
   (`BIND_ACCESSIBILITY_SERVICE`), asks for no events and acts only on request; the sleep timer is one alarm, set only while
   a timer runs. Both are exceptions to "no services, no scheduled jobs", asked for by the owner. The item label in Xiaomi's power
   menu is a guess ("Выключить"/"Power off"…); check on the TV.
+
+- M7: exceptions to "nothing in the background", all switched on by the owner: the remote server, a SCREEN_OFF
+  receiver and a 30 s idle check run only while Phone remote or AI access is on. The helper takes screenshots only
+  for a paired client.
+- M7: keys reach YouTube only through loopback adb (network debugging on, the launcher's key allowed once with
+  "Always allow"); without it they go through accessibility, which YouTube ignores.
+- T44: a running sleep timer stays in the top bar even when its chip is hidden, so the owner sees the TV is about to
+  turn off.
 
 ## Blockers
 

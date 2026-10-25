@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Phone remote and AI access</title>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="themes.css">
+  <link rel="stylesheet" href="settings.css">
+  <script src="panel.js"></script>
+  <style>
+    .pair { display: flex; gap: 16px; align-items: center; padding: 12px; border-radius: 12px; background: var(--item-bg); }
+    .qr { width: 112px; height: 112px; flex: none; border-radius: 8px; background: #fff; padding: 8px;
+          background-image: repeating-linear-gradient(90deg, #111 0 8px, transparent 8px 16px), repeating-linear-gradient(0deg, #111 0 8px, transparent 8px 24px);
+          background-blend-mode: difference; background-clip: content-box; }
+    .pair .muted { color: var(--panel-muted); }
+    .code { font-size: 32px; line-height: 40px; font-weight: 700; letter-spacing: .08em; color: var(--panel-fg); }
+    .badge { position: fixed; top: 27px; right: 48px; display: flex; gap: 8px; align-items: center; height: 32px; padding: 0 14px;
+             border-radius: 16px; background: var(--chip-bg); color: var(--chip-fg); box-shadow: var(--chip-shadow); font-size: 14px; font-weight: 600; }
+    .badge i { width: 8px; height: 8px; border-radius: 50%; background: var(--signal); }
+    body.badge-only .sheet, body.badge-only .dim { display: none; }
+    body:not(.badge-only) .badge { display: none; }
+  </style>
+</head>
+<body>
+  <script src="icons.js"></script>
+  <script>if (location.search.includes('badge')) document.body.classList.add('badge-only');</script>
+  <iframe class="behind" data-src="home.html?nofocus" title="home"></iframe>
+  <div class="badge"><i></i>Пульт · ИИ управляет</div>
+
+  <div class="dim"></div>
+  <aside class="sheet">
+    <h1>Пульт и ИИ-доступ</h1>
+    <div class="item focused"><svg><use href="#phone"/></svg><span class="title title-medium">Пульт с телефона</span><span class="switch on"></span></div>
+    <div class="item"><svg><use href="#star"/></svg><span class="title title-medium">ИИ-доступ</span><span class="switch on"></span></div>
+    <div class="pair">
+      <div class="qr"></div>
+      <div>
+        <div class="body-medium muted">Наведите камеру телефона или введите код</div>
+        <div class="code">482 913</div>
+        <div class="body-medium muted">192.168.100.5:8765</div>
+      </div>
+    </div>
+    <div class="section label-large">Подключены</div>
+    <div class="list">
+      <div class="item"><svg><use href="#phone"/></svg><span class="title title-medium">Телефон</span><span class="value body-medium">Отключить</span></div>
+      <div class="item"><svg><use href="#star"/></svg><span class="title title-medium">Claude · MacBook</span><span class="value body-medium">Отключить</span></div>
+      <div class="item"><span class="title title-medium">Отключить всех</span></div>
+    </div>
+    <div class="note"><svg><use href="#warning"/></svg><div class="body-medium">Ассистента подключают на компьютере: откройте 192.168.100.5:8765/pair. Всё выключается само при выключении телевизора и через 15 минут без действий.</div></div>
+  </aside>
+</body>
+</html>

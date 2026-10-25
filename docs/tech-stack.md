@@ -49,7 +49,12 @@ AGP 9 notes (details in the `agp-9-upgrade` skill):
 | `androidx.palette:palette-ktx` | 1.1.0 | Tint for generated banners of icon-only apps |
 | `androidx.profileinstaller:profileinstaller` | 1.4.1 | Ships the Baseline Profile |
 | `org.jetbrains.kotlinx:kotlinx-coroutines-android` | 1.11.0 | Threading |
-| `org.jetbrains.kotlinx:kotlinx-serialization-json` | 1.12.0 | Open-Meteo and IP-geolocation JSON |
+| `org.jetbrains.kotlinx:kotlinx-serialization-json` | 1.12.0 | Open-Meteo and IP-geolocation JSON; the remote's API and MCP JSON-RPC |
+| `dev.mobile:dadb` | 2.0.0 | Phone remote: real key events through the TV's own adbd at 127.0.0.1:5555 (only while access is on) |
+| `com.google.zxing:core` | 3.5.4 | The pairing QR code (matrix only; drawn with Compose) |
+
+The phone remote's HTTP server is our own (~150 lines, `system/remote/http/`), not Ktor or NanoHTTPD: one request
+per connection, hard size limits, private source addresses only, and nothing running while both switches are off.
 
 Tests:
 

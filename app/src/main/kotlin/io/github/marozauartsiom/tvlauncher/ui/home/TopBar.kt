@@ -1,5 +1,6 @@
 package io.github.marozauartsiom.tvlauncher.ui.home
 
+import io.github.marozauartsiom.tvlauncher.data.prefs.TopButton
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.Image
@@ -53,7 +54,10 @@ val SafeHorizontal = 48.dp
 val SafeVertical = 27.dp
 val TopBarHeight = 71.dp
 
-/** Clock and date on the left, weather chip next to them, HDMI/iPhone/settings chips on the right. */
+/**
+ * Clock and date on the left, weather chip next to them; Inputs, Timer, Remote, iPhone and the settings avatar on the
+ * right. Every chip but Settings can be hidden in Settings → Top bar ([TopBarState.hidden]).
+ */
 @Composable
 fun TopBar(
     state: TopBarState,
@@ -65,6 +69,7 @@ fun TopBar(
     onIphone: () -> Unit,
     onSettings: () -> Unit,
     focus: FocusMemory,
+    onRemote: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -78,7 +83,7 @@ fun TopBar(
         // The left side gives way when the bar is crowded, so the buttons on the right (the avatar last) always stay on screen.
         Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(24.dp)) {
             ClockAndDate(clock, theme)
-            state.weather?.let { w ->
+            state.weather?.takeIf { TopButton.Weather !in state.hidden }?.let { w ->
                 val description = stringResource(R.string.cd_weather, w.description)
                 TopChip(theme, onWeather, focus.track("chip:weather").semantics { contentDescription = description }) {
                     WeatherIcon(theme, w.condition, w.isDay)
@@ -99,7 +104,7 @@ fun TopBar(
         }
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
             // All HDMI inputs behind one button (T33); the popup lists them with their status. The dot: something is connected.
-            if (state.hdmi.isNotEmpty()) {
+            if (state.hdmi.isNotEmpty() && TopButton.Inputs !in state.hidden) {
                 val connected = state.hdmi.any { it.hasSignal }
                 val description = stringResource(R.string.inputs_chip)
                 TopChip(theme, onInputs, focus.track("chip:inputs").semantics { contentDescription = description }) {
@@ -109,18 +114,29 @@ fun TopBar(
                 }
             }
             // Sleep timer: the minutes left once it runs. clock() changes every minute, so reading it here keeps them current.
-            val timerLabel = stringResource(R.string.timer_chip)
+            // A running timer stays visible even when the button is hidden: it is about to turn the TV off.
             val left = state.sleepTimerAt?.let { at -> clock(); ((at - System.currentTimeMillis() + 59_999) / 60_000).toInt().coerceAtLeast(0) }
-            TopChip(theme, onTimer, focus.track("chip:timer").semantics { contentDescription = timerLabel }) {
-                ChipIcon(Icons.Sleep, theme)
-                Text(
-                    if (left == null) timerLabel else pluralStringResource(R.plurals.timer_minutes, left, left),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = theme.colors.chipFg,
-                    maxLines = 1,
-                )
+            if (TopButton.Timer !in state.hidden || left != null) {
+                val timerLabel = stringResource(R.string.timer_chip)
+                TopChip(theme, onTimer, focus.track("chip:timer").semantics { contentDescription = timerLabel }) {
+                    ChipIcon(Icons.Sleep, theme)
+                    Text(
+                        if (left == null) timerLabel else pluralStringResource(R.plurals.timer_minutes, left, left),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = theme.colors.chipFg,
+                        maxLines = 1,
+                    )
+                }
             }
-            if (state.showIphone) {
+            if (state.showRemote && TopButton.Remote !in state.hidden) {
+                val label = stringResource(R.string.remote_chip)
+                TopChip(theme, onRemote, focus.track("chip:remote").semantics { contentDescription = label }) {
+                    ChipIcon(Icons.Remote, theme)
+                    Text(label, style = MaterialTheme.typography.labelLarge, color = theme.colors.chipFg, maxLines = 1)
+                    if (state.remoteOn) Box(Modifier.size(8.dp).background(theme.colors.signal, CircleShape))
+                }
+            }
+            if (state.showIphone && TopButton.Iphone !in state.hidden) {
                 val description = stringResource(R.string.cd_iphone)
                 TopChip(theme, onIphone, focus.track("chip:iphone").semantics { contentDescription = description }) {
                     ChipIcon(Icons.Phone, theme)

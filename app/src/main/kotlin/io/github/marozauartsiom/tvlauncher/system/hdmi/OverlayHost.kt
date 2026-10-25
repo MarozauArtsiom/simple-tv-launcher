@@ -28,7 +28,17 @@ class OverlayHost(private val context: Context) {
 
     val isShowing: Boolean get() = view != null
 
-    fun show(content: @Composable (dismiss: () -> Unit) -> Unit) {
+    /**
+     * [focusable] false makes a passive window (no focus, no touches) for status badges; [gravity] and the
+     * offsets in dp place it (default: bottom-right of the safe area).
+     */
+    fun show(
+        focusable: Boolean = true,
+        gravity: Int = Gravity.BOTTOM or Gravity.END,
+        xDp: Int = 48,
+        yDp: Int = 27,
+        content: @Composable (dismiss: () -> Unit) -> Unit,
+    ) {
         hide()
         val windowManager = context.getSystemService(WindowManager::class.java)
         val owner = Owner().also { it.start() }
@@ -42,18 +52,20 @@ class OverlayHost(private val context: Context) {
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED or
+                (if (focusable) 0 else WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE),
             PixelFormat.TRANSLUCENT,
         ).apply {
-            gravity = Gravity.BOTTOM or Gravity.END
-            x = (48 * density).toInt()
-            y = (27 * density).toInt()
+            this.gravity = gravity
+            x = (xDp * density).toInt()
+            y = (yDp * density).toInt()
         }
         try {
             windowManager.addView(compose, params)
             view = compose
             this.owner = owner
         } catch (e: RuntimeException) { // the permission was withdrawn, or the window token is bad: no overlay, no crash
+            android.util.Log.w("OverlayHost", "no overlay: $e")
             owner.destroy()
         }
     }

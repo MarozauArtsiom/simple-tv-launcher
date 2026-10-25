@@ -359,6 +359,70 @@ Found by the owner on the real TV after the first install. Recorded first, fixed
   header and the next Down goes nowhere / no hidden tile ever gets focus; OK expands and focus can
   enter; Home reset collapses; "Show on Home" moves the app back); screenshots in 9 themes and `be`/`fr`.
 
+## M7 — Phone remote and AI access (planned 2026-10-25; `requirements.md` §14)
+
+Order: design → core and security → TV control → the two front ends → docs and the TV check. The
+stage-0 spike (`system/remote/RemoteProbe.kt`, `assets/remote/probe.html`, uncommitted) is replaced by
+T34–T39 and deleted.
+
+- [x] **T33 Mockups.** Read: `tv-ui-design`, `requirements.md` §14. (a) TV: Settings → "Phone remote &
+  AI access": two switches, QR + 6-digit code + address, connected clients with "Disconnect" and
+  "Disconnect all", the adb status ("Full keys" / "Basic keys: turn on network debugging"), the
+  auto-off note. (b) TV badge over other apps. (c) Phone page: pairing, Remote mode, Screen mode,
+  keyboard sheet, "Disconnected", "Wrong code / wait 60 s"; iPhone portrait; rendered in one theme of
+  each family (Midnight, Paper, Space, Gloomy hill, Halloween day) to show it follows the launcher. (d) The
+  page a computer
+  opens to pair an assistant (code → key → ready `claude mcp add …` command).
+  **Done:** owner approved the renders.
+- [x] **T34 Server and access gate** (`system/remote/`). A local HTTP/1.1 server (only private source
+  addresses, request size and header limits, timeouts, no directory paths) and `AccessGate`: code,
+  per-client keys in memory, lockout, one-phone rule, AI client list, idle timeout, and **wipe on screen
+  off / process death / helper off / update** (hooked to `ScreenOnWatcher`). Runs in the accessibility
+  helper's process; nothing starts while both switches are off.
+  **Done:** unit tests for the parser, limits, lockout, one-phone takeover, idle timeout, and "screen off
+  erases every key and closes the socket".
+- [x] **T35 TV control layer** (`TvControl`). Screenshot (one shared, rate-limited capture), `readScreen`
+  (the accessibility tree as compact text), tap / long-press / scroll on the node at a point,
+  `typeText` + Enter, keys (in-process in the launcher, else loopback adb, else accessibility),
+  `listApps` / `openApp` (AppRepository), `openUrl` / web search (TV Bro), YouTube search and play deep
+  links, power off and sleep timer (existing). **Done:** unit tests with fake node trees and a fake adb.
+- [x] **T36 Loopback adb.** `dadb` added to the version catalog and `tech-stack.md`; a key pair in app
+  storage; connect on demand, close on wipe; fail soft with a status the UI can show.
+  **Done:** tests with a fake transport; checked on the TV.
+- [x] **T37 Accessibility helper.** Config gains `canTakeScreenshot` (no gestures); new label and
+  description in all six languages; README privacy and permissions updated.
+  **Done:** strings test green; the helper stays enabled after an update (checked on the TV).
+- [x] **T38 TV UI.** The settings page and the badge from T33, strings ×6.
+  **Done:** Roborazzi screenshots in 14 themes and `be`/`fr`; focus and Back tests.
+- [x] **T39 Phone page** (`assets/remote/`, plain HTML/CSS/JS, no frameworks). Pairing by QR or code,
+  Remote and Screen modes, keyboard sheet, disconnected state, language taken from the launcher's.
+  Theme: `themes.css` is copied into the APK's assets at build time (one source of truth, guarded by
+  `ThemeCssSyncTest`), the page sets `data-theme` from `/api/state`, and the server serves the theme's
+  background (`bg_<id>.webp`, or the gradient for Graphite/Paper) and the Nunito font; the state poll
+  carries the theme id, so a change on the TV restyles the page live.
+  **Done:** matches the T33 mockup; a test that every theme id the app knows exists in the served CSS;
+  checked in iPhone Safari on the owner's phone in two themes and after a theme change.
+- [x] **T40 MCP endpoint** (`/mcp`, Streamable HTTP, JSON-RPC 2.0): `initialize`, `tools/list`,
+  `tools/call` for the tools in §14; `screenshot` returns image content; every call needs the client's
+  `Authorization: Bearer` key; the pairing page from T33(d).
+  **Done:** protocol tests; connected from Claude Code on the owner's computer and did "play a YouTube
+  video", "open Kinopub and find Dark", "search the web for …".
+- [x] **T41 Security review.** The `android-intent-security` checklist for the new pieces; threat model
+  "someone else on the Wi-Fi"; parser fuzz test; no secrets in logs; rate limits.
+  **Done:** findings fixed or recorded in `progress.md`.
+- [x] **T42 Docs.** README (features, how to pair a phone and an assistant, privacy, adb requirement),
+  `ui-spec.md`, `tech-stack.md`, `requirements.md` statuses, `progress.md`.
+- [ ] **T43 On the TV.** Phone: Remote and Screen modes in the launcher, TV Bro, Kinopub, YouTube
+  (keys and Latin text). AI: the three tasks from T40 plus a sleep timer. Turning the TV off and on
+  drops every client and needs a new code. Memory and CPU while on and after turning off.
+  *Checked by Claude over adb on 2026-10-25: the AI tasks (Kinopub, YouTube search, web search in TV Bro).
+  Left for the owner: the phone page in iPhone Safari, and TV off → every client dropped.*
+- [x] **T44 Top bar (owner feedback 2026-10-25).** A **Remote** chip in the top bar opens the Remote page
+  directly (Back closes it); Settings → **Top bar buttons** hides any chip but Settings (hidden weather is not
+  fetched; a running sleep timer always shows). Phone page: no double-tap zoom, Copy works on plain http,
+  the QR code carries the code as `?c=` and wins over a stale key.
+  **Done:** Roborazzi `home-remote-chip`, `home-top-bar-hidden`, `top-bar-page*`; `SettingsTest`, `OverlayTest`.
+
 ## On the TV (owner, or Claude Code running on a computer in the same network)
 
 Not part of the cloud run. Do these after M5:

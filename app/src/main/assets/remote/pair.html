@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>Connect an AI assistant</title>
+  <link rel="stylesheet" href="themes.css">
+  <link rel="stylesheet" href="remote.css">
+</head>
+<body class="wide">
+  <div class="art"></div>
+  <header class="top"><span class="pill title" data-s="web_ai_title">Connect an AI assistant</span></header>
+  <section class="card" id="form">
+    <h1 data-s="web_ai_title">Connect an AI assistant</h1>
+    <p class="muted" data-s="web_ai_hint">Turn on AI access in the TV's settings, then enter the code shown on the TV. The assistant must run on a device in this home network.</p>
+    <input id="code" inputmode="numeric" maxlength="6" placeholder="000000">
+    <input id="name" class="name" maxlength="40" data-ph="web_ai_name">
+    <button class="primary" id="go" data-s="web_pair_button">Connect</button>
+    <p class="error" id="err" hidden></p>
+  </section>
+  <section class="card" id="done" hidden>
+    <h1 data-s="web_ai_done">Connected</h1>
+    <p class="muted" data-s="web_ai_claude">Claude Code: run this on the computer</p>
+    <pre id="cmd"></pre>
+    <button class="primary" data-copy="cmd"><span data-s="web_copy">Copy</span></button>
+    <p class="muted" data-s="web_ai_other">Other assistants: add an MCP server with this address and header</p>
+    <pre id="cfg"></pre>
+    <button class="primary" data-copy="cfg"><span data-s="web_copy">Copy</span></button>
+    <p class="muted" data-s="web_ai_note">The key stops working when the TV turns off. Then connect again with a new code.</p>
+  </section>
+  <script src="pair.js"></script>
+</body>
+</html>

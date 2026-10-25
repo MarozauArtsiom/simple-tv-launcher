@@ -87,6 +87,8 @@ data class HomeActions(
     /** The top bar's sleep timer button. */
     val onTimer: () -> Unit = {},
     val onIphone: () -> Unit = {},
+    /** The top bar's "Remote" button: Settings → Phone remote & AI access. */
+    val onRemote: () -> Unit = {},
     val onSettings: () -> Unit = {},
     /** Move mode: swap the tile one place left (-1) or right (+1). */
     val onMoveStep: (ItemKey, Int) -> Unit = { _, _ -> },
@@ -210,6 +212,7 @@ fun HomeScreen(
                     onInputs = actions.onInputs,
                     onTimer = actions.onTimer,
                     onIphone = actions.onIphone,
+                    onRemote = actions.onRemote,
                     onSettings = actions.onSettings,
                     focus = focus,
                 )

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#101216">
+  <title>Simple TV</title>
+  <link rel="stylesheet" href="themes.css">
+  <link rel="stylesheet" href="remote.css">
+</head>
+<body>
+  <div class="art"></div>
+
+  <header class="top">
+    <span class="pill title" data-s="web_title">TV remote</span>
+    <div class="modes" id="modes" hidden>
+      <button class="mode on" data-mode="remote" data-s="web_mode_remote">Remote</button>
+      <button class="mode" data-mode="screen" data-s="web_mode_screen">Screen</button>
+    </div>
+  </header>
+
+  <!-- Pairing: the code from the TV (filled in from the QR code's ?c=…). -->
+  <section id="pair" class="card" hidden>
+    <h1 data-s="web_pair_title">Connect to the TV</h1>
+    <p class="muted" data-s="web_pair_hint">Enter the code shown on the TV.</p>
+    <input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
+    <button class="primary" id="pairBtn" data-s="web_pair_button">Connect</button>
+    <p class="error" id="pairError" hidden></p>
+  </section>
+
+  <!-- The TV turned access off (or the page lost its key). -->
+  <section id="off" class="card" hidden>
+    <h1 data-s="web_off_title">Disconnected</h1>
+    <p class="muted" data-s="web_off_hint">Turn on Phone remote in the TV's settings and enter the new code.</p>
+    <button class="primary" id="again" data-s="web_off_button">Enter a code</button>
+  </section>
+
+  <main id="main" hidden>
+    <section id="screenCard" hidden>
+      <div id="screen" class="screen"><img id="frame" alt=""><div id="dot"></div></div>
+      <p class="hint muted" data-s="web_screen_hint">Tap to press · hold for a long press · swipe to scroll</p>
+    </section>
+
+    <section class="pad">
+      <button class="key up" data-key="up" aria-label="Up"><svg viewBox="0 0 24 24"><path d="M7 14l5-5 5 5z"/></svg></button>
+      <button class="key left" data-key="left" aria-label="Left"><svg viewBox="0 0 24 24"><path d="M14 7l-5 5 5 5z"/></svg></button>
+      <button class="key ok" data-key="ok">OK</button>
+      <button class="key right" data-key="right" aria-label="Right"><svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5z"/></svg></button>
+      <button class="key down" data-key="down" aria-label="Down"><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></button>
+    </section>
+
+    <section class="row">
+      <button class="btn" data-key="back"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg><span data-s="web_back">Back</span></button>
+      <button class="btn" data-key="home"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span data-s="web_home">Home</span></button>
+    </section>
+    <section class="row small">
+      <button class="btn" data-key="volume_down" aria-label="Volume down"><svg viewBox="0 0 24 24"><path d="M18.5 12A4.5 4.5 0 0 0 16 7.97v8.05A4.5 4.5 0 0 0 18.5 12zM5 9v6h4l5 5V4L9 9H5z"/></svg>−</button>
+      <button class="btn" data-key="play_pause" aria-label="Play or pause"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <button class="btn" data-key="volume_up" aria-label="Volume up"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>+</button>
+    </section>
+
+    <section class="type">
+      <input id="text" type="text" data-ph="web_text_placeholder" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
+      <button class="primary" id="enter" data-s="web_enter">Enter</button>
+    </section>
+    <p class="hint muted" data-s="web_text_hint">Select a field on the TV, then type here. The text appears on the TV as you type.</p>
+
+    <button class="link" id="disconnect" data-s="web_disconnect">Disconnect</button>
+  </main>
+
+  <script src="remote.js"></script>
+</body>
+</html>

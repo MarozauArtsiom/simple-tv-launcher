@@ -199,6 +199,89 @@ help with mirroring an iPhone screen.
 - Mockups: `design/mockups/settings/language-picker.png`, `design/mockups/settings/languages.png`.
 - Details: `android-tv-launcher` skill, `references/settings-themes-i18n.md`.
 
+## 14. Phone remote and AI access ✅ (built 2026-10-25, tasks T33–T44; owner checks in T43 left)
+
+The owner asked to control the TV from a phone, and to let any AI assistant in the home (Claude or
+another one) do what a person asks: "play this YouTube video", "open Kinopub and find Dark", "search the
+web for…". Anyone at home may connect their own assistant.
+
+### What it is
+
+One small web server inside the launcher, with two front ends on top of one "TV control" layer:
+
+1. **Phone remote**: a web page for the phone's browser (iPhone Safari; nothing to install, can be
+   added to the home screen).
+   - **Remote** (default): D-pad, OK, Back, Home, and the phone keyboard typing into the field selected
+     on the TV.
+   - **Screen** (extension, switched on from the page): a live picture of the TV (about one frame a
+     second). Tap on the picture presses the element under the finger, long-press works as a long
+     press, a swipe scrolls, and text goes into the tapped field.
+   - **Same theme as the launcher** (owner's request): the page uses the TV's current theme: its tokens
+     from `themes.css` (colours, radii, focus colour, pills, Nunito for cartoon themes), its background
+     art behind the top of the page, and its button style. When the theme changes on the TV (by hand
+     or by the day/night schedule), the open page follows without a reload. Its language is the
+     launcher's language.
+2. **AI access (MCP)**: an MCP server (Streamable HTTP) that an assistant on a computer or phone in the
+   same network connects to. Tools: `list_apps`, `open_app`, `youtube_search`, `youtube_play`,
+   `open_url`, `web_search`, `screenshot`, `read_screen`, `tap`, `scroll`, `type_text`, `press_key`,
+   `power_off`, `sleep_timer`.
+
+### Hard requirements
+
+- **Local network only.** The server listens on the TV's Wi-Fi address and rejects any address that is
+  not private. No cloud relay, no port forwarding, no remote access from outside the home.
+- **Off by default.** Turned on in Settings → "Phone remote & AI access" (two switches on one page).
+- **TV off = access gone.** Keys live only in memory, never on disk. The server closes and every key is
+  erased when the screen turns off (standby, sleep timer, "Turn off TV"), on reboot or power loss, when
+  the launcher process dies, when the accessibility helper is turned off, and on an app update. After the
+  TV is on again, access is off and has to be granted from scratch with a new code. An assistant
+  can't turn the TV on. (Google's Ambient screensaver keeps the screen on, so access continues there.)
+- **Pairing.** The TV shows a 6-digit code (and a QR code for the phone). Each phone or assistant
+  exchanges it once for its own random 128-bit key. Five wrong codes → 60 s lockout. The phone's key
+  travels in the QR fragment (`#`), never in a URL that a server could log.
+- **One phone at a time.** A new phone takes over; the old page shows "Disconnected".
+  **Several assistants** may be connected; the TV lists them by name, each can be disconnected, and
+  there is "Disconnect all".
+- **Visible.** While anyone is connected, a small badge shows on the TV over any app ("📱 Remote",
+  "AI is controlling").
+- **Auto-off** after 15 minutes without requests.
+- **No dangerous tools:** no install or uninstall, no system settings, no shell passthrough.
+- **Resources:** nothing runs while it is off. While on: the server is about 1 MB; screenshots are taken
+  only while a client asks for them. An owner-approved exception to "nothing in the background".
+
+### What the TV can do (spike on the Xiaomi TV A Pro 2025, Android 11, 2026-10-25)
+
+| Capability | Result |
+|---|---|
+| Accessibility helper keeps working after the update adds capabilities | ✅ no new adb command |
+| Screen picture through the accessibility helper (`takeScreenshot`) | ✅ but at most one per ~1.1 s (about 0.9 fps); 120–160 ms of work, ~65 KB JPEG at 960×540 |
+| Injected touch gestures (`dispatchGesture`) | ❌ refused instantly by this firmware (touch from `adb shell input tap` works) |
+| Tap / long-press / scroll on the accessibility node under a point | ✅ TV Bro (also inside web pages), Kinopub, the launcher |
+| Text into a field (`ACTION_SET_TEXT`, any language) + Enter (`ACTION_IME_ENTER`) | ✅ Google search in TV Bro, including Cyrillic |
+| D-pad by moving accessibility focus; Back/Home global actions | ✅ Kinopub, browser, launcher; Back/Home everywhere |
+| YouTube | ❌ its UI is not exposed to accessibility (taps and focus moves do nothing) |
+| Real key events through the TV's own adbd from inside the app (loopback adb, `dadb`) | ✅ everywhere, YouTube included; connected without an on-screen prompt; ~1 s per command |
+| `input text` through loopback adb | ✅ Latin only; Cyrillic via clipboard paste doesn't reach YouTube's field |
+| YouTube deep links (`youtube.com/results?search_query=…`, `watch?v=…`) | ✅ open the TV app directly |
+
+### Decisions
+
+- **Picture:** accessibility screenshots (no prompt, no foreground service), about 1 fps. A smoother
+  mode through MediaProjection (system prompt every time) only if the owner asks later.
+- **Taps:** act on the node under the finger; injected gestures don't work on this TV.
+- **Keys:** in the launcher, delivered in-process; elsewhere, real key events through loopback adb;
+  when adb is unavailable, accessibility focus moves and global actions as a fallback.
+- **Text:** `ACTION_SET_TEXT` into the tapped or focused field (any language), then Enter; for apps
+  without accessible fields (YouTube), `input text` (Latin). Cyrillic YouTube searches go through the
+  `youtube_search` deep link.
+- **Loopback adb** needs network debugging to stay on (it is on for this TV). Library: `dadb`
+  (Apache-2.0, depends on okio). If adb is off, the page and the AI tools say so and keep working in
+  the reduced mode.
+- **Accessibility helper:** gains `canTakeScreenshot`; its label and description change from "reads
+  nothing" to "turns the TV off; while Phone remote or AI access is on, it sees the screen and presses
+  buttons for you".
+- **Not planned:** access from outside the home network, video streaming, voice.
+
 ## Status after the first unattended run
 
 Everything marked ✅ above is built and covered by unit, behaviour and screenshot tests (`docs/progress.md` has

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- No event types: the service gets nothing until the owner presses "Turn off TV" or the sleep timer ends. -->
+<!-- No event types: the service gets nothing until the owner presses "Turn off TV", the sleep timer ends, or the
+     phone remote / AI access (while switched on) asks for a screen picture or an action. -->
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
     android:canRetrieveWindowContent="true"
+    android:canTakeScreenshot="true"
     android:accessibilityFlags="flagRetrieveInteractiveWindows"
     android:description="@string/power_service_description"
     android:notificationTimeout="0" />
