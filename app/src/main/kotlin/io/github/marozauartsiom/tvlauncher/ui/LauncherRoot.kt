@@ -1,5 +1,6 @@
 package io.github.marozauartsiom.tvlauncher.ui
 
+import io.github.marozauartsiom.tvlauncher.system.remote.ClientKind
 import io.github.marozauartsiom.tvlauncher.ui.settings.RemoteAccessPage
 import io.github.marozauartsiom.tvlauncher.ui.settings.TopBarPage
 import io.github.marozauartsiom.tvlauncher.data.prefs.TopButton
@@ -243,6 +244,9 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
     val settingsOverlay = overlay as? Overlay.Settings
     val moveKey = (overlay as? Overlay.MoveMode)?.key
 
+    // The remote's objects are made when it is first opened; until then there is nothing to observe.
+    val remoteNow = graph.remoteIfStarted?.state?.collectAsStateWithLifecycle()?.value
+
     LauncherTheme(theme) {
         Box(Modifier.fillMaxSize()) {
             ThemedBackground(backgroundSpec, graph.backgrounds)
@@ -250,8 +254,10 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                 content = content,
                 theme = theme,
                 topBar = TopBarState(weather = weatherChip(weatherView, context), hdmi = hdmiStatus.map { HdmiChip(it.input.id, it.input.label, it.connected) }, avatar = avatar, sleepTimerAt = settings.sleepTimerAt?.takeIf { it > System.currentTimeMillis() },
-                    // The remote's objects are made when it is first opened; until then nothing to observe and the dot is off.
-                    showRemote = true, remoteOn = graph.remoteIfStarted?.state?.collectAsStateWithLifecycle()?.value?.anyOn == true,
+                    showRemote = true,
+                    remoteOn = remoteNow?.anyOn == true,
+                    remotePhoneConnected = remoteNow?.clients.orEmpty().any { it.kind == ClientKind.Phone },
+                    remoteAiConnected = remoteNow?.clients.orEmpty().any { it.kind == ClientKind.Assistant },
                     hidden = settings.hiddenTopButtons),
                 clock = { clock },
                 art = graph.banners,
@@ -494,6 +500,7 @@ fun LauncherRoot(graph: AppGraph, viewModel: LauncherViewModel, safeMode: Boolea
                         memory = remoteFocus,
                         onPhone = graph.remote::setPhone,
                         onAi = graph.remote::setAi,
+                        onExternal = graph.remote::setExternal,
                         onDisconnect = graph.remote::disconnect,
                         onDisconnectAll = graph.remote::disconnectAll,
                         onCheckHelper = graph.remote::refresh,

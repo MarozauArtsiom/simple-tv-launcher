@@ -32,6 +32,7 @@ class McpServer(
     private val control: TvControl,
     private val version: String,
     private val encodeBase64: (ByteArray) -> String = { Base64.encodeToString(it, Base64.NO_WRAP) },
+    private val onToolCall: () -> Unit = {},
 ) {
     /** Returns the JSON response body, or null for notifications (answered with 202 and no body). */
     fun handle(body: String): String? {
@@ -60,6 +61,7 @@ class McpServer(
                 val name = params["name"]?.jsonPrimitive?.contentOrNull ?: return error(id, -32602, "missing tool name")
                 val args = params["arguments"] as? JsonObject ?: JsonObject(emptyMap())
                 if (TOOLS.none { it.name == name }) return error(id, -32602, "unknown tool: $name")
+                onToolCall()
                 result(id, call(name, args))
             }
             else -> error(id, -32601, "method not found: $method")

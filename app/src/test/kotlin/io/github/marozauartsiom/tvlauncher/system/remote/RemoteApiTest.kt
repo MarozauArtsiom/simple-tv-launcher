@@ -14,7 +14,7 @@ class RemoteApiTest {
     private val tv = FakeTvControl()
     private var actions = 0
     private val api = RemoteApi(
-        gate, tv, McpServer(tv, "1") { "x" }, { host },
+        gate, tv, McpServer(tv, "1", encodeBase64 = { "x" }), { host },
         look = { RemoteLook("midnight", "ru", mapOf("web_ok" to "ОК")) },
         asset = { path -> if (path.startsWith("remote/")) "file:$path".toByteArray() else null },
         font = { byteArrayOf(9) },

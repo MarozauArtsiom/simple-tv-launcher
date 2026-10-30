@@ -189,6 +189,15 @@ One line per finished task: date, task id, what was done, anything notable.
   goldens (`remote-page*`, `remote-badge`, `top-bar-page*`, `home-remote-chip`, `home-top-bar-hidden`).
   Owner feedback the same day (T44): Remote chip in the top bar, Settings → Top bar buttons, no double-tap zoom on the
   phone page, Copy works over http, QR code passes the code as `?c=`.
+- 2026-10-25 — T45: the "remote / AI" badge is steady only on Home; over other apps it flashes (fade + slide, 2.5 s)
+  when an assistant runs a tool (`OverlayRemoteBadge.flash`, `McpServer.onToolCall`, `LauncherInFront.onChange`).
+  Owner decision: AI access can be opened to the internet through a free external relay, localhost.run, by an SSH
+  reverse tunnel (`Tunnel.kt`, JSch). New random address and secret path each time, assistants only (`ExternalApi`).
+  Gotchas: JSch waits for a reply to the "shell" request when the channel has a connect timeout, and localhost.run
+  never sends one, so `channel.connect()` has no timeout; R8 stripped JSch's by-name classes in release, hence the keep
+  rules. The pairing page now targets the owner's use case (Claude app on the phone): connector address with the key
+  in the path, links to Claude's connectors and a new chat (`claude.ai/new?q=` is unofficial, so the first message is
+  also shown as text). Names: "Remote & AI assistant", "Control via AI assistant", "…also from anywhere".
 
 ## Decisions to review
 
@@ -258,6 +267,11 @@ Defaults taken during unattended runs that the owner should look at.
   "Always allow"); without it they go through accessibility, which YouTube ignores.
 - T44: a running sleep timer stays in the top bar even when its chip is hidden, so the owner sees the TV is about to
   turn off.
+
+- T45: **the relay can read the traffic** (TLS ends at localhost.run). Accepted by the owner for convenience; a
+  leaked address + code controls the TV including logged-in apps. Mitigations: off by default, 128-bit secret path,
+  code + lockout, new address each time, ends with the TV, flash badge on every tool call. If this feels too open,
+  switch it off in Settings → Remote & AI assistant, or replace `SshTunnel` with another `Tunnel`.
 
 ## Blockers
 

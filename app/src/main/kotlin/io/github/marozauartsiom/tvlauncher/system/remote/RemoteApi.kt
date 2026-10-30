@@ -34,14 +34,24 @@ class RemoteApi(
     private val look: () -> RemoteLook,
     private val asset: (String) -> ByteArray?,
     private val font: () -> ByteArray?,
-    private val onUserAction: () -> Unit = {},
+    private val onUserAction: (ClientKind) -> Unit = {},
 ) {
+    /**
+     * A request that came through the tunnel ([ExternalApi] already checked its secret path). The Host is the
+     * tunnel's, so the home-network Host and Origin checks don't apply; the routes are the same code.
+     */
+    internal fun handleExternal(req: HttpRequest): HttpResponse = route(req)
+
     fun handle(req: HttpRequest): HttpResponse {
         val expectedHost = host()
         val reqHost = req.header("host")
         if (reqHost != null && reqHost != expectedHost) return HttpResponse.text(403, "wrong host")
         req.header("origin")?.let { if (it != "http://$expectedHost") return HttpResponse.text(403, "wrong origin") }
 
+        return route(req)
+    }
+
+    private fun route(req: HttpRequest): HttpResponse {
         STATIC[req.path]?.let { (file, type) ->
             if (req.method != "GET" && req.method != "HEAD") return HttpResponse.empty(405)
             val bytes = (if (file == FONT) font() else asset(file)) ?: return HttpResponse.empty(404)
@@ -76,7 +86,7 @@ class RemoteApi(
         val kind = when (body.str("kind")) { "phone" -> ClientKind.Phone; "assistant" -> ClientKind.Assistant; else -> return HttpResponse.json(400, """{"error":"bad kind"}""") }
         val name = body.str("name") ?: if (kind == ClientKind.Phone) "Phone" else "AI assistant"
         return when (val r = gate.pair(code, kind, name)) {
-            is PairResult.Paired -> { onUserAction(); HttpResponse.json(200, buildJsonObject { put("key", r.key); put("id", r.client.id) }.toString()) }
+            is PairResult.Paired -> { onUserAction(kind); HttpResponse.json(200, buildJsonObject { put("key", r.key); put("id", r.client.id) }.toString()) }
             is PairResult.WrongCode -> HttpResponse.json(403, buildJsonObject { put("error", "wrong"); put("left", r.attemptsLeft) }.toString())
             is PairResult.Locked -> HttpResponse.json(429, buildJsonObject { put("error", "locked"); put("seconds", r.secondsLeft) }.toString())
             PairResult.Closed -> HttpResponse.json(409, """{"error":"off"}""")
@@ -86,7 +96,7 @@ class RemoteApi(
     private fun mcp(req: HttpRequest): HttpResponse {
         if (req.method != "POST") return HttpResponse.empty(405)
         gate.authorize(req.bearer, ClientKind.Assistant) ?: return HttpResponse(401, "application/json", """{"error":"pair this assistant on the TV first"}""".toByteArray(), mapOf("WWW-Authenticate" to "Bearer"))
-        gate.touch(); onUserAction()
+        gate.touch() // the tools tell the badge themselves (McpServer's onToolCall)
         val out = mcp.handle(req.bodyText) ?: return HttpResponse.empty(202)
         return HttpResponse.json(200, out)
     }
@@ -100,7 +110,7 @@ class RemoteApi(
         }
         if (req.method != "POST") return HttpResponse.empty(405)
         val b = parse(req) ?: JsonObject(emptyMap())
-        gate.touch(); onUserAction()
+        gate.touch(); onUserAction(ClientKind.Phone)
         val result = when (req.path) {
             "/api/key" -> control.key(RemoteKey.fromWire(b.str("key")) ?: return HttpResponse.text(400, "unknown key"))
             "/api/tap" -> control.tap(b.num("x") ?: return bad(), b.num("y") ?: return bad(), b["long"]?.jsonPrimitive?.booleanOrNull ?: false)

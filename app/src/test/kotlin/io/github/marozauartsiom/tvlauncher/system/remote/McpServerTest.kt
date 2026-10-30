@@ -15,7 +15,8 @@ import org.junit.Test
 
 class McpServerTest {
     private val tv = FakeTvControl()
-    private val mcp = McpServer(tv, "1.2.3") { "B64(${it.size})" }
+    private var toolCalls = 0
+    private val mcp = McpServer(tv, "1.2.3", encodeBase64 = { "B64(${it.size})" }, onToolCall = { toolCalls++ })
 
     private fun rpc(method: String, params: String = "{}"): JsonObject =
         Json.parseToJsonElement(mcp.handle("""{"jsonrpc":"2.0","id":7,"method":"$method","params":$params}""")!!).jsonObject
@@ -32,6 +33,15 @@ class McpServerTest {
         assertEquals("2025-03-26", result["protocolVersion"]!!.jsonPrimitive.content)
         assertEquals("1.2.3", result["serverInfo"]!!.jsonObject["version"]!!.jsonPrimitive.content)
         assertTrue(result["capabilities"]!!.jsonObject.containsKey("tools"))
+    }
+
+    @Test fun onlyToolCallsCountAsAnAction() {
+        rpc("initialize"); rpc("tools/list"); rpc("ping")
+        assertEquals(0, toolCalls)
+        call("get_status")
+        assertEquals(1, toolCalls)
+        rpc("tools/call", """{"name":"rm_rf"}""")
+        assertEquals(1, toolCalls)
     }
 
     @Test fun notificationsGetNoAnswer() {

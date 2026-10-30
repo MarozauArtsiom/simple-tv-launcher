@@ -53,6 +53,8 @@ AGP 9 notes (details in the `agp-9-upgrade` skill):
 | `dev.mobile:dadb` | 2.0.0 | Phone remote: real key events through the TV's own adbd at 127.0.0.1:5555 (only while access is on) |
 | `com.google.zxing:core` | 3.5.4 | The pairing QR code (matrix only; drawn with Compose) |
 
+| `com.github.mwiede:jsch` | 2.28.8 | SSH client for the optional internet tunnel to the free relay localhost.run (only while that switch is on). Kept whole by R8 (`proguard-rules.pro`): it loads its algorithms by class name; about +0.4 MB in the release APK |
+
 The phone remote's HTTP server is our own (~150 lines, `system/remote/http/`), not Ktor or NanoHTTPD: one request
 per connection, hard size limits, private source addresses only, and nothing running while both switches are off.
 

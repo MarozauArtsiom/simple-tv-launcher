@@ -1,5 +1,6 @@
 package io.github.marozauartsiom.tvlauncher
 
+import io.github.marozauartsiom.tvlauncher.data.prefs.TopButton
 import android.content.Context
 import io.github.marozauartsiom.tvlauncher.R
 import android.content.res.Resources
@@ -41,6 +42,7 @@ import java.io.File
 import io.github.marozauartsiom.tvlauncher.data.prefs.themeAt
 import io.github.marozauartsiom.tvlauncher.system.power.PowerService
 import io.github.marozauartsiom.tvlauncher.system.remote.AccessGate
+import io.github.marozauartsiom.tvlauncher.system.remote.ClientKind
 import io.github.marozauartsiom.tvlauncher.system.remote.LauncherInFront
 import io.github.marozauartsiom.tvlauncher.system.remote.McpServer
 import io.github.marozauartsiom.tvlauncher.system.remote.RemoteAccess
@@ -171,12 +173,20 @@ class AppGraph(private val context: Context) {
             scope = appScope,
             gate = gate,
             control = control,
-            api = { host -> RemoteApi(gate, control, McpServer(control, version), host, ::remoteLook, ::remoteAsset, ::remoteFont) },
+            api = { host ->
+                RemoteApi(
+                    gate, control, McpServer(control, version, onToolCall = { remoteIfStarted?.onAction(ClientKind.Assistant) }),
+                    host, ::remoteLook, ::remoteAsset, ::remoteFont,
+                    onUserAction = { kind -> remoteIfStarted?.onAction(kind) },
+                )
+            },
             helperReady = { PowerService.isEnabled },
             badge = OverlayRemoteBadge(
                 context = { LocaleController.localized(context, latestSettings.language) },
                 theme = { Themes.byId(currentTheme()) },
                 canDraw = { android.provider.Settings.canDrawOverlays(context) },
+                homeInFront = { LauncherInFront.activity != null },
+                homeShowsStatus = { TopButton.Remote !in latestSettings.hiddenTopButtons },
             ),
         )
     }
@@ -227,5 +237,5 @@ private val WEB_STRINGS = listOf(
     "web_title", "web_mode_remote", "web_mode_screen", "web_pair_title", "web_pair_hint", "web_pair_button", "web_pair_wrong",
     "web_pair_locked", "web_off_title", "web_off_hint", "web_off_button", "web_screen_hint", "web_back", "web_home", "web_enter",
     "web_text_placeholder", "web_text_hint", "web_disconnect", "web_ai_title", "web_ai_hint", "web_ai_name", "web_ai_done",
-    "web_ai_claude", "web_ai_other", "web_ai_note", "web_ai_off", "web_copy", "web_copied", "web_copy_manual",
+    "web_ai_claude", "web_ai_other", "web_ai_note", "web_ai_off", "web_copy", "web_copied", "web_copy_manual", "web_chat_title", "web_chat_steps", "web_chat_open", "web_chat_prompt", "web_chat_address", "web_chat_other", "web_chat_connectors", "web_chat_first", "web_ai_default_name",
 )

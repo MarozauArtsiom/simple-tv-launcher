@@ -65,6 +65,7 @@ fun RemoteAccessPage(
     onDisconnectAll: () -> Unit,
     onCheckHelper: () -> Unit,
     modifier: Modifier = Modifier,
+    onExternal: (Boolean) -> Unit = {},
 ) {
     LaunchedEffect(Unit) {
         withFrameNanos { }
@@ -86,10 +87,17 @@ fun RemoteAccessPage(
             } else {
                 IconSwitchRow(stringResource(R.string.remote_phone), Icons.Phone, state.phoneOn, theme, memory.track("phone")) { onPhone(!state.phoneOn) }
                 IconSwitchRow(stringResource(R.string.remote_ai), Icons.Sparkle, state.aiOn, theme, memory.track("ai")) { onAi(!state.aiOn) }
+                if (state.aiOn) {
+                    IconSwitchRow(stringResource(R.string.remote_external), Icons.Cloud, state.externalOn, theme, memory.track("external")) { onExternal(!state.externalOn) }
+                }
                 if (state.noNetwork) Muted(stringResource(R.string.remote_no_network), theme)
                 val address = state.address
                 if (state.anyOn && address != null) {
-                    PairCard(theme, address, state.code, qr = if (state.phoneOn) "http://$address/?c=${state.code}" else "http://$address/pair")
+                    val url = state.externalUrl
+                    // With the internet address up and no phone remote, that card replaces the home-network one.
+                    if (state.phoneOn || url == null) {
+                        PairCard(theme, address, state.code, qr = if (state.phoneOn) "http://$address/?c=${state.code}" else "http://$address/pair")
+                    }
                     if (state.clients.isNotEmpty()) {
                         Text(stringResource(R.string.remote_connected), style = MaterialTheme.typography.labelLarge, color = c.panelMuted, modifier = Modifier.padding(top = 8.dp))
                         state.clients.forEach { client ->
@@ -106,7 +114,13 @@ fun RemoteAccessPage(
                             PanelItem(stringResource(R.string.remote_disconnect_all), theme, onDisconnectAll, memory.track("all"))
                         }
                     }
-                    if (state.aiOn) Muted(stringResource(R.string.remote_ai_hint, "$address/pair"), theme)
+                    if (state.aiOn && !state.externalOn) Muted(stringResource(R.string.remote_ai_hint, "$address/pair"), theme)
+                    if (state.externalOn) {
+                        if (url != null) ExternalCard(theme, url, state.code) else Muted(stringResource(R.string.remote_external_connecting), theme)
+                        Muted(stringResource(R.string.remote_external_note), theme)
+                    } else if (state.externalFailed) {
+                        Muted(stringResource(R.string.remote_external_failed), theme)
+                    }
                     when (state.fullKeys) {
                         true -> Muted(stringResource(R.string.remote_keys_full), theme)
                         false -> Muted(stringResource(R.string.remote_keys_basic), theme)
@@ -152,6 +166,28 @@ private fun PairCard(theme: ThemeSpec, address: String, code: String, qr: String
                 modifier = Modifier.semantics { contentDescription = code.toList().joinToString(" ") },
             )
             Text(address, style = MaterialTheme.typography.bodyMedium, color = c.panelMuted)
+        }
+    }
+}
+
+/** The internet address of the AI pairing page: a QR code (code included) and the address as text. */
+@Composable
+private fun ExternalCard(theme: ThemeSpec, url: String, code: String) {
+    val c = theme.colors
+    Row(
+        Modifier.fillMaxWidth().padding(top = 4.dp).background(c.itemBg, RoundedCornerShape(12.dp)).padding(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        QrCode("$url/pair?c=$code", Modifier.size(112.dp))
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(stringResource(R.string.remote_external_scan), style = MaterialTheme.typography.bodyMedium, color = c.panelMuted)
+            Text(
+                code.chunked(3).joinToString(" "),
+                fontSize = 32.sp, lineHeight = 40.sp, fontWeight = FontWeight.Bold, letterSpacing = 2.sp, color = c.panelFg,
+                modifier = Modifier.semantics { contentDescription = code.toList().joinToString(" ") },
+            )
+            Text(url.removePrefix("https://").substringBefore('/'), style = MaterialTheme.typography.bodyMedium, color = c.panelMuted, maxLines = 1)
         }
     }
 }

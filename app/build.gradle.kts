@@ -99,6 +99,7 @@ dependencies {
     implementation(libs.serialization.json)
     implementation(libs.dadb)
     implementation(libs.zxing.core)
+    implementation(libs.jsch)
 
     // The profile recorded on the TV by :baselineprofile is merged into the release build (src/release/generated/baselineProfiles).
     baselineProfile(project(":baselineprofile"))

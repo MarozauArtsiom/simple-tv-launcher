@@ -423,6 +423,15 @@ T34–T39 and deleted.
   the QR code carries the code as `?c=` and wins over a stale key.
   **Done:** Roborazzi `home-remote-chip`, `home-top-bar-hidden`, `top-bar-page*`; `SettingsTest`, `OverlayTest`.
 
+- [x] **T45 Badge and internet access (owner request 2026-10-25).** The badge is steady only on Home and flashes
+  over other apps when an assistant runs a tool. AI access from the internet through a free tunnel
+  (localhost.run over SSH, `Tunnel`/`SshTunnel`), random address and secret path every time (`ExternalApi`), a
+  switch "…also from anywhere", QR with the address and code. Pairing page for the Claude app: connector address
+  with the key in the path, "Open connectors in Claude", "Open a chat in Claude". Clearer names ("Remote & AI
+  assistant", "Control via AI assistant"). JSch kept in release builds (R8 rules). Decision in `requirements.md` §14.
+  **Done:** `ExternalApiTest`, goldens `remote-page-internet*`, `remote-page-connecting`; on the TV: the tunnel comes
+  up, pairing and a tool call through the public address.
+
 ## On the TV (owner, or Claude Code running on a computer in the same network)
 
 Not part of the cloud run. Do these after M5:

@@ -12,6 +12,7 @@ import io.github.marozauartsiom.tvlauncher.system.remote.http.LocalHttpServer
 import java.net.Inet4Address
 import java.net.InetAddress
 import java.net.NetworkInterface
+import java.security.SecureRandom
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -35,6 +36,12 @@ data class RemoteState(
     val fullKeys: Boolean? = null,
     /** A switch is on but the TV has no home-network address. */
     val noNetwork: Boolean = false,
+    /** AI access from the internet (through the tunnel) is switched on. */
+    val externalOn: Boolean = false,
+    /** `https://abc.lhr.life/s/<secret>` once the tunnel is up; null while it connects. */
+    val externalUrl: String? = null,
+    /** The tunnel could not start or dropped. */
+    val externalFailed: Boolean = false,
 ) {
     val anyOn: Boolean get() = phoneOn || aiOn
 }
@@ -55,12 +62,17 @@ class RemoteAccess(
     private val badge: RemoteBadgeHost,
     private val port: Int = PORT,
     private val lanAddress: () -> InetAddress? = ::homeNetworkAddress,
+    private val tunnel: () -> Tunnel = { SshTunnel() },
+    private val random: SecureRandom = SecureRandom(),
 ) {
     private val main = Handler(Looper.getMainLooper())
     private val _state = MutableStateFlow(RemoteState(helperReady = helperReady()))
     val state: StateFlow<RemoteState> = _state.asStateFlow()
 
     private var server: LocalHttpServer? = null
+    private var routes: RemoteApi? = null
+    private var externalServer: LocalHttpServer? = null
+    private var externalTunnel: Tunnel? = null
     private var host: String = ""
     private var idleJob: Job? = null
     private var screenReceiverOn = false
@@ -73,11 +85,53 @@ class RemoteAccess(
 
     init {
         gate.onChange = { main.post { publish() } }
+        LauncherInFront.onChange = { main.post { badge.refresh() } }
         control.onAdbResult = { full -> _state.update { it.copy(fullKeys = full) } }
     }
 
     fun setPhone(on: Boolean) = reconfigure(_state.value.copy(phoneOn = on))
     fun setAi(on: Boolean) = reconfigure(_state.value.copy(aiOn = on))
+
+    /**
+     * AI access from the internet: opens a tunnel to a relay, which gives a random https address. Only for
+     * assistants (see [ExternalApi]); needs AI access on; a new address and a new secret every time; gone when
+     * the switch, AI access or the TV goes off.
+     */
+    @Synchronized
+    fun setExternal(on: Boolean) {
+        if (!on) {
+            stopExternal()
+            _state.update { it.copy(externalOn = false, externalUrl = null, externalFailed = false) }
+            return
+        }
+        val api = routes
+        if (!_state.value.aiOn || server == null || api == null || externalTunnel != null) return
+        val secret = ByteArray(16).also(random::nextBytes).joinToString("") { "%02x".format(it) }
+        // IPv4 loopback on purpose: Android's getLoopbackAddress() is ::1, and the tunnel connects to 127.0.0.1.
+        val local = LocalHttpServer(Tunnel.LOCAL_HOST, 0, ExternalApi(api) { secret }::handle)
+        if (!local.start()) { _state.update { it.copy(externalOn = false, externalFailed = true) }; return }
+        val t = tunnel()
+        externalServer = local
+        externalTunnel = t
+        _state.update { it.copy(externalOn = true, externalUrl = null, externalFailed = false) }
+        t.start(
+            localPort = local.boundPort,
+            onUrl = { url -> if (externalTunnel === t) _state.update { it.copy(externalUrl = "$url/s/$secret") } },
+            onDown = { main.post { synchronized(this) { if (externalTunnel === t) { stopExternal(); _state.update { it.copy(externalOn = false, externalUrl = null, externalFailed = true) } } } } },
+        )
+    }
+
+    private fun stopExternal() {
+        externalTunnel?.stop()
+        externalTunnel = null
+        externalServer?.stop()
+        externalServer = null
+    }
+
+    /** An assistant ran a tool: outside Home the badge shows for a moment so the owner sees it. Any thread. */
+    fun onAction(kind: ClientKind) {
+        if (kind == ClientKind.Assistant) main.post { badge.flash() }
+    }
 
     fun disconnect(id: String) = gate.disconnect(id)
 
@@ -102,6 +156,7 @@ class RemoteAccess(
     private fun reconfigure(wanted: RemoteState) {
         val kinds = buildSet { if (wanted.phoneOn) add(ClientKind.Phone); if (wanted.aiOn) add(ClientKind.Assistant) }
         if (kinds.isEmpty()) { shutDown(); return }
+        if (!wanted.aiOn && externalTunnel != null) stopExternal()
         val starting = server == null
         if (starting) {
             val address = lanAddress()
@@ -109,6 +164,7 @@ class RemoteAccess(
             control.reset()
             gate.newPairingCode()
             val routes = api { host }
+            this.routes = routes
             val s = LocalHttpServer(address, port, routes::handle)
             if (!s.start()) { _state.value = wanted.copy(phoneOn = false, aiOn = false, noNetwork = true); return }
             host = "${address.hostAddress}:${s.boundPort}"
@@ -118,7 +174,10 @@ class RemoteAccess(
             control.adbReady() // checks in the background; the page shows the result
         }
         gate.setOpen(kinds)
-        _state.value = wanted.copy(address = host, code = gate.code, clients = gate.clients(), helperReady = helperReady(), noNetwork = false)
+        _state.value = wanted.copy(
+            address = host, code = gate.code, clients = gate.clients(), helperReady = helperReady(), noNetwork = false,
+            externalOn = wanted.externalOn && wanted.aiOn, externalUrl = wanted.externalUrl.takeIf { wanted.aiOn },
+        )
     }
 
     private fun publish() {
@@ -128,8 +187,10 @@ class RemoteAccess(
     }
 
     private fun stopServer() {
+        stopExternal()
         server?.stop()
         server = null
+        routes = null
         idleJob?.cancel()
         idleJob = null
         control.reset()
@@ -167,8 +228,15 @@ private fun homeNetworkAddress(): InetAddress? = runCatching {
             .firstOrNull { it is Inet4Address && it.isSiteLocalAddress }
 }.getOrNull()
 
-/** Shows the small "remote / AI is controlling" pill over every app. */
+/** The small "remote / AI is controlling" pill: steady on Home, a short flash over other apps. */
 interface RemoteBadgeHost {
+    /** Who is connected now (both false: nobody). The badge stays up while Home is in front. Main thread. */
     fun show(phone: Boolean, ai: Boolean)
     fun hide()
+
+    /** Home came to or left the front: show or hide the badge to match. Main thread. */
+    fun refresh()
+
+    /** An assistant did something: outside Home, show the badge briefly with an animation. Main thread. */
+    fun flash()
 }

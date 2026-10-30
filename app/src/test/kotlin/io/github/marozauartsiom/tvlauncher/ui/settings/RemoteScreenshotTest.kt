@@ -46,12 +46,12 @@ class RemoteScreenshotTest : TvScreenshotTest() {
     )
 
     @Composable
-    private fun OverHome(theme: ThemeSpec, hidden: Set<TopButton> = emptySet(), remoteOn: Boolean = true, panel: (@Composable () -> Unit)? = null) {
+    private fun OverHome(theme: ThemeSpec, hidden: Set<TopButton> = emptySet(), remoteOn: Boolean = true, aiConnected: Boolean = false, panel: (@Composable () -> Unit)? = null) {
         Box(Modifier.fillMaxSize()) {
             ThemedBackground(theme, cache)
             HomeScreen(
                 content = HomeFixtures.content, theme = theme,
-                topBar = HomeFixtures.topBar.copy(showRemote = true, remoteOn = remoteOn, hidden = hidden),
+                topBar = HomeFixtures.topBar.copy(showRemote = true, remoteOn = remoteOn, remoteAiConnected = aiConnected, hidden = hidden),
                 clock = { HomeFixtures.clock }, art = art, resets = emptyFlow(), actions = HomeActions(), overlayOpen = panel != null,
             )
             panel?.invoke()
@@ -81,6 +81,31 @@ class RemoteScreenshotTest : TvScreenshotTest() {
         }
     }
 
+    private val internet = on.copy(
+        phoneOn = false, externalOn = true,
+        externalUrl = "https://86e0f64868e2d7.lhr.life/s/0123456789abcdef0123456789abcdef",
+        clients = listOf(RemoteClient("d4e5f6", ClientKind.Assistant, "Claude", 0)),
+    )
+
+    @Test fun remotePageFromTheInternet() {
+        captureThemes("remote-page-internet", listOf("midnight", "paper").map(Themes::byKey)) { theme ->
+            OverHome(theme) { RemoteAccessPage(theme, internet, "", FocusMemory(), {}, {}, {}, {}, {}) }
+        }
+    }
+
+    @Test fun remotePageFromTheInternetInLongLanguages() {
+        captureLocales("remote-page-internet-locales", tags = listOf("be", "fr", "de")) {
+            val theme = Themes.default
+            OverHome(theme) { RemoteAccessPage(theme, internet, "", FocusMemory(), {}, {}, {}, {}, {}) }
+        }
+    }
+
+    @Test fun remotePageWhileTheTunnelConnects() {
+        captureThemes("remote-page-connecting", listOf(Themes.byKey("midnight"))) { theme ->
+            OverHome(theme) { RemoteAccessPage(theme, internet.copy(externalUrl = null, clients = emptyList()), "", FocusMemory(), {}, {}, {}, {}, {}) }
+        }
+    }
+
     @Test fun remotePageInLongLanguages() {
         captureLocales("remote-page-locales", tags = listOf("be", "fr", "de")) {
             val theme = Themes.default
@@ -104,6 +129,11 @@ class RemoteScreenshotTest : TvScreenshotTest() {
 
     @Test fun homeWithTheRemoteButton() {
         captureThemes("home-remote-chip", listOf("midnight", "paper", "valley").map(Themes::byKey)) { theme -> OverHome(theme) }
+    }
+
+    @Test fun homeWhileAnAssistantIsConnected() {
+        // The Remote chip is Home's indicator: "AI is controlling" with the sparkle icon and the dot.
+        captureThemes("home-remote-ai", listOf("midnight", "halloween-day").map(Themes::byKey)) { theme -> OverHome(theme, hidden = setOf(TopButton.Inputs), aiConnected = true) }
     }
 
     @Test fun homeWithHiddenButtons() {

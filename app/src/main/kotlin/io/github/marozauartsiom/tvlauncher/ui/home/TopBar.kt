@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.ClickableSurfaceDefaults
 import androidx.tv.material3.ExperimentalTvMaterial3Api
@@ -53,6 +55,9 @@ import io.github.marozauartsiom.tvlauncher.ui.theme.themeShadow
 val SafeHorizontal = 48.dp
 val SafeVertical = 27.dp
 val TopBarHeight = 71.dp
+
+/** Room for the weather chip's icon and temperature; with less, the chip is left out. */
+private val WeatherChipMinWidth = 96.dp
 
 /**
  * Clock and date on the left, weather chip next to them; Inputs, Timer, Remote, iPhone and the settings avatar on the
@@ -81,9 +86,12 @@ fun TopBar(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // The left side gives way when the bar is crowded, so the buttons on the right (the avatar last) always stay on screen.
-        Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+        // Within it the clock and date stay whole; the weather chip takes what is left: the place name gives way first
+        // (ellipsis), and with no room even for the temperature the chip is left out rather than cut into a sliver.
+        Row(Modifier.weight(1f).padding(end = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(24.dp)) {
             ClockAndDate(clock, theme)
-            state.weather?.takeIf { TopButton.Weather !in state.hidden }?.let { w ->
+            state.weather?.takeIf { TopButton.Weather !in state.hidden }?.let { w -> BoxWithConstraints(Modifier.weight(1f, fill = false)) {
+                if (maxWidth < WeatherChipMinWidth) return@BoxWithConstraints
                 val description = stringResource(R.string.cd_weather, w.description)
                 TopChip(theme, onWeather, focus.track("chip:weather").semantics { contentDescription = description }) {
                     WeatherIcon(theme, w.condition, w.isDay)
@@ -98,9 +106,10 @@ fun TopBar(
                         style = MaterialTheme.typography.labelLarge,
                         color = theme.colors.chipFg,
                         maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
-            }
+            } }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
             // All HDMI inputs behind one button (T33); the popup lists them with their status. The dot: something is connected.
@@ -129,9 +138,14 @@ fun TopBar(
                 }
             }
             if (state.showRemote && TopButton.Remote !in state.hidden) {
-                val label = stringResource(R.string.remote_chip)
+                // While someone is connected, the chip is Home's indicator: "Remote · AI is controlling" (the badge isn't shown on Home).
+                val connected = listOfNotNull(
+                    stringResource(R.string.remote_badge_phone).takeIf { state.remotePhoneConnected },
+                    stringResource(R.string.remote_badge_ai).takeIf { state.remoteAiConnected },
+                ).joinToString(" · ")
+                val label = connected.ifEmpty { stringResource(R.string.remote_chip) }
                 TopChip(theme, onRemote, focus.track("chip:remote").semantics { contentDescription = label }) {
-                    ChipIcon(Icons.Remote, theme)
+                    ChipIcon(if (state.remoteAiConnected) Icons.Sparkle else Icons.Remote, theme)
                     Text(label, style = MaterialTheme.typography.labelLarge, color = theme.colors.chipFg, maxLines = 1)
                     if (state.remoteOn) Box(Modifier.size(8.dp).background(theme.colors.signal, CircleShape))
                 }

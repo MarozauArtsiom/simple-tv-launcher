@@ -1,6 +1,15 @@
 package io.github.marozauartsiom.tvlauncher.ui.remote
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import android.view.Gravity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -49,33 +58,103 @@ fun RemoteBadge(theme: ThemeSpec, phone: Boolean, ai: Boolean, modifier: Modifie
 }
 
 /**
- * The badge as a passive window over every app (no focus, no touches). Needs the "draw over other apps"
- * permission the HDMI card uses; without it there is no badge (Settings still lists who is connected).
+ * The badge as a passive window (no focus, no touches). Needs the "draw over other apps" permission the HDMI
+ * card uses; without it there is no badge (Settings still lists who is connected).
+ *
+ * - On Home the top bar's Remote chip says who is connected, so the badge is hidden there; only when the owner hid
+ *   that chip ([homeShowsStatus] false) does the badge stay up on Home instead.
+ * - Over any other app it stays hidden, and only [flash]es for a moment (with a fade and slide) when an
+ *   assistant does something, so the owner sees that the TV is being controlled without a permanent pill.
+ *
+ * All methods run on the main thread.
  */
 class OverlayRemoteBadge(
     private val context: () -> Context,
     private val theme: () -> ThemeSpec,
     private val canDraw: () -> Boolean,
+    private val homeInFront: () -> Boolean,
+    private val homeShowsStatus: () -> Boolean = { false },
 ) : RemoteBadgeHost {
+    private val handler = Handler(Looper.getMainLooper())
     private var host: OverlayHost? = null
-    private var shown: Pair<Boolean, Boolean>? = null
+    private var visible: MutableTransitionState<Boolean>? = null
+    private var shownPhone = false
+    private var shownAi = false
+    private var phone = false
+    private var ai = false
+    private var flashing = false
 
     override fun show(phone: Boolean, ai: Boolean) {
-        if (shown == phone to ai) return
-        if (!canDraw()) return
-        hide()
-        val t = theme()
-        host = OverlayHost(context()).also { h ->
-            h.show(focusable = false, gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL, xDp = 0, yDp = 6) {
-                LauncherTheme(t) { RemoteBadge(t, phone, ai) }
-            }
-        }
-        shown = phone to ai
+        this.phone = phone
+        this.ai = ai
+        if (!phone && !ai) flashing = false
+        refresh()
     }
 
     override fun hide() {
+        phone = false
+        ai = false
+        flashing = false
+        handler.removeCallbacksAndMessages(null)
+        remove()
+    }
+
+    override fun refresh() {
+        if (!phone && !ai) { remove(); return }
+        val onHome = homeInFront()
+        when {
+            onHome && homeShowsStatus() -> fadeOut()
+            onHome -> display(phone, ai)
+            flashing -> display(phone = false, ai = true)
+            else -> fadeOut()
+        }
+    }
+
+    override fun flash() {
+        if (!ai || homeInFront()) return
+        flashing = true
+        handler.removeCallbacksAndMessages(null)
+        refresh()
+        handler.postDelayed({ flashing = false; refresh() }, FLASH_MS)
+    }
+
+    private fun display(phone: Boolean, ai: Boolean) {
+        visible?.let { if (host != null && shownPhone == phone && shownAi == ai) { it.targetState = true; return } }
+        if (!canDraw()) return
+        remove()
+        val t = theme()
+        val state = MutableTransitionState(false).apply { targetState = true } // composes hidden, then animates in
+        host = OverlayHost(context()).also { h ->
+            h.show(focusable = false, gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL, xDp = 0, yDp = 6) {
+                LauncherTheme(t) {
+                    AnimatedVisibility(
+                        visibleState = state,
+                        enter = fadeIn(tween(200)) + slideInVertically(tween(250)) { -it },
+                        exit = fadeOut(tween(200)) + slideOutVertically(tween(250)) { -it },
+                    ) { RemoteBadge(t, phone, ai) }
+                }
+            }
+        }
+        visible = state
+        shownPhone = phone
+        shownAi = ai
+    }
+
+    /** Plays the exit animation, then removes the window. */
+    private fun fadeOut() {
+        val state = visible ?: return remove()
+        state.targetState = false
+        handler.postDelayed({ if (visible === state && !state.targetState) remove() }, EXIT_MS)
+    }
+
+    private fun remove() {
         host?.hide()
         host = null
-        shown = null
+        visible = null
+    }
+
+    private companion object {
+        const val FLASH_MS = 2_500L
+        const val EXIT_MS = 300L
     }
 }

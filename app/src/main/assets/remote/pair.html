@@ -20,6 +20,17 @@
   </section>
   <section class="card" id="done" hidden>
     <h1 data-s="web_ai_done">Connected</h1>
+    <div id="chat" hidden>
+      <h2 data-s="web_chat_title">Claude app or claude.ai</h2>
+      <p class="muted" data-s="web_chat_steps"></p>
+      <p class="muted small" data-s="web_chat_address"></p>
+      <pre id="addr"></pre>
+      <button class="primary" data-copy="addr"><span data-s="web_copy">Copy</span></button>
+      <a class="primary link-button" href="https://claude.ai/customize/connectors" target="_blank" rel="noopener" data-s="web_chat_connectors">Open connectors in Claude</a>
+      <a class="primary link-button" id="openChat" href="https://claude.ai/new" target="_blank" rel="noopener" data-s="web_chat_open">Open a chat in Claude</a>
+      <p class="muted small"><span data-s="web_chat_first">If the chat opens empty, write:</span> <span id="firstMessage"></span></p>
+      <h2 data-s="web_chat_other">Claude Code and other assistants</h2>
+    </div>
     <p class="muted" data-s="web_ai_claude">Claude Code: run this on the computer</p>
     <pre id="cmd"></pre>
     <button class="primary" data-copy="cmd"><span data-s="web_copy">Copy</span></button>

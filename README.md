@@ -55,18 +55,25 @@ It is not on Google Play. You install it with `adb` (or from a USB drive once it
 - **Settings tiles** for Wi-Fi, Bluetooth, Sound, Picture, Sleep timer and the Android settings
   (tiles the TV can't open are hidden).
 
-**Phone remote and AI access** (both off until you turn them on; see
+**Phone remote and AI assistant** (both off until you turn them on; see
 [Phone remote and AI assistant](#phone-remote-and-ai-assistant))
 - **Phone remote:** a web page the TV serves to your phone (no app to install). Scan the QR code on the TV:
   D-pad, OK, Back, Home, volume, and typing from the phone keyboard straight into the field on the TV
   (any language). A **Screen** mode shows the TV picture; tap to press, hold for a long press, swipe to
   scroll. One phone at a time.
-- **AI access:** an [MCP](https://modelcontextprotocol.io) server on the TV, so Claude or another assistant
-  on a computer in your network can open apps, play YouTube videos, search the web, read and tap the
-  screen, type, press keys, set a sleep timer or turn the TV off when you ask it to.
-- **Home network only.** Pairing needs the 6-digit code shown on the TV. **Turning the TV off ends every
+- **Control via AI assistant:** an [MCP](https://modelcontextprotocol.io) server on the TV, so Claude (the app on
+  your phone, claude.ai, Claude Code) or another assistant can open apps, play YouTube videos, search the web, read
+  and tap the screen, type, press keys, set a sleep timer or turn the TV off when you ask it to in a chat.
+- **Home network by default.** Pairing needs the 6-digit code shown on the TV. **Turning the TV off ends every
   connection and forgets every key**; the next time you pair again with a new code. Access also turns
-  itself off after 15 minutes without use. A small badge on the TV shows while something is connected.
+  itself off after 15 minutes without use.
+- **Optional: "…also from anywhere".** A switch (off by default) opens a tunnel to the free relay
+  [localhost.run](https://localhost.run), which gives a random `https://….lhr.life` address, new every time. That
+  is what lets the Claude app reach the TV (Claude connects from Anthropic's cloud, not from your Wi-Fi). Only the
+  assistant pairing page and the MCP endpoint are reachable that way, behind a secret path and the code.
+- **Indicator.** On Home the **Remote** button says who is connected ("AI is controlling"). Over other apps a small
+  badge flashes for a few seconds each time an assistant does something, so you always see when the TV is being
+  controlled.
 
 **Weather**
 - Current weather in the top bar and a panel with "feels like", wind, the next hours and 5 days.
@@ -227,7 +234,7 @@ adb shell appops set $PKG SCHEDULE_EXACT_ALARM allow                # sleep time
 **Turn off TV, sleep timer, phone remote.** An ordinary app can't power the TV off or press buttons in other
 apps, so the launcher ships a small accessibility helper. It receives no events. It acts when you press
 "Turn off TV" or the timer ends (it opens the system power menu and presses "Power off"), and, only while
-Phone remote or AI access is switched on, it takes screenshots, reads the screen and presses the buttons
+the phone remote or the AI assistant is switched on, it takes screenshots, reads the screen and presses the buttons
 you or your assistant ask for. Enable it once (this adds it to the services already enabled and turns
 none off):
 
@@ -312,14 +319,31 @@ Get a newer `app-debug.apk` and run `adb install -r app-debug.apk`, or put it on
 ## Phone remote and AI assistant
 
 Needs the accessibility helper from section 4. On the TV open **Remote** in the top bar (or
-**Settings → Phone remote & AI access**) and turn on what you need. The page shows a QR code, a
+**Settings → Remote & AI assistant**) and turn on what you need. The page shows a QR code, a
 6-digit code and the TV's address (for example `192.168.1.20:8765`).
 
 **Phone:** scan the QR code with the phone's camera (the phone must be on the same Wi-Fi). The page
 connects by itself. To type, select a field on the TV with the D-pad (or tap it in Screen mode) and type
 on the phone; Enter sends the search.
 
-**AI assistant:** turn on **AI access**, then on a computer in the same network open
+**Claude on your phone (or claude.ai), from anywhere:** turn on **Control via AI assistant** and **…also from
+anywhere**. After a few seconds the TV shows a QR code, the code and an address like `86e0f64868e2d7.lhr.life`.
+
+1. Scan the QR code with the phone. The page connects by itself (the code is in the QR) and shows the
+   **connector address** (it contains the key: keep it private) with a **Copy** button.
+2. **Open connectors in Claude** (claude.ai → Customize → Connectors): **+ Add → Add custom connector**, name `TV`,
+   paste the address, choose **No sign in**, **Add**. If a `TV` connector is left from last time, remove it first:
+   the address is new every time. The Free plan allows one custom connector.
+3. **Open a chat in Claude**, turn `TV` on under **+ → Connectors**, and ask: "open Kinopub", "find a cartoon on
+   YouTube", "turn the TV off in 30 minutes".
+
+Steps from Anthropic's help article
+[Get started with custom connectors using remote MCP](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-MCP).
+The relay sees the traffic, and anyone with the address and the code controls the TV; each time an assistant does
+something, the badge flashes on the TV. Turning the TV off ends it; next time scan the new QR code.
+
+**AI assistant on the home network** (Claude Code or another MCP client on a computer in the same Wi-Fi): turn on
+**Control via AI assistant**, then open
 `http://<TV address>/pair`, enter the code and copy the ready command. For Claude Code:
 
 ```bash
@@ -398,10 +422,11 @@ add `bg_<id>.webp` and `thumb_<id>.webp` to `res/drawable-nodpi`, the name in al
   [ipapi.co](https://ipapi.co)) when the city is set to automatic. It runs only while the home screen
   is visible.
 - Nothing runs in the background. The exceptions are ones you turn on yourself: the accessibility helper
-  (receives no events), a single alarm while a sleep timer is set, and the phone remote / AI access
+  (receives no events), a single alarm while a sleep timer is set, and the phone remote / AI assistant
   server while its switch is on.
-- The phone remote and AI access listen only on the TV's home-network address, answer only private
-  addresses, and need a key from the code on the TV. Keys live in memory only: turning the TV off,
+- The phone remote and the AI assistant listen only on the TV's home-network address, answer only private
+  addresses, and need a key from the code on the TV. The one exception is the optional internet switch: the TV
+  then connects out to localhost.run (a third party that can see that traffic) and only assistants can use it. Keys live in memory only: turning the TV off,
   switching access off, or 15 minutes without use forgets them. Screenshots go only to the paired phone
   or assistant and are never stored.
 

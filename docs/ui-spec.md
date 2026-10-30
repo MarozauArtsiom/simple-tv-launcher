@@ -98,7 +98,7 @@ For each screen: initial focus, Back, Home, and the mockup.
 - The remote's Menu key opens Settings from anywhere on Home.
 - Top bar order: weather · Inputs · Timer · Remote · iPhone · avatar. Every chip but the avatar can be hidden in
   Settings → Top bar buttons; a running sleep timer shows anyway. **Remote** (remote-control icon, a signal dot while
-  the phone remote or AI access is on) opens Settings → Phone remote & AI access directly; Back closes it. **Timer** (moon icon, "Timer" or the minutes left)
+  the phone remote or AI access is on) opens Settings → Remote & AI assistant directly; Back closes it. **Timer** (moon icon, "Timer" or the minutes left)
   opens a popup under the bar: Off, 15, 30, 45, 60, 90, 120 min; the running choice is focused and checked.
 - Settings: under the TV tiles a full-width **Turn off TV** row → dialog "Turn the TV off completely?" Yes
   (focused) / No. Without the power helper both the dialog and the timer popup show its adb command instead.
@@ -108,7 +108,9 @@ For each screen: initial focus, Back, Home, and the mockup.
   hidden tile offers "Show on Home", App info and Uninstall. Settings → Hidden apps stays as a second way back.
 - The section that holds focus (Favourites or All apps) is drawn as is; the other one fades to 50 %
   in 150 ms (title and tiles). Focus in the top bar fades every section below; the top bar never fades.
-  The clock side of the top bar gives way when it is crowded, so the avatar button always stays on screen. No blur (see T31).
+  The clock side of the top bar gives way when it is crowded, so the avatar button always stays on screen. The clock and
+  date stay whole; the weather chip takes what is left (the place name is ellipsized first) and is left out when not even
+  the temperature fits (no half-cut chip). No blur (see T31).
 - Scrolling follows focus calmly (`CalmScrollSpec`, not the TV pivot): a tile already on screen
   never scrolls the list, even while it grows; a tile off screen is brought just inside the edge
   (56 dp from the top so the section title shows, 27 dp from the bottom, 48 dp at the row ends).
@@ -141,7 +143,7 @@ For each screen: initial focus, Back, Home, and the mockup.
 ### Settings panel — `design/mockups/settings.html`, `settings/settings-*.png`
 - Title "Settings". Section "Television": Wi-Fi, Bluetooth, Sound, Picture, Sleep timer,
   Android (tiles the TV can't open are hidden). Section "Launcher": Theme, Background, Profile photo,
-  Top bar buttons, Language, Weather, HDMI signal, Hidden apps, Website shortcuts, Phone remote & AI access,
+  Top bar buttons, Language, Weather, HDMI signal, Hidden apps, Website shortcuts, Remote & AI assistant,
   Install from USB, About.
 - Initial focus: the Wi-Fi tile. Back: out of a sub-page, then close the panel and return focus
   to the settings (avatar) button. Coming back from a sub-page, focus returns to the row that opened it.
@@ -242,13 +244,20 @@ For each screen: initial focus, Back, Home, and the mockup.
 - One switch row per chip (icon, name, switch): Weather, Inputs, Sleep timer, Remote, iPhone screen (AirPlay); a
   muted note below. Initial focus: Weather. The settings row shows "N of 5" while something is hidden.
 
-### Phone remote & AI access — `design/mockups/settings-remote.html` (`?badge` for the badge), golden `remote-page/`
-- Switches "Phone remote" and "AI access"; while one is on, a card with the QR code (`http://<ip>:8765/?c=<code>`,
+### Remote & AI assistant — `design/mockups/settings-remote.html` (`?badge` for the badge), golden `remote-page/`
+- Switches "Phone remote" and "Control via AI assistant"; while one is on, a card with the QR code (`http://<ip>:8765/?c=<code>`,
   or `/pair` with only AI on), the code in two groups of three (32 sp) and the address; connected clients with
   "Disconnect" ("Disconnect everyone" from two); the AI hint, the keys status and the auto-off note. Without the
   helper: its adb command and "Check again". Initial focus: the first switch.
-- Badge over every app while someone is connected: a pill at the top centre ("Remote · AI is controlling"), not
-  focusable, not touchable.
+- Under it a third switch, "…also from anywhere" (only while the AI switch is on). While on: "Connecting…", then a
+  card that replaces the home-network one (unless the phone remote is on): QR code
+  (`https://<random>.lhr.life/s/<secret>/pair?c=<code>`), the code in big digits, the host and a plain warning
+  (anyone with the address and the code controls the TV; new address every time; traffic passes the free relay).
+  If the tunnel fails: one line, switch on again for a new address.
+- Indicator on Home: the top bar's Remote chip itself says who is connected ("Remote · AI is controlling", sparkle icon
+  while an assistant is connected, dot while a switch is on). Only if the owner hid that chip does the overlay badge stay
+  up on Home. Badge: a pill at the top centre, not focusable, not touchable; over other apps it is hidden and slides in
+  for 2.5 s each time an assistant runs a tool.
 - Phone page (`assets/remote/`): the TV's theme tokens and art, pairing, Remote and Screen modes, the typing row;
   no zoom (double tap or pinch).
 
@@ -296,7 +305,7 @@ Theme and background crossfade 300 ms. Only scale, alpha, translation and rotati
 | USB installer (4 states), About, theme schedule | `settings-usb.html?state=…`, `settings-about.html`, `settings-schedule.html` | `screens/` |
 | HDMI settings, iPhone hint | `settings-hdmi.html`, `iphone-hint.html` | `screens/` |
 | Website shortcuts (list, editor) | `shortcuts.html?state=list|edit` | `screens/shortcuts-{list,edit}-<theme>.png` |
-| Phone remote & AI access (TV), badge | `settings-remote.html`, `settings-remote.html?badge` | goldens `remote-page/`, `remote-badge/` |
+| Remote & AI assistant (TV), badge | `settings-remote.html`, `settings-remote.html?badge` | goldens `remote-page/`, `remote-badge/` |
 | Phone page (pair, remote, screen, off), AI pairing | `app/src/main/assets/remote/index.html?demo=…&t=…`, `pair.html` | `screens/remote-phone-*.png`, `screens/remote-pair-ai.png` |
 
 `screens/` holds midnight, sky and valley renders of the batch above (`render-screens.sh`).

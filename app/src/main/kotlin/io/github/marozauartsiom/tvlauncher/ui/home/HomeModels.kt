@@ -56,6 +56,9 @@ data class TopBarState(
     val showRemote: Boolean = false,
     /** The phone remote or AI access is on: the Remote button gets a dot. */
     val remoteOn: Boolean = false,
+    /** Who is connected right now: the Remote button says so ("Remote · AI is controlling") instead of the badge. */
+    val remotePhoneConnected: Boolean = false,
+    val remoteAiConnected: Boolean = false,
     /** Buttons the owner hid in Settings → Top bar. */
     val hidden: Set<TopButton> = emptySet(),
 )

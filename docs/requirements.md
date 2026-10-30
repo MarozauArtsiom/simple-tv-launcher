@@ -199,7 +199,10 @@ help with mirroring an iPhone screen.
 - Mockups: `design/mockups/settings/language-picker.png`, `design/mockups/settings/languages.png`.
 - Details: `android-tv-launcher` skill, `references/settings-themes-i18n.md`.
 
-## 14. Phone remote and AI access ✅ (built 2026-10-25, tasks T33–T44; owner checks in T43 left)
+## 14. Phone remote and AI assistant ✅ (built 2026-10-25, tasks T33–T45; owner checks in T43 left)
+
+Names on the TV (owner asked for clearer ones, 2026-10-25): page "Remote & AI assistant", switches "Phone remote",
+"Control via AI assistant" and "…also from anywhere" (the internet tunnel). "AI access" below means the second switch.
 
 The owner asked to control the TV from a phone, and to let any AI assistant in the home (Claude or
 another one) do what a person asks: "play this YouTube video", "open Kinopub and find Dark", "search the
@@ -228,8 +231,10 @@ One small web server inside the launcher, with two front ends on top of one "TV 
 
 ### Hard requirements
 
-- **Local network only.** The server listens on the TV's Wi-Fi address and rejects any address that is
-  not private. No cloud relay, no port forwarding, no remote access from outside the home.
+- **Local network by default.** The server listens on the TV's Wi-Fi address and rejects any address that is
+  not private. **One opt-in exception (decided 2026-10-25, owner request): AI access from the internet**, see
+  "Internet access for assistants" below. The phone remote, the screen picture and every other route never
+  leave the home network.
 - **Off by default.** Turned on in Settings → "Phone remote & AI access" (two switches on one page).
 - **TV off = access gone.** Keys live only in memory, never on disk. The server closes and every key is
   erased when the screen turns off (standby, sleep timer, "Turn off TV"), on reboot or power loss, when
@@ -242,8 +247,9 @@ One small web server inside the launcher, with two front ends on top of one "TV 
 - **One phone at a time.** A new phone takes over; the old page shows "Disconnected".
   **Several assistants** may be connected; the TV lists them by name, each can be disconnected, and
   there is "Disconnect all".
-- **Visible.** While anyone is connected, a small badge shows on the TV over any app ("📱 Remote",
-  "AI is controlling").
+- **Visible.** While anyone is connected, Home shows it in the top bar's Remote chip ("Remote · AI is controlling";
+  the overlay badge instead if that chip is hidden). Over other apps a badge shows only briefly, with an animation,
+  when an assistant runs a tool (owner request 2026-10-25).
 - **Auto-off** after 15 minutes without requests.
 - **No dangerous tools:** no install or uninstall, no system settings, no shell passthrough.
 - **Resources:** nothing runs while it is off. While on: the server is about 1 MB; screenshots are taken
@@ -280,7 +286,35 @@ One small web server inside the launcher, with two front ends on top of one "TV 
 - **Accessibility helper:** gains `canTakeScreenshot`; its label and description change from "reads
   nothing" to "turns the TV off; while Phone remote or AI access is on, it sees the screen and presses
   buttons for you".
-- **Not planned:** access from outside the home network, video streaming, voice.
+- **Internet access for assistants (owner decision 2026-10-25).** The owner wants Claude or any assistant to
+  reach the TV from anywhere, so the MCP server can be opened to the internet through a **tunnel to a free
+  external relay service**. Chosen over router port forwarding because it needs no router setup and gives a
+  new random address each time.
+  - A third switch under "AI access", **off by default**, shown only while AI access is on. The TV connects *out*
+    to the anonymous free relay [localhost.run](https://localhost.run) over SSH (user `nokey`, throw-away key made
+    each time, no account) and gets a random `https://<14 hex>.lhr.life` address. Library: JSch (`com.github.mwiede`).
+    Nothing on the router is opened and no extra program is bundled.
+  - **Every switch-on is a new address and a new secret path** (`/s/<128-bit secret>/…`), so the QR code must be
+    scanned again each time. The QR carries the address and the pairing code.
+  - Behind the secret only the assistant pairing page, `/api/look`, `/api/pair` (assistants only, never a
+    phone) and `/mcp` exist; the rest is a plain 404 that also doesn't count as a wrong code. Pairing still needs
+    the 6-digit code (5 wrong → 60 s lock), and `/mcp` still needs the assistant's key.
+  - Ends with the switch, with AI access, when the TV turns off, the helper goes away or after 15 minutes
+    without use; the keys die with it. A dropped tunnel is not reconnected (the next address would differ).
+  - **Safety by visibility:** the badge is steady only on Home. Over any other app it is hidden and **flashes for
+    a few seconds (fade and slide) each time an assistant runs a tool**, so the owner always sees when the TV is
+    being controlled. The TV page says in plain words that anyone with the address and the code controls the TV
+    and that traffic passes through the relay.
+  - **Main use case (owner, 2026-10-25):** the owner opens Claude on the phone and says "control my TV". The phone
+    scans the QR on the TV; the page pairs by itself and shows a connector address with the key in the path
+    (`https://<host>/s/<secret>/mcp/<key>`, because Claude's connectors are added by URL) plus buttons "Open
+    connectors in Claude" and "Open a chat in Claude". Claude reaches the TV from Anthropic's cloud, which is why
+    the internet tunnel is needed at all. A connector can't be edited, so it is removed and re-added with each
+    new address.
+  - Risks accepted by the owner: the relay (a third party) can see the traffic, since TLS ends there; the free
+    service has no promise of availability; a leaked address plus code controls the TV, Kinopub and YouTube
+    accounts included.
+- **Not planned:** video streaming, voice.
 
 ## Status after the first unattended run
 

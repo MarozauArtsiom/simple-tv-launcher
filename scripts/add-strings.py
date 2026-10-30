@@ -24,7 +24,7 @@ def folder(lang):
 
 def escape(text):
     text = text.replace("\\", "\\\\").replace("'", "\\'").replace('"', '\\"')
-    text = text.replace("&", "&amp;").replace("<", "&lt;")
+    # & and < are escaped by ElementTree when it writes the file; doing it here too gave "&amp;amp;".
     return ("\\" + text) if text[:1] in "@?" else text
 
 

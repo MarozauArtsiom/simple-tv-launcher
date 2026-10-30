@@ -70,3 +70,6 @@ body.wide .card { margin-top: 120px; }
 pre { margin: 0 0 10px; padding: 12px; border-radius: 12px; background: var(--item-bg); color: var(--panel-fg); white-space: pre-wrap;
       word-break: break-all; font-size: 13px; line-height: 18px; user-select: text; -webkit-user-select: text; }
 #done .primary { margin-bottom: 18px; }
+.card h2 { margin: 18px 0 8px; font-size: 18px; line-height: 24px; }
+.muted.small { font-size: 13px; margin-bottom: 6px; }
+.link-button { display: flex; align-items: center; justify-content: center; text-decoration: none; margin-bottom: 8px; }
